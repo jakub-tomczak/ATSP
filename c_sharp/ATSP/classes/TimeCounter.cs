@@ -3,9 +3,9 @@ using System.Diagnostics;
 
 namespace ATSP.classes
 {
-    public class TimeCounter<T>
+    public class TimeCounter
     {
-        public TimeCounter<T> Run(Func<T> function)
+        public TimeCounter Run(Action function)
         {
             Iterations = 0;
             var timer = new Stopwatch();
@@ -17,11 +17,12 @@ namespace ATSP.classes
                 var time = timer.ElapsedTicks;
                 totalTime += (ulong)time;
                 Iterations++;
+                Console.WriteLine($"Iter {Iterations}, time {TicksToMillis((ulong)time)}");
             } while( ElapsedMillis < timeout * 1000 || Iterations < minIterations );
             return this;
         }
 
-        public TimeCounter<T> SetTimeout(ulong value)
+        public TimeCounter SetTimeout(ulong value)
         {
             timeout = value;
             return this;
@@ -31,14 +32,16 @@ namespace ATSP.classes
         {
             get
             {
-                var millis = totalTime / TimeSpan.TicksPerMillisecond;
                 if(Iterations == 0)
                 {
                     return 0;
                 }
-                return (double)millis / Iterations;
+                var millis = TicksToMillis(totalTime);
+                return millis / Iterations;
             }
         }
+
+        private double TicksToMillis(ulong ticks) => (double)ticks / TimeSpan.TicksPerMillisecond;
 
         public ulong Iterations
         {
