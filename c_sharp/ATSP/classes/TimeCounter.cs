@@ -17,8 +17,7 @@ namespace ATSP.classes
                 var time = timer.ElapsedTicks;
                 totalTime += (ulong)time;
                 Iterations++;
-                // Console.WriteLine($"Iter {Iterations}, time {TicksToMillis((ulong)time)}");
-            } while( ElapsedMillis < timeout * 1000 || Iterations < minIterations );
+            } while( TicksToMillis(totalTime) < timeout * 1000 || Iterations < minIterations );
             return this;
         }
 
@@ -28,7 +27,7 @@ namespace ATSP.classes
             return this;
         }
 
-        public double ElapsedMillis
+        public double MeanIterationTime
         {
             get
             {
@@ -41,7 +40,7 @@ namespace ATSP.classes
             }
         }
 
-        private double TicksToMillis(ulong ticks) => (double)ticks / TimeSpan.TicksPerMillisecond;
+        private double TicksToMillis(ulong ticks) => (double)ticks / Stopwatch.Frequency * 1000;
 
         public ulong Iterations
         {

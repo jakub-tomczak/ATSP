@@ -10,7 +10,7 @@ namespace ATSP.classes
             var timer = new TimeCounter().Run(() => {
                 permutator.Permutate();
             });
-            Console.WriteLine($"Total mean elapsed time in milliseconds {timer.ElapsedMillis}, iterations {timer.Iterations}");
+            Console.WriteLine($"mean elapsed time in milliseconds {timer.MeanIterationTime}, iterations {timer.Iterations}");
         }
     }
 }

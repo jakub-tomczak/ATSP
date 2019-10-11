@@ -32,10 +32,8 @@ namespace ATSP.classes
                 var time = timer.ElapsedTicks;
                 totalTime += (ulong)time;
                 iterations++;
-                // Console.WriteLine($"Iter {iterations}, time {TicksToMillis((ulong)time)}");
-            } while( ElapsedMillis(iterations, totalTime) < timeout * 1000 || iterations < minIterations );
-
-            Console.WriteLine($"Total mean elapsed time in milliseconds {ElapsedMillis(iterations, totalTime)}, iterations {iterations}");
+            } while( TicksToMillis(totalTime) < timeout * millisToSeconds || iterations < minIterations );
+            Console.WriteLine($"mean elapsed time in milliseconds {MeanIterationTime(iterations, totalTime)}, iterations {iterations}");
         }
 
         private void Swap(uint[] arr, ref int firstIndex, ref int secondIndex)
@@ -45,7 +43,7 @@ namespace ATSP.classes
             arr[secondIndex] = temp;
         }
 
-        private double ElapsedMillis(ulong iterations, ulong totalTime)
+        private double MeanIterationTime(ulong iterations, ulong totalTime)
         {
             if(iterations == 0)
             {
@@ -54,6 +52,8 @@ namespace ATSP.classes
             var millis = TicksToMillis(totalTime);
             return millis / iterations;
         }
-        private double TicksToMillis(ulong ticks) => (double)ticks / TimeSpan.TicksPerMillisecond;
+        private double TicksToMillis(ulong ticks) => (double)ticks / Stopwatch.Frequency * millisToSeconds;
+
+        const uint millisToSeconds = 1000;
     }
 }
