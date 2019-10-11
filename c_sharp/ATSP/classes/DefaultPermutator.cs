@@ -13,7 +13,7 @@ namespace ATSP.classes
             for(int i=indices.Length-1;i>0;i--)
             {
                 var swapIndex = randomizer.Next(i);
-                Swap(swapIndex, i);
+                Swap(ref swapIndex, ref i);
             }
 
             return indices;

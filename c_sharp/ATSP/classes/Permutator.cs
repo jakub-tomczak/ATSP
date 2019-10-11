@@ -19,7 +19,7 @@ namespace ATSP.classes
             Console.WriteLine(string.Join(',', indices));
         }
 
-        protected void Swap(int firstIndex, int secondIndex)
+        protected void Swap(ref int firstIndex, ref int secondIndex)
         {
             var temp = indices[firstIndex];
             indices[firstIndex] = indices[secondIndex];
