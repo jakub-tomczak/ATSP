@@ -16,6 +16,16 @@ void inline swap(uint *array, int &first_index, int &second_index)
     array[second_index] = temp;
 }
 
+void inline print_array(uint *array, int array_size)
+{
+    cout << endl;
+    for(int i=0;i<array_size;i++)
+    {
+        cout << array[i] << ' ';
+    }
+    cout << endl;
+}
+
 int main()
 {
     const int array_size = 10000000;
