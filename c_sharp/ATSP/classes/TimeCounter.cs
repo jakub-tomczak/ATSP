@@ -17,7 +17,7 @@ namespace ATSP.classes
                 var time = timer.ElapsedTicks;
                 totalTime += (ulong)time;
                 Iterations++;
-                Console.WriteLine($"Iter {Iterations}, time {TicksToMillis((ulong)time)}");
+                // Console.WriteLine($"Iter {Iterations}, time {TicksToMillis((ulong)time)}");
             } while( ElapsedMillis < timeout * 1000 || Iterations < minIterations );
             return this;
         }

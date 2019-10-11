@@ -7,11 +7,9 @@ namespace ATSP
     {
         static void Main(string[] args)
         {
-            var permutator = new DefaultPermutator(10000000, 0);
-            var timer = new TimeCounter().Run(() => {
-                permutator.Permutate();
-            });
-            Console.WriteLine($"Total mean elapsed time in milliseconds {timer.ElapsedMillis}, iterations {timer.Iterations}");
+            new ClassBasedRunner().Run(10000000, 0);
+            Console.WriteLine();
+            new NoClassRunner().Run(10000000, 0);
         }
     }
 }
