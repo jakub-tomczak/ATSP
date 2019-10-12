@@ -6,11 +6,16 @@ class Runner {
         var iterations = 0
         do {
             val start = System.nanoTime()
-            indices.indices.take(indices.length-1).foreach(x => {
-                var swapIndex = randomizer.nextInt(indices.length - x - 1)
-                swapIndex += x+1
-                swap(indices, swapIndex, x)
-            })
+            for(i <- indices.length - 1 to 1 by -1)
+            {
+                val swapIndex = randomizer.nextInt(i)
+                swap(indices, i, swapIndex)
+            }
+//            indices.indices.take(indices.length-1).foreach(x => {
+//                var swapIndex = randomizer.nextInt(indices.length - x - 1)
+//                swapIndex += x+1
+//                swap(indices, swapIndex, x)
+//            })
             val end = System.nanoTime()
             iterations += 1
             totalTime += (end - start) / 1e6
