@@ -16,6 +16,13 @@ void inline swap(uint *array, int &first_index, int &second_index)
     array[second_index] = temp;
 }
 
+void inline swap_xor(uint *array, int &first_index, int &second_index)
+{
+    array[first_index] ^= array[second_index];
+    array[second_index] ^= array[first_index];
+    array[first_index] ^= array[second_index];
+}
+
 void inline print_array(uint *array, int array_size)
 {
     cout << endl;
