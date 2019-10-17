@@ -36,7 +36,21 @@ namespace ATSP.classes
             Console.WriteLine($"mean elapsed time in milliseconds {MeanIterationTime(iterations, totalTime)}, iterations {iterations}");
         }
 
+        private void SwapXOR(uint []arr, ref int firstIndex, ref int secondIndex)
+        {
+            arr[firstIndex] ^=  arr[secondIndex];
+            arr[secondIndex] ^=  arr[firstIndex];
+            arr[firstIndex] ^= arr[secondIndex];
+        }
+
         private void Swap(uint[] arr, ref int firstIndex, ref int secondIndex)
+        {
+            var temp = arr[firstIndex];
+            arr[firstIndex] = arr[secondIndex];
+            arr[secondIndex] = temp;
+        }
+
+        private void Swap(uint[] arr, int firstIndex, int secondIndex)
         {
             var temp = arr[firstIndex];
             arr[firstIndex] = arr[secondIndex];
