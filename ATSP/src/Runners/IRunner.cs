@@ -1,6 +1,6 @@
 using System;
 
-namespace ATSP.classes
+namespace ATSP.Runners
 {
     public interface IRunner
     {

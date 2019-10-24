@@ -1,6 +1,5 @@
-using System;
 using Xunit;
-using ATSP.classes;
+using ATSP.Permutators;
 
 namespace ATSP.Tests
 {

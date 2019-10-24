@@ -1,6 +1,7 @@
 using System;
+using ATSP.Permutators;
 
-namespace ATSP.classes
+namespace ATSP.Runners
 {
     public class ClassBasedRunner: IRunner
     {

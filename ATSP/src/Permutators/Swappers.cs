@@ -1,4 +1,4 @@
-namespace ATSP.classes
+namespace ATSP.Permutators
 {
     public class DefaultSwapper : ISwapper
     {

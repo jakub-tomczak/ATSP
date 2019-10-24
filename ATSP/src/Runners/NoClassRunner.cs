@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace ATSP.classes
+namespace ATSP.Runners
 {
     public class NoClassRunner: IRunner
     {

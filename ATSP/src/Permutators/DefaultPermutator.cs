@@ -1,7 +1,4 @@
-using System;
-using System.Linq;
-
-namespace ATSP.classes
+namespace ATSP.Permutators
 {
     public class DefaultPermutator : Permutator, IPermutator
     {
