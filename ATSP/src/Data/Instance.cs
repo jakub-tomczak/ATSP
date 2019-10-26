@@ -23,5 +23,8 @@ namespace ATSP.Data
         [System.Xml.Serialization.XmlArray("graph")]
         [System.Xml.Serialization.XmlArrayItem("vertex")]
         public Vertex[] Vertices { get; set; }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public int N { get => Vertices?.Length ?? 0; }
     }
 }
