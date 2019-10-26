@@ -1,5 +1,5 @@
 using System;
-
+using System.Globalization;
 namespace ATSP.Runners{
     [Serializable()]
     [System.Xml.Serialization.XmlRoot("travellingSalesmanProblemInstance")]
@@ -31,9 +31,15 @@ namespace ATSP.Runners{
     public class Edge{
 
 
+
         [System.Xml.Serialization.XmlText(typeof(int))]
         public int no{get;set;}
-        [System.Xml.Serialization.XmlAttribute]
-        public string cost{get;set;}
+        [System.Xml.Serialization.XmlAttribute("cost")]
+        public string costformated{get{return this.cost.ToString();}set{this.cost = Decimal.Parse(value, NumberStyles.Float | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);}}
+
+        [System.Xml.Serialization.XmlIgnore]
+        public decimal cost{get;set;}
+
+
     }
 }
