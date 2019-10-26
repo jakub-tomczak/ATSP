@@ -1,5 +1,5 @@
 ﻿using System;
-using ATSP.Runners;
+using ATSP.Data;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -20,7 +20,7 @@ namespace ATSP
             {
                 travellingSalesmanProblemInstance = (TravellingSalesmanProblemInstance) ser.Deserialize(reader);
             }
-            Console.WriteLine("{0} {1} ",travellingSalesmanProblemInstance.vertices[0].edges[0].no, travellingSalesmanProblemInstance.vertices[0].edges[0].costformated);
+            Console.WriteLine("{0} {1} ",travellingSalesmanProblemInstance.Vertices[0].Edges[0].ID, travellingSalesmanProblemInstance.Vertices[0].Edges[0].CostFormatted);
         }
     }
 }
