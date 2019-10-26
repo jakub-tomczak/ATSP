@@ -18,29 +18,22 @@ namespace ATSP.Runners{
         [System.Xml.Serialization.XmlElement("ignoredDigits")]
         public int ignoredDigits {get;set;}
         
-        [System.Xml.Serialization.XmlElement("graph")]
-        public Graph graph{get;set;}
+        [System.Xml.Serialization.XmlArray("graph")]
+        [System.Xml.Serialization.XmlArrayItem("vertex")]
+        public Vertex[] vertices{get;set;}
     }
 
-    [Serializable()]
-    public class Graph{
-        [System.Xml.Serialization.XmlArray("vertex")]
-        [System.Xml.Serialization.XmlArrayItem("vertex", typeof(Vertex))]
-        public Vertex[] Vertex {get;set;}
-
-    }
-    [Serializable()]
     public class Vertex{
-        [System.Xml.Serialization.XmlArray("edge")]
-        [System.Xml.Serialization.XmlArrayItem("edge", typeof(Edge))]
+        [System.Xml.Serialization.XmlElement("edge")]
         public Edge[] edges{get;set;}
     }
-    [Serializable()]
-    public class Edge{
-        [System.Xml.Serialization.XmlText]
-        public int no{get;set;}
 
-        [System.Xml.Serialization.XmlAttribute("cost")]
-        public int cost {get;set;}
+    public class Edge{
+
+
+        [System.Xml.Serialization.XmlText(typeof(int))]
+        public int no{get;set;}
+        [System.Xml.Serialization.XmlAttribute]
+        public string cost{get;set;}
     }
 }

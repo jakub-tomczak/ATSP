@@ -21,6 +21,7 @@ namespace ATSP
                 travellingSalesmanProblemInstance = (TravellingSalesmanProblemInstance) ser.Deserialize(reader);
             }
             Console.WriteLine("name: {0}, source: {1}, description: {2}, doublePrecision: {3}, ignoredDigits: {4}", travellingSalesmanProblemInstance.name, travellingSalesmanProblemInstance.source,travellingSalesmanProblemInstance.description,travellingSalesmanProblemInstance.doublePrecision,travellingSalesmanProblemInstance.ignoredDigits);
+            Console.WriteLine("{0} {1}",travellingSalesmanProblemInstance.vertices[0].edges[1].no, travellingSalesmanProblemInstance.vertices[0].edges[1].cost);
         }
     }
 }
