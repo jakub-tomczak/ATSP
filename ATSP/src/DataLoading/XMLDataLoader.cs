@@ -20,7 +20,13 @@ namespace ATSP.DataLoading
 
             using (var reader = XmlReader.Create(file))
             {
-                return serializator.Deserialize(reader) as TravellingSalesmanProblemInstance ?? new TravellingSalesmanProblemInstance();
+                var instance = serializator.Deserialize(reader) as TravellingSalesmanProblemInstance;
+                if(instance is null)
+                {
+                    return new TravellingSalesmanProblemInstance();
+                }
+                instance.TransformToArray();
+                return instance;
             }
         }
     }
