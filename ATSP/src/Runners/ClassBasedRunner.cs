@@ -7,6 +7,7 @@ namespace ATSP.Runners
         {
             var timer = new TimeCounter().Run(() => {
                 experiment.Heuristic.Reset();
+                experiment.Heuristic.Solution = experiment.Initializer.InitializeSolution(experiment.Instance.N);
                 while(!experiment.Heuristic.IsEnd)
                 {
                     experiment.Heuristic.NextStep();
