@@ -1,10 +1,8 @@
-using System;
-
 namespace ATSP.Permutators
 {
     public interface IPermutator
     {
-        uint[] Permutate();
+        void Permutate(uint []array);
         IPermutator UseSwapper(ISwapper swapper);
 
         IPermutator SetSeed(int seed);

@@ -2,31 +2,26 @@ using System;
 
 namespace ATSP.Permutators
 {
-    public abstract class Permutator
+    public abstract class Permutator: IPermutator
     {
-        public void PrintArray()
+        public abstract void Permutate(uint []array);
+
+        public IPermutator SetSeed(int seed)
         {
-            Console.WriteLine(string.Join(',', indices));
+            this.Seed = seed;
+            randomizer = new Random(seed);
+            return this;
         }
 
-        public void Initialize(int arrSize, int seed)
+        public IPermutator UseSwapper(ISwapper swapper)
         {
-            indices = new uint[arrSize];
-            this.seed = seed;
-            randomizer = new Random(this.seed);
-            PopulateArray();
+            this.swapper = swapper;
+            return this;
         }
 
-        private void PopulateArray()
-        {
-            for(uint i=0;i<indices.Length;i++)
-            {
-                indices[i] = i;
-            }
-        }
+        protected Random randomizer = new Random(0);
+        public int Seed { get; private set; } = 0;
 
-        protected uint[] indices;
-        protected Random randomizer;
-        protected int seed = 0;
+        protected ISwapper swapper = new DefaultSwapper();
     }
 }

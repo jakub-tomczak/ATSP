@@ -58,7 +58,7 @@ namespace ATSP.Heuristics
 
         public abstract bool IsEnd { get; protected set; }
         public TravellingSalesmanProblemInstance Instance {get; private set;}
-        public uint[] Solution { get; private set; }
+        public uint[] Solution { get; set; }
         protected uint[,] vertices;
         protected IPermutator permutator;
 

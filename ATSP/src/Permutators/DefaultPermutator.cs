@@ -1,30 +1,14 @@
 namespace ATSP.Permutators
 {
-    public class DefaultPermutator : Permutator, IPermutator
+    public class DefaultPermutator : Permutator
     {
-        public uint[] Permutate()
+        public override void Permutate(uint [] array)
         {
-            for(int i=indices.Length-1;i>0;i--)
+            for(int i=array.Length-1;i>0;i--)
             {
                 var swapIndex = randomizer.Next(i);
-                swapper.Swap(indices, ref swapIndex, ref i);
+                swapper.Swap(array, ref swapIndex, ref i);
             }
-
-            return indices;
         }
-
-        public IPermutator UseSwapper(ISwapper swapper)
-        {
-            this.swapper = swapper;
-            return this;
-        }
-
-        public IPermutator SetSeed(int seed)
-        {
-            this.seed = seed;
-            return this;
-        }
-
-        private ISwapper swapper = new DefaultSwapper();
     }
 }

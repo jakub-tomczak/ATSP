@@ -24,16 +24,24 @@ namespace ATSP
 
             var bestResults = new BestResultsLoader();
             bestResults.LoadBestResults($"../instances/{bestInstancesFilename}");
-            var permutator = new DefaultPermutator().SetSeed(seed);
+            var permutator = new DefaultPermutator().SetSeed(seed)
+                                                    .UseSwapper(new XORSwapper());
 
             experiments = new [] {
                 new Experiment()
                                 .UseInstance(instanceName)
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
-                                .UseLoader(new XMLDataLoader())
-                                .UseSwapper(new DefaultSwapper())
                                 .UsePermutator(permutator)
+                                .UseLoader(new XMLDataLoader())
+                                .UseHeuristic(new RandomHeuristic())
+                                .UseRunner(new ClassBasedRunner()),
+                new Experiment()
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UsePermutator(permutator)
+                                .UseLoader(new XMLDataLoader())
                                 .UseHeuristic(new RandomHeuristic())
                                 .UseRunner(new ClassBasedRunner())
 

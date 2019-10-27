@@ -45,12 +45,6 @@ namespace ATSP.Runners
             return this;
         }
 
-        public Experiment UseSwapper(ISwapper swapper)
-        {
-            this.swapper = swapper;
-            return this;
-        }
-
         public Experiment UseHeuristic(ATSPHeuristic heuristic)
         {
             this.Heuristic = heuristic;
@@ -104,16 +98,16 @@ namespace ATSP.Runners
             return true;
         }
 
-        public ExperimentResult Result { get; private set; }
-        public TravellingSalesmanProblemInstance Instance { get; private set; }
-        private IPermutator permutator;
-        private ISwapper swapper;
-        private IDataLoader dataLoader;
-        private BestResultsLoader bestResultsLoader;
-        public string InstanceName;
-        private IRunner runner;
-        public ATSPHeuristic Heuristic { get; private set; }
-        private string instancesLocation;
+        public ExperimentResult Result { get; private set; } = new ExperimentResult();
+        public TravellingSalesmanProblemInstance Instance { get; private set; } = new TravellingSalesmanProblemInstance();
+        private IPermutator permutator = new DefaultPermutator();
+        private IDataLoader dataLoader = new XMLDataLoader();
+        private BestResultsLoader bestResultsLoader = new BestResultsLoader();
+        public string InstanceName = string.Empty;
+        private IRunner runner = new ClassBasedRunner();
+        public ISolutionInitializer Initializer { get; private set; } = new RandomSolutionInitializer();
+        public ATSPHeuristic Heuristic { get; private set; } = new RandomHeuristic();
+        private string instancesLocation = "../instances";
         private bool initialized = false;
     }
 
