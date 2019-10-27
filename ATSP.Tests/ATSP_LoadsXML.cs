@@ -1,5 +1,5 @@
 using Xunit;
-using ATSP.Data;
+using System;
 using ATSP.DataLoading;
 
 namespace ATSP.Tests
@@ -9,7 +9,7 @@ namespace ATSP.Tests
         [Fact]
         public void LoadXMLFromExistingFile()
         {
-            var filename = "existingFile.xml";
+            var filename = "../../../existingFile.xml";
             var xmlLoader = new XMLDataLoader();
             var loadedInstance = xmlLoader.LoadInstance(filename);
 
@@ -20,21 +20,12 @@ namespace ATSP.Tests
         [Fact]
         public void LoadXMLFromNonExistingFile()
         {
-            var filename = "nonExistingFile.xml";
+            var filename = "../../../nonExistingFile.xml";
             var xmlLoader = new XMLDataLoader();
             var loadedInstance = xmlLoader.LoadInstance(filename);
 
             Assert.NotNull(loadedInstance);
             Assert.Equal(0, loadedInstance.N);
         }
-
-        // [Theory]
-        // public void LoadXMLFromString()
-        // {
-        //     ;
-        // }
-        // public void LoadXML(string data)
-        // {
-        // }
     }
 }
