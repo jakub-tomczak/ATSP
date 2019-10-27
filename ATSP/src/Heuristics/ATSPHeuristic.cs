@@ -11,7 +11,6 @@ namespace ATSP.Heuristics
 
         public virtual void Reset()
         {
-            Console.WriteLine("reset in ATSP");
             this.IsEnd = false;
             this.step = 0;
             ResetSolution();
@@ -57,7 +56,7 @@ namespace ATSP.Heuristics
         }
 
         public abstract bool IsEnd { get; protected set; }
-        public TravellingSalesmanProblemInstance Instance {get; private set;}
+        public TravellingSalesmanProblemInstance Instance { get; private set; }
         public uint[] Solution { get; set; }
         protected uint[,] vertices;
         protected IPermutator permutator;

@@ -7,7 +7,7 @@ namespace ATSP.Heuristics
         public RandomHeuristic()
             : base()
         {
-            maxSteps = new Random().Next(30000, 50000);
+            GetRandomMaxSteps();
         }
 
         public override bool IsEnd { get; protected set; }
@@ -18,15 +18,20 @@ namespace ATSP.Heuristics
             if(step > maxSteps)
             {
                 IsEnd = true;
-                Console.WriteLine($"Steps {step}, total cost {CalculateCost()}");
                 PrintSolution();
             }
+            permutator.Permutate(Solution);
         }
 
         public override void Reset()
         {
             base.Reset();
-            maxSteps = new Random().Next(30000, 50000);
+            GetRandomMaxSteps();
+        }
+
+        private void GetRandomMaxSteps()
+        {
+            maxSteps = new Random(0).Next(30000, 50000);
         }
 
         int maxSteps = 0;
