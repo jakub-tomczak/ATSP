@@ -52,7 +52,7 @@ namespace ATSP
 
         public bool RunExperiments()
         {
-            var result = false;
+            var result = true;
             Console.WriteLine($"Experiments to run {experiments.Length}");
             foreach(var experiment in experiments)
             {
