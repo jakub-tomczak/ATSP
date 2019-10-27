@@ -3,9 +3,9 @@ using System.Diagnostics;
 
 namespace ATSP.Runners
 {
-    public class NoClassRunner: IRunner
+    public class NoClassRunner: AbstractRunner
     {
-        public void Run(int arraySize, int seed)
+        public override void Run(int arraySize, int seed)
         {
             var indices = new uint[arraySize];
             var randomizer = new Random();

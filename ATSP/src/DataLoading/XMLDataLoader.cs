@@ -1,6 +1,9 @@
 using System;
 using System.IO;
 using ATSP.Data;
+using System.Xml;
+using System.Xml.Serialization;
+
 
 namespace ATSP.DataLoading
 {
@@ -13,9 +16,12 @@ namespace ATSP.DataLoading
                 return new TravellingSalesmanProblemInstance();
             }
 
-            using(var reader = new StreamReader(file))
-            Console.WriteLine($"Loading instance from xml file {file}");
-            return null;
+            var serializator = new XmlSerializer(typeof(TravellingSalesmanProblemInstance));
+
+            using (var reader = XmlReader.Create(file))
+            {
+                return serializator.Deserialize(reader) as TravellingSalesmanProblemInstance ?? new TravellingSalesmanProblemInstance();
+            }
         }
     }
 }

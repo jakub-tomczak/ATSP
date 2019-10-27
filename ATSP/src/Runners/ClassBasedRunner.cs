@@ -1,11 +1,12 @@
 using System;
+using ATSP.Data;
 using ATSP.Permutators;
 
 namespace ATSP.Runners
 {
-    public class ClassBasedRunner: IRunner
+    public class ClassBasedRunner: AbstractRunner
     {
-        public void Run(int arraySize, int seed)
+        public override void Run(int arraySize, int seed)
         {
             var permutator = new DefaultPermutator(arraySize, seed);
             var timer = new TimeCounter().Run(() => {
