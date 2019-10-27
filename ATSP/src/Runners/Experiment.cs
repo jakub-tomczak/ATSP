@@ -3,6 +3,7 @@ using ATSP.Permutators;
 using ATSP.Data;
 using ATSP.DataLoading;
 using System.IO;
+using ATSP.Heuristics;
 
 namespace ATSP.Runners
 {
@@ -50,26 +51,57 @@ namespace ATSP.Runners
             return this;
         }
 
-        public ExperimentResult Run()
+        public Experiment UseHeuristic(ATSPHeuristic heuristic)
         {
-            InitializeExperiment();
-            Result = runner.Run(this);
-            return Result;
+            this.Heuristic = heuristic;
+            return this;
         }
 
-        private void InitializeExperiment()
+        public ExperimentResult Run()
+        {
+            Console.WriteLine($"Running experiment with instance {InstanceName}");
+            if(!InitializeExperiment())
+            {
+                Console.WriteLine($"Failed to initialize experiment {InstanceName}");
+                return new ExperimentResult();
+            }
+            else
+            {
+                Result = runner.Run(this);
+                return Result;
+            }
+        }
+
+        private bool InitializeExperiment()
         {
             if(!initialized)
             {
+                Console.WriteLine($"Initializing experiment with instance {InstanceName}");
                 if(dataLoader is null)
                 {
-                    throw new ArgumentException($"DataLoader cannot be empty!");
+                    Console.WriteLine($"DataLoader cannot be empty!");
+                    return false;
                 }
 
-                Instance = dataLoader.LoadInstance($"{Path.Combine(instancesLocation, InstanceName)}");
+                Instance = dataLoader.LoadInstance($"{Path.Combine(instancesLocation, InstanceName, InstanceName)}");
+                if(Instance.N == 0)
+                {
+                    return false;
+                }
 
                 Instance.BestKnownCost = Instance.BestKnownCost = bestResultsLoader.GetBestResultForInstance(Instance.Name);
+
+                if(Heuristic is null)
+                {
+                    Console.WriteLine("Heuristic cannot be null");
+                    return false;
+                }
+
+                Heuristic.UseInstance(Instance).UsePermutator(permutator);
+
+                initialized = true;
             }
+            return true;
         }
 
         public ExperimentResult Result { get; private set; }
@@ -80,6 +112,7 @@ namespace ATSP.Runners
         private BestResultsLoader bestResultsLoader;
         public string InstanceName;
         private IRunner runner;
+        public ATSPHeuristic Heuristic { get; private set; }
         private string instancesLocation;
         private bool initialized = false;
     }

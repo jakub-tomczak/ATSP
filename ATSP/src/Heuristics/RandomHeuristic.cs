@@ -1,18 +1,16 @@
 using System;
-using ATSP.Data;
-using ATSP.Permutators;
 
 namespace ATSP.Heuristics
 {
     public class RandomHeuristic : ATSPHeuristic
     {
-        public RandomHeuristic(TravellingSalesmanProblemInstance instance, IPermutator permutator)
-            : base(instance, permutator)
+        public RandomHeuristic()
+            : base()
         {
-            maxSteps = new Random().Next(30, 50);
+            maxSteps = new Random().Next(30000, 50000);
         }
 
-        public override bool IsEnd { get => throw new System.NotImplementedException(); protected set => throw new System.NotImplementedException(); }
+        public override bool IsEnd { get; protected set; }
 
         public override void NextStep()
         {
@@ -20,11 +18,17 @@ namespace ATSP.Heuristics
             if(step > maxSteps)
             {
                 IsEnd = true;
-                return;
+                Console.WriteLine($"Steps {step}, total cost {CalculateCost()}");
+                PrintSolution();
             }
         }
 
-        int step = 0;
+        public override void Reset()
+        {
+            base.Reset();
+            maxSteps = new Random().Next(30000, 50000);
+        }
+
         int maxSteps = 0;
 
     }

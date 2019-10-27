@@ -1,4 +1,6 @@
-﻿using ATSP.DataLoading;
+﻿using System;
+using ATSP.DataLoading;
+using ATSP.Heuristics;
 using ATSP.Permutators;
 using ATSP.Runners;
 
@@ -10,7 +12,7 @@ namespace ATSP
         {
             new Program()
                 .PrepareExperiments()
-                .RunTests();
+                .RunExperiments();
         }
 
         public Program PrepareExperiments()
@@ -32,6 +34,7 @@ namespace ATSP
                                 .UseLoader(new XMLDataLoader())
                                 .UseSwapper(new DefaultSwapper())
                                 .UsePermutator(permutator)
+                                .UseHeuristic(new RandomHeuristic())
                                 .UseRunner(new ClassBasedRunner())
 
             };
@@ -39,9 +42,15 @@ namespace ATSP
             return this;
         }
 
-        public bool RunTests(params Experiment[] test)
+        public bool RunExperiments()
         {
-            return true;
+            var result = false;
+            Console.WriteLine($"Experiments to run {experiments.Length}");
+            foreach(var experiment in experiments)
+            {
+                result &= experiment.Run().Result;
+            }
+            return result;
         }
 
         private Experiment[] experiments;

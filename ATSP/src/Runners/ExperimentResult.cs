@@ -2,6 +2,6 @@ namespace ATSP.Runners
 {
     public class ExperimentResult
     {
-        public bool Result;
+        public bool Result = false;
     }
 }

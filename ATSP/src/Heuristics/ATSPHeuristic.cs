@@ -1,12 +1,23 @@
+using System;
 using ATSP.Data;
 using ATSP.Permutators;
-using System.Linq;
 
 namespace ATSP.Heuristics
 {
     public abstract class ATSPHeuristic
     {
-        public ATSPHeuristic(TravellingSalesmanProblemInstance instance, IPermutator permutator)
+        public ATSPHeuristic()
+        {}
+
+        public virtual void Reset()
+        {
+            Console.WriteLine("reset in ATSP");
+            this.IsEnd = false;
+            this.step = 0;
+            ResetSolution();
+        }
+
+        public ATSPHeuristic UseInstance(TravellingSalesmanProblemInstance instance)
         {
             this.Instance = instance;
             // transform data into uint array
@@ -14,11 +25,16 @@ namespace ATSP.Heuristics
             // take reference to that array
             vertices = this.Instance.ToArray();
 
-            Solution = new uint[instance.N];
+            ResetSolution();
+            return this;
+        }
 
+        protected void ResetSolution() => Solution = new uint[Instance.N];
+
+        public ATSPHeuristic UsePermutator(IPermutator permutator)
+        {
             this.permutator = permutator;
-
-            this.IsEnd = false;
+            return this;
         }
 
         public abstract void NextStep();
@@ -35,10 +51,17 @@ namespace ATSP.Heuristics
             return cost;
         }
 
+        public void PrintSolution()
+        {
+            Console.WriteLine(string.Join(',', Solution));
+        }
+
         public abstract bool IsEnd { get; protected set; }
-        public readonly TravellingSalesmanProblemInstance Instance;
-        public readonly uint[] Solution;
+        public TravellingSalesmanProblemInstance Instance {get; private set;}
+        public uint[] Solution { get; private set; }
         protected uint[,] vertices;
         protected IPermutator permutator;
+
+        protected int step = 0;
     }
 }

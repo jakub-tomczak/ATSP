@@ -4,7 +4,7 @@ namespace ATSP.Permutators
 {
     public abstract class Permutator
     {
-        protected void PrintArray()
+        public void PrintArray()
         {
             Console.WriteLine(string.Join(',', indices));
         }
