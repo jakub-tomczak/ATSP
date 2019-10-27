@@ -1,4 +1,5 @@
 using ATSP.Data;
+using ATSP.Permutators;
 
 namespace ATSP.Runners
 {
@@ -11,6 +12,13 @@ namespace ATSP.Runners
             return this;
         }
 
-        private TravellingSalesmanProblemInstance instance;
+        public IRunner UsePermutator(IPermutator permutator)
+        {
+            this.permutator = permutator;
+            return this;
+        }
+
+        protected TravellingSalesmanProblemInstance instance;
+        protected IPermutator permutator;
     }
 }

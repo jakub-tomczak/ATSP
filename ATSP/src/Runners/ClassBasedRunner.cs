@@ -8,7 +8,6 @@ namespace ATSP.Runners
     {
         public override void Run(int arraySize, int seed)
         {
-            var permutator = new DefaultPermutator(arraySize, seed);
             var timer = new TimeCounter().Run(() => {
                 permutator.Permutate();
             });

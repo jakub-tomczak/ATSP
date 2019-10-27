@@ -16,6 +16,12 @@ namespace ATSP.Permutators
             return indices;
         }
 
+        public IPermutator UseSwapper(ISwapper swapper)
+        {
+            this.swapper = swapper;
+            return this;
+        }
+
         private ISwapper swapper = new DefaultSwapper();
     }
 }
