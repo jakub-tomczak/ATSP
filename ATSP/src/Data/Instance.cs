@@ -26,5 +26,39 @@ namespace ATSP.Data
 
         [System.Xml.Serialization.XmlIgnore]
         public int N { get => Vertices?.Length ?? 0; }
+
+        public uint this[int row, int column]
+        {
+            get => Vertices[row].Edges[column].Cost;
+            set => Vertices[row].Edges[column].Cost = value;
+        }
+
+        public uint[,] ToArray()
+        {
+            if(array is null)
+            {
+                TransformToArray();
+            }
+
+            return array;
+        }
+
+        public void TransformToArray()
+        {
+            array = new uint[Vertices.Length, Vertices.Length];
+            for(int i=0;i<N;i++)
+            {
+                if(Vertices[i].Edges.Length != N)
+                {
+                    throw new ArgumentException($"Edges in the row no. {i} have different size than Vertices");
+                }
+                for(int j=0;j<N;j++)
+                {
+                    array[i, j] = Vertices[i].Edges[j].Cost;
+                }
+            }
+        }
+
+        private uint [,] array;
     }
 }
