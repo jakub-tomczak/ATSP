@@ -4,15 +4,10 @@ using System.Collections.Generic;
 
 namespace ATSP.DataLoading
 {
-    public static class BestResultsLoader
+    public class BestResultsLoader
     {
-        public static Dictionary<string, uint> LoadBestResults(string bestResultsFilename, bool forceResultsReloading = false)
+        public Dictionary<string, uint> LoadBestResults(string bestResultsFilename)
         {
-            if(bestResults != null && !forceResultsReloading)
-            {
-                return bestResults;
-            }
-
             if(!File.Exists(bestResultsFilename))
             {
                 throw new ArgumentException($"File {bestResultsFilename} doesn't exist.");
@@ -39,20 +34,24 @@ namespace ATSP.DataLoading
                     }
                 }
             }
-            bestResults = results;
-            return bestResults;
+            BestResults = results;
+            return BestResults;
         }
 
-        public static uint GetBestResultForInstance(string instanceName)
+        public uint GetBestResultForInstance(string instanceName)
         {
-            if(bestResults is null)
+            if(BestResults is null)
             {
                 return 0;
             }
 
-            return bestResults.ContainsKey(instanceName) ? bestResults[instanceName] : 0;
+            return BestResults.ContainsKey(instanceName) ? BestResults[instanceName] : 0;
         }
 
-        private static Dictionary<string, uint> bestResults;
+        public Dictionary<string, uint> BestResults
+        {
+            get;
+            private set;
+        }
     }
 }

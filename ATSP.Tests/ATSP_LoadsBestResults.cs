@@ -9,7 +9,8 @@ namespace ATSP.Tests
         [Fact]
         public void LoadsBestKnownResults()
         {
-            var results = BestResultsLoader.LoadBestResults("../../../../instances/best_known_results", true);
+            var bestResults = new BestResultsLoader();
+            var results = bestResults.LoadBestResults("../../../../instances/best_known_results");
 
             Assert.Equal(27, results.Count);
         }
@@ -17,12 +18,13 @@ namespace ATSP.Tests
         [Fact]
         public void AssignsBestKnownResults()
         {
-            var results = BestResultsLoader.LoadBestResults("../../../best_results", true);
+            var bestResults = new BestResultsLoader();
+            var results = bestResults.LoadBestResults("../../../best_results");
 
             Assert.Equal(1, results.Count);
 
             var instance = GetInstance();
-            var instanceBestResult = BestResultsLoader.GetBestResultForInstance(instance.Name);
+            var instanceBestResult = bestResults.GetBestResultForInstance(instance.Name);
 
             Assert.Equal(100u, instanceBestResult);
         }
@@ -31,7 +33,7 @@ namespace ATSP.Tests
         public void FailsWhenLoadingNonExisitingBestResults()
         {
             Assert.Throws<ArgumentException>( () => {
-                BestResultsLoader.LoadBestResults("../../../non_existing_best_results", true);
+                new BestResultsLoader().LoadBestResults("../../../non_existing_best_results");
             });
         }
 
@@ -39,7 +41,7 @@ namespace ATSP.Tests
         public void FailsWhenParsingBadlyFormattedBestResults()
         {
             Assert.Throws<FormatException>( () => {
-                BestResultsLoader.LoadBestResults("../../../badly_formatted_best_results", true);
+                new BestResultsLoader().LoadBestResults("../../../badly_formatted_best_results");
             });
         }
 
