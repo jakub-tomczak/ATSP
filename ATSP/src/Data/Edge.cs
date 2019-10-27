@@ -18,11 +18,11 @@ namespace ATSP.Data
 
             set
             {
-                this.Cost = Decimal.Parse(value, NumberStyles.Float | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
+                this.Cost = UInt32.Parse(value, NumberStyles.Float | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
             }
         }
 
         [System.Xml.Serialization.XmlIgnore]
-        public decimal Cost { get; set; }
+        public uint Cost { get; set; }
     }
 }
