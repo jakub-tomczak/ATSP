@@ -16,13 +16,12 @@ namespace ATSP
         public Program PrepareExperiments()
         {
             var instancesLocation = @"../instances";
-            var bestInstancesFilename = "best_known_instances";
+            var bestInstancesFilename = "best_known_results";
             var instanceName = "br17";
             var seed = 50;
 
             var bestResults = new BestResultsLoader();
             bestResults.LoadBestResults($"../instances/{bestInstancesFilename}");
-
             var permutator = new DefaultPermutator().SetSeed(seed);
 
             experiments = new [] {
