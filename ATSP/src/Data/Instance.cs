@@ -27,6 +27,9 @@ namespace ATSP.Data
         [System.Xml.Serialization.XmlIgnore]
         public int N { get => Vertices?.Length ?? 0; }
 
+        [System.Xml.Serialization.XmlIgnore]
+        public uint BestKnownCost { get; set; }
+
         public uint this[int row, int column]
         {
             get => Vertices[row].Edges[column].Cost;
