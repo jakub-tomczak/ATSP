@@ -8,6 +8,14 @@ namespace ATSP
     {
         static void Main(string[] args)
         {
+            new Program()
+                .PrepareExperiments()
+                .RunTests();
+        }
+
+        public Program PrepareExperiments()
+        {
+            var instancesLocation = @"../instances";
             var bestInstancesFilename = "best_known_instances";
             var instanceName = "br17";
             var seed = 50;
@@ -15,17 +23,28 @@ namespace ATSP
             var bestResults = new BestResultsLoader();
             bestResults.LoadBestResults($"../instances/{bestInstancesFilename}");
 
-            var instance = new XMLDataLoader().LoadInstance($"../instances/{instanceName}/{instanceName}.xml");
+            var permutator = new DefaultPermutator().SetSeed(seed);
 
-            instance.BestKnownCost = bestResults.GetBestResultForInstance(instance.Name);
+            experiments = new [] {
+                new Experiment()
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UseLoader(new XMLDataLoader())
+                                .UseSwapper(new DefaultSwapper())
+                                .UsePermutator(permutator)
+                                .UseRunner(new ClassBasedRunner())
 
-            var swapper = new DefaultSwapper();
-            var permutator = new DefaultPermutator(instance.N, seed).UseSwapper(swapper);
+            };
 
-
-            new ClassBasedRunner().UseInstance(instance)
-                                  .UsePermutator(permutator)
-                                  .Run(10000000, 0);
+            return this;
         }
+
+        public bool RunTests(params Experiment[] test)
+        {
+            return true;
+        }
+
+        private Experiment[] experiments;
     }
 }

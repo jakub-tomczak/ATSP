@@ -4,29 +4,12 @@ namespace ATSP.Permutators
 {
     public abstract class Permutator
     {
-        public Permutator()
-            : this(100, 0)
-        {}
-
-        public Permutator(int arraySize, int seed)
-        {
-            Initialize(arraySize, seed);
-        }
-
-
         protected void PrintArray()
         {
             Console.WriteLine(string.Join(',', indices));
         }
 
-        protected void Swap(ref int firstIndex, ref int secondIndex)
-        {
-            var temp = indices[firstIndex];
-            indices[firstIndex] = indices[secondIndex];
-            indices[secondIndex] = temp;
-        }
-
-        private void Initialize(int arrSize, int seed)
+        public void Initialize(int arrSize, int seed)
         {
             indices = new uint[arrSize];
             this.seed = seed;

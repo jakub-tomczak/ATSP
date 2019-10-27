@@ -9,16 +9,19 @@ namespace ATSP.DataLoading
 {
     public class XMLDataLoader : IDataLoader
     {
+        public string FileExtension => "xml";
+
         public TravellingSalesmanProblemInstance LoadInstance(string file)
         {
-            if(!File.Exists(file))
+            var filename = $"{file}.{FileExtension}";
+            if(!File.Exists(filename))
             {
                 return new TravellingSalesmanProblemInstance();
             }
 
             var serializator = new XmlSerializer(typeof(TravellingSalesmanProblemInstance));
 
-            using (var reader = XmlReader.Create(file))
+            using (var reader = XmlReader.Create(filename))
             {
                 var instance = serializator.Deserialize(reader) as TravellingSalesmanProblemInstance;
                 if(instance is null)

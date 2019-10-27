@@ -9,7 +9,7 @@ namespace ATSP.Tests
         [Fact]
         public void LoadXMLFromExistingFile()
         {
-            var filename = "../../../existingFile.xml";
+            var filename = "../../../existingFile";
             var xmlLoader = new XMLDataLoader();
             var loadedInstance = xmlLoader.LoadInstance(filename);
 
@@ -20,7 +20,7 @@ namespace ATSP.Tests
         [Fact]
         public void LoadXMLFromNonExistingFile()
         {
-            var filename = "../../../nonExistingFile.xml";
+            var filename = "../../../nonExistingFile";
             var xmlLoader = new XMLDataLoader();
             var loadedInstance = xmlLoader.LoadInstance(filename);
 

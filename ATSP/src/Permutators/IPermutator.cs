@@ -6,5 +6,7 @@ namespace ATSP.Permutators
     {
         uint[] Permutate();
         IPermutator UseSwapper(ISwapper swapper);
+
+        IPermutator SetSeed(int seed);
     }
 }

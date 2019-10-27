@@ -2,9 +2,6 @@ namespace ATSP.Permutators
 {
     public class DefaultPermutator : Permutator, IPermutator
     {
-        public DefaultPermutator(int arraySize, int seed)
-            : base(arraySize, seed)
-        {}
         public uint[] Permutate()
         {
             for(int i=indices.Length-1;i>0;i--)
@@ -19,6 +16,12 @@ namespace ATSP.Permutators
         public IPermutator UseSwapper(ISwapper swapper)
         {
             this.swapper = swapper;
+            return this;
+        }
+
+        public IPermutator SetSeed(int seed)
+        {
+            this.seed = seed;
             return this;
         }
 

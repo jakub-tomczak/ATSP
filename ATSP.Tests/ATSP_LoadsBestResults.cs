@@ -47,7 +47,7 @@ namespace ATSP.Tests
 
         private Data.TravellingSalesmanProblemInstance GetInstance()
         {
-            var filename = "../../../existingFile.xml";
+            var filename = "../../../existingFile";
             var xmlLoader = new XMLDataLoader();
             var loadedInstance = xmlLoader.LoadInstance(filename);
 
