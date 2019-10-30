@@ -25,7 +25,7 @@ namespace ATSP
             var bestResults = new BestResultsLoader();
             bestResults.LoadBestResults($"../instances/{bestInstancesFilename}");
             var permutator = new DefaultPermutator().SetSeed(seed)
-                                                    .UseSwapper(new XORSwapper());
+                                                    .UseSwapper(new DefaultSwapper());
 
             experiments = new [] {
                 new Experiment()
