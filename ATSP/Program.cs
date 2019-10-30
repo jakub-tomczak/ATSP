@@ -33,6 +33,7 @@ namespace ATSP
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
+                                .UseHeuristic(new GreedyHeuristic()),
                 new Experiment()
                                 .UseInstance(instanceName)
                                 .SetInstancesLocation(instancesLocation)
