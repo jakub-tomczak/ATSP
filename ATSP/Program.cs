@@ -33,17 +33,12 @@ namespace ATSP
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
-                                .UseLoader(new XMLDataLoader())
-                                .UseHeuristic(new RandomHeuristic())
-                                .UseRunner(new ClassBasedRunner()),
                 new Experiment()
                                 .UseInstance(instanceName)
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
-                                .UseLoader(new XMLDataLoader())
                                 .UseHeuristic(new RandomHeuristic())
-                                .UseRunner(new ClassBasedRunner())
 
             };
 
