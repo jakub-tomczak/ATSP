@@ -1,4 +1,5 @@
 using System;
+using ATSP.Permutators;
 
 namespace ATSP.Heuristics
 {
@@ -14,13 +15,33 @@ namespace ATSP.Heuristics
 
         public override void NextStep()
         {
+            if(step == 0)
+            {
+                currentCost = CalculateCost();
+            }
+
             step++;
             if(step > maxSteps)
             {
                 IsEnd = true;
-                PrintSolution();
+                // PrintSolution();
             }
-            permutator.Permutate(Solution);
+
+            for(int i=Solution.Length-1;i>0;i--)
+            {
+                var swapIndex = randomizer.Next(i);
+                swapper.Swap(Solution, ref swapIndex, ref i);
+                if(CalculateCost() < currentCost)
+                {
+                    // swap gives bteter result
+                    currentCost = CalculateCost();
+                }
+                else
+                {
+                    // restore previous state
+                    swapper.Swap(Solution, ref swapIndex, ref i);
+                }
+            }
         }
 
         public override void Reset()
@@ -31,10 +52,12 @@ namespace ATSP.Heuristics
 
         private void GetRandomMaxSteps()
         {
-            maxSteps = new Random(0).Next(30000, 50000);
+            maxSteps = randomizer.Next(30000, 50000);
         }
 
-        int maxSteps = 0;
-
+        int maxSteps = 30;
+        uint currentCost = 0;
+        Random randomizer = new Random();
+        ISwapper swapper = new DefaultSwapper();
     }
 }
