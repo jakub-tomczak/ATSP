@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ATSP.DataLoading;
 using ATSP.Heuristics;
@@ -50,11 +51,14 @@ namespace ATSP
         public void RunExperiments()
         {
             Console.WriteLine($"Experiments to run {experiments.Length}");
+            var results = new List<ExperimentResult>();
             foreach(var experiment in experiments)
             {
-                var result = experiment.Run();
-                Console.WriteLine($"Number of executions {result.NumberOfExecutions}, best cost {result.Executions.Min(x => x.Cost)}, worst cost {result.Executions.Max(x => x.Cost)}");
+                results.Add(experiment.Run());
+                Console.WriteLine($"Number of executions {results.Last().NumberOfExecutions}, best cost {results.Last().Executions.Min(x => x.Cost)}, worst cost {results.Last().Executions.Max(x => x.Cost)}");
             }
+
+            new CSVResultSaver().SaveResults(results);
         }
 
         private Experiment[] experiments;
