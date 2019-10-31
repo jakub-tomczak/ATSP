@@ -1,25 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ATSP.Runners
 {
-    public class TimeCounter
+    public abstract class TimeCounter
     {
-        public TimeCounter Run(Action function)
-        {
-            NumberOfExecutions = 0;
-            var timer = new Stopwatch();
-            do
-            {
-                timer.Restart();
-                function();
-                timer.Stop();
-                var time = timer.ElapsedTicks;
-                totalTime += (ulong)time;
-                NumberOfExecutions++;
-            } while( TicksToMillis(totalTime) < timeout * 1000 || NumberOfExecutions < minExecutions );
-            return this;
-        }
+        public abstract List<Execution> Run();
 
         public TimeCounter SetTimeout(ulong value)
         {
@@ -40,16 +27,16 @@ namespace ATSP.Runners
             }
         }
 
-        private double TicksToMillis(ulong ticks) => (double)ticks / Stopwatch.Frequency * 1000;
+        protected double TicksToMillis(ulong ticks) => (double)ticks / Stopwatch.Frequency * 1000;
 
         public ulong NumberOfExecutions
         {
             get;
-            private set;
+            protected set;
         }
 
-        private ulong timeout = 1; // in seconds
-        private ulong totalTime = 0;
-        private ulong minExecutions = 10;
+        protected ulong timeout = 1; // in seconds
+        protected ulong totalTime = 0;
+        protected ulong minExecutions = 10;
     }
 }

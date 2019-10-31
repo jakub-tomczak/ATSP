@@ -55,6 +55,8 @@ namespace ATSP.Heuristics
             Console.WriteLine(string.Join(',', Solution));
         }
 
+        public uint Steps { get; protected set; }
+
         public abstract bool IsEnd { get; protected set; }
         public TravellingSalesmanProblemInstance Instance { get; private set; }
         public uint[] Solution { get; set; }
