@@ -84,26 +84,43 @@ namespace ATSP
         public Program PrepareRaport(string resultsDirectory, string raportFilesExtension)
         {
             Console.WriteLine("\nPreparing raport");
-            var raportProcess = new Process();
-            raportProcess.StartInfo.FileName = "python";
-            raportProcess.StartInfo.ArgumentList.Add("../Raport/raport_generator.py");
-            raportProcess.StartInfo.ArgumentList.Add(Path.GetFullPath(resultsDirectory));
-            raportProcess.StartInfo.ArgumentList.Add(raportFilesExtension);
-
-            // set color for python's output
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
-
-            raportProcess.Start();
-            raportProcess.WaitForExit();
-
-            Console.ResetColor();
-            if(raportProcess.ExitCode > 0)
+            using(var raportProcess =  new Process())
             {
-                Console.WriteLine("Failed to create raport.");
-            }
-            else
-            {
-                Console.WriteLine("Raport created.");
+                raportProcess.StartInfo.FileName = "dupa";
+                raportProcess.StartInfo.ArgumentList.Add("../Raport/raport_generator.py");
+                raportProcess.StartInfo.ArgumentList.Add(Path.GetFullPath(resultsDirectory));
+                raportProcess.StartInfo.ArgumentList.Add(raportFilesExtension);
+
+                // set color for python's output
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
+
+                var executed = false;
+                try
+                {
+                    raportProcess.Start();
+                    raportProcess.WaitForExit();
+                    executed = true;
+                }
+                catch(Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"Failed to run raport generator, error {e.Message}");
+                    Console.WriteLine();
+                }
+                finally
+                {
+                    Console.ResetColor();
+                }
+
+                if(!executed || raportProcess.ExitCode > 0)
+                {
+                    Console.WriteLine("Failed to create raport.");
+                }
+                else
+                {
+                    Console.WriteLine("Raport created.");
+                }
+
             }
 
             return this;
