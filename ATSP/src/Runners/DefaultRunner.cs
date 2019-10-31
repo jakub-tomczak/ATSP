@@ -39,13 +39,13 @@ namespace ATSP.Runners
                 }
 
                 timer.Stop();
-                var time = timer.ElapsedTicks;
-                totalTime += (ulong)time;
+                var time = (ulong)timer.ElapsedTicks;
+                totalTime += time;
                 NumberOfExecutions++;
 
                 executions.Add(new Execution()
                 {
-                    Time = time,
+                    Time = TicksToMillis(time),
                     Steps = experimentToRun.Heuristic.Steps,
                     Cost = experimentToRun.Heuristic.CalculateCost()
                 });
