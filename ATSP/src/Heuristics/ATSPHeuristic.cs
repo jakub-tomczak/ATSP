@@ -12,7 +12,7 @@ namespace ATSP.Heuristics
         public virtual void Reset()
         {
             this.IsEnd = false;
-            this.step = 0;
+            this.Steps = 0;
             ResetSolution();
         }
 
@@ -62,7 +62,5 @@ namespace ATSP.Heuristics
         public uint[] Solution { get; set; }
         protected uint[,] vertices;
         protected IPermutator permutator;
-
-        protected int step = 0;
     }
 }

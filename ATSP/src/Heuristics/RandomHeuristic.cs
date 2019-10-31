@@ -15,13 +15,13 @@ namespace ATSP.Heuristics
 
         public override void NextStep()
         {
-            if(step == 0)
+            if(Steps == 0)
             {
                 currentCost = CalculateCost();
             }
 
-            step++;
-            if(step > maxSteps)
+            Steps++;
+            if(Steps > maxSteps)
             {
                 IsEnd = true;
                 // PrintSolution();

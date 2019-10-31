@@ -13,7 +13,6 @@ namespace ATSP.Runners
 
             result.Executions = Run();
             result.MeanExecutionTime = MeanExecutionTime;
-            result.NumberOfExecutions = NumberOfExecutions;
 
             return result;
         }

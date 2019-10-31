@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ATSP.DataLoading;
 using ATSP.Heuristics;
 using ATSP.Permutators;
@@ -51,7 +52,8 @@ namespace ATSP
             Console.WriteLine($"Experiments to run {experiments.Length}");
             foreach(var experiment in experiments)
             {
-                experiment.Run();
+                var result = experiment.Run();
+                Console.WriteLine($"Number of executions {result.NumberOfExecutions}, best cost {result.Executions.Min(x => x.Cost)}, worst cost {result.Executions.Max(x => x.Cost)}");
             }
         }
 
