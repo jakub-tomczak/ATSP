@@ -34,13 +34,13 @@ namespace ATSP
                                                     .UseSwapper(new DefaultSwapper());
 
             experiments = new [] {
-                new Experiment()
+                new Experiment("greedy")
                                 .UseInstance(instanceName)
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
                                 .UseHeuristic(new GreedyHeuristic()),
-                new Experiment()
+                new Experiment("random")
                                 .UseInstance(instanceName)
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)

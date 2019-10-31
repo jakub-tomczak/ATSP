@@ -9,6 +9,7 @@ namespace ATSP.Runners
 {
     public class Experiment
     {
+        public Experiment(string experimentName) => Name = experimentName;
         public Experiment UseInstance(string instanceName)
         {
             this.InstanceName = instanceName;
@@ -67,7 +68,9 @@ namespace ATSP.Runners
             }
             else
             {
+                Console.WriteLine($"\nRunning experiment {Name}");
                 Result = runner.Run(this);
+                Console.Write("\n\n");
                 return Result;
             }
         }
@@ -116,6 +119,7 @@ namespace ATSP.Runners
         public bool SaveResults { get; private set; } = false;
         private string instancesLocation = "../instances";
         private bool initialized = false;
+        public readonly string Name = "";
     }
 
 }
