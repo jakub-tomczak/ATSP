@@ -70,6 +70,8 @@ namespace ATSP.Runners
             {
                 Console.WriteLine($"\nRunning experiment {Name}");
                 Result = runner.Run(this);
+                Result.Name = Name;
+                Result.InstanceName = InstanceName;
                 Console.Write("\n\n");
                 return Result;
             }
