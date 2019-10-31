@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using ATSP.DataLoading;
 using ATSP.Heuristics;
@@ -18,7 +19,8 @@ namespace ATSP
             new Program()
                 .PrepareExperiments()
                 .RunExperiments()
-                .SaveResults(resultsSaver);
+                .SaveResults(resultsSaver)
+                .PrepareRaport(resultsSaver.SaveDirectory);
         }
 
         public Program PrepareExperiments()
@@ -73,6 +75,32 @@ namespace ATSP
                     Console.WriteLine($"Saving results, experiment {experiment.Name} {experiment.InstanceName}");
                     saver.SaveResult(experiment.Result);
                 }
+            }
+
+            return this;
+        }
+
+        public Program PrepareRaport(string resultsDirectory)
+        {
+            var raportProcess = new Process();
+            raportProcess.StartInfo.FileName = "python";
+            raportProcess.StartInfo.ArgumentList.Add("../Raport/raport_generator.py");
+            raportProcess.StartInfo.ArgumentList.Add(Path.GetFullPath(resultsDirectory));
+
+            // set color for python's output
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+
+            raportProcess.Start();
+            raportProcess.WaitForExit();
+
+            Console.ResetColor();
+            if(raportProcess.ExitCode > 0)
+            {
+                Console.WriteLine("Failed to create raport.");
+            }
+            else
+            {
+                Console.WriteLine("Raport created.");
             }
 
             return this;
