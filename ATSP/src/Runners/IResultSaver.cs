@@ -4,5 +4,6 @@ namespace ATSP.Runners
     {
         void SaveResult(ExperimentResult experimentResults);
         string SaveDirectory { get; set; }
+        string Extension { get; }
     }
 }

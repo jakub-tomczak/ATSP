@@ -6,6 +6,7 @@ namespace ATSP.Runners
     public class CSVResultSaver : IResultSaver
     {
         public string SaveDirectory { get; set; }
+        public string Extension { get => "csv"; }
 
         public void SaveResult(ExperimentResult experimentResults)
         {
@@ -19,7 +20,7 @@ namespace ATSP.Runners
                 Directory.CreateDirectory(SaveDirectory);
             }
 
-            var path = Path.Combine(SaveDirectory, $"{experimentResults.Name}_{experimentResults.InstanceName}");
+            var path = Path.Combine(SaveDirectory, $"{experimentResults.Name}_{experimentResults.InstanceName}.{Extension}");
             using(var file = new StreamWriter(path))
             {
                 file.WriteLine("Steps;Time;Cost");
