@@ -68,6 +68,7 @@ namespace ATSP
 
         public Program SaveResults(IResultSaver saver)
         {
+            Console.WriteLine("\nSaving experiments results");
             foreach(var experiment in experiments)
             {
                 if(experiment.Result != null && experiment.SaveResults)
@@ -82,6 +83,7 @@ namespace ATSP
 
         public Program PrepareRaport(string resultsDirectory)
         {
+            Console.WriteLine("\nPreparing raport");
             var raportProcess = new Process();
             raportProcess.StartInfo.FileName = "python";
             raportProcess.StartInfo.ArgumentList.Add("../Raport/raport_generator.py");
