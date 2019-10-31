@@ -9,7 +9,11 @@ namespace ATSP.Runners
 {
     public class Experiment
     {
-        public Experiment(string experimentName) => Name = experimentName;
+        public Experiment(string experimentName, bool saveResults = false)
+        {
+            Name = experimentName;
+            SaveResults = saveResults;
+        }
         public Experiment UseInstance(string instanceName)
         {
             this.InstanceName = instanceName;
@@ -49,12 +53,6 @@ namespace ATSP.Runners
         public Experiment UseHeuristic(ATSPHeuristic heuristic)
         {
             this.Heuristic = heuristic;
-            return this;
-        }
-
-        public Experiment SaveResultsAfterRun(bool shouldSaveResults)
-        {
-            this.SaveResults = shouldSaveResults;
             return this;
         }
 
@@ -118,7 +116,7 @@ namespace ATSP.Runners
         private IRunner runner = new DefaultRunner();
         public ISolutionInitializer Initializer { get; private set; } = new RandomSolutionInitializer();
         public ATSPHeuristic Heuristic { get; private set; } = new RandomHeuristic();
-        public bool SaveResults { get; private set; } = false;
+        public readonly bool SaveResults = false;
         private string instancesLocation = "../instances";
         private bool initialized = false;
         public readonly string Name = "";
