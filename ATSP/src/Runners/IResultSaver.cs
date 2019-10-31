@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-
 namespace ATSP.Runners
 {
     public interface IResultSaver
     {
-        void SaveResults(List<ExperimentResult> experimentsResults);
+        void SaveResult(ExperimentResult experimentResults);
+        string SaveDirectory { get; set; }
     }
 }

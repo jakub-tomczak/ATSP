@@ -12,9 +12,13 @@ namespace ATSP
     {
         static void Main(string[] args)
         {
+            var resultsSaver = new CSVResultSaver();
+            resultsSaver.SaveDirectory = "results";
+
             new Program()
                 .PrepareExperiments()
-                .RunExperiments();
+                .RunExperiments()
+                .SaveResults(resultsSaver);
         }
 
         public Program PrepareExperiments()
@@ -42,23 +46,37 @@ namespace ATSP
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
                                 .UseHeuristic(new RandomHeuristic())
+                                .SaveResultsAfterRun(true)
 
             };
 
             return this;
         }
 
-        public void RunExperiments()
+        public Program RunExperiments()
         {
             Console.WriteLine($"Experiments to run {experiments.Length}");
-            var results = new List<ExperimentResult>();
             foreach(var experiment in experiments)
             {
-                results.Add(experiment.Run());
-                Console.WriteLine($"Number of executions {results.Last().NumberOfExecutions}, best cost {results.Last().Executions.Min(x => x.Cost)}, worst cost {results.Last().Executions.Max(x => x.Cost)}");
+                var result = experiment.Run();
+                Console.WriteLine($"Number of executions {result.NumberOfExecutions}, best cost {result.Executions.Min(x => x.Cost)}, worst cost {result.Executions.Max(x => x.Cost)}");
             }
 
-            new CSVResultSaver().SaveResults(results);
+            return this;
+        }
+
+        public Program SaveResults(IResultSaver saver)
+        {
+            foreach(var experiment in experiments)
+            {
+                if(experiment.Result != null && experiment.SaveResults)
+                {
+                    Console.WriteLine("Saving results");
+                    saver.SaveResult(experiment.Result);
+                }
+            }
+
+            return this;
         }
 
         private Experiment[] experiments;

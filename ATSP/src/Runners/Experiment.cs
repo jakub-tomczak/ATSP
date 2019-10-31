@@ -51,6 +51,12 @@ namespace ATSP.Runners
             return this;
         }
 
+        public Experiment SaveResultsAfterRun(bool shouldSaveResults)
+        {
+            this.SaveResults = shouldSaveResults;
+            return this;
+        }
+
         public ExperimentResult Run()
         {
             Console.WriteLine($"Running experiment with instance {InstanceName}");
@@ -98,7 +104,7 @@ namespace ATSP.Runners
             return true;
         }
 
-        public ExperimentResult Result { get; private set; } = new ExperimentResult();
+        public ExperimentResult Result { get; private set; }
         public TravellingSalesmanProblemInstance Instance { get; private set; } = new TravellingSalesmanProblemInstance();
         private IPermutator permutator = new DefaultPermutator();
         private IDataLoader dataLoader = new XMLDataLoader();
@@ -107,6 +113,7 @@ namespace ATSP.Runners
         private IRunner runner = new DefaultRunner();
         public ISolutionInitializer Initializer { get; private set; } = new RandomSolutionInitializer();
         public ATSPHeuristic Heuristic { get; private set; } = new RandomHeuristic();
+        public bool SaveResults { get; private set; } = false;
         private string instancesLocation = "../instances";
         private bool initialized = false;
     }

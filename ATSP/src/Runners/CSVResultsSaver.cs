@@ -1,15 +1,28 @@
 using System;
-using System.Collections.Generic;
+using System.IO;
 
 namespace ATSP.Runners
 {
     public class CSVResultSaver : IResultSaver
     {
-        public void SaveResults(List<ExperimentResult> experimentsResults)
+        public string SaveDirectory { get; set; }
+
+        public void SaveResult(ExperimentResult experimentResults)
         {
-            foreach(var experiment in experimentsResults)
+            if(string.IsNullOrEmpty(SaveDirectory))
             {
-                Console.WriteLine($"Saving an experiment with {experiment.NumberOfExecutions} executions.");
+                throw new ArgumentException("SaveDirectory is not set");
+            }
+            var path = Path.Combine(SaveDirectory, "experiment");
+            using(var file = new StreamWriter(path))
+            {
+                file.WriteLine("Steps;Time;Cost");
+                foreach(var execution in experimentResults.Executions)
+                {
+                    file.WriteLine(
+                        $"{execution.Steps};{execution.Time};{execution.Cost}"
+                    );
+                }
             }
         }
     }
