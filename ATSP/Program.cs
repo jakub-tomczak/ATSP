@@ -86,7 +86,7 @@ namespace ATSP
             Console.WriteLine("\nPreparing raport");
             using(var raportProcess =  new Process())
             {
-                raportProcess.StartInfo.FileName = "dupa";
+                raportProcess.StartInfo.FileName = "python";
                 raportProcess.StartInfo.ArgumentList.Add("../Raport/raport_generator.py");
                 raportProcess.StartInfo.ArgumentList.Add(Path.GetFullPath(resultsDirectory));
                 raportProcess.StartInfo.ArgumentList.Add(raportFilesExtension);
