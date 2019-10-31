@@ -1,7 +1,7 @@
 using System;
 namespace ATSP.Runners
 {
-    public class ClassBasedRunner: IRunner
+    public class DefaultRunner: IRunner
     {
         public ExperimentResult Run(Experiment experiment)
         {

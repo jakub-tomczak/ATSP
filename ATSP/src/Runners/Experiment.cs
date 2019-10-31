@@ -104,7 +104,7 @@ namespace ATSP.Runners
         private IDataLoader dataLoader = new XMLDataLoader();
         private BestResultsLoader bestResultsLoader = new BestResultsLoader();
         public string InstanceName = string.Empty;
-        private IRunner runner = new ClassBasedRunner();
+        private IRunner runner = new DefaultRunner();
         public ISolutionInitializer Initializer { get; private set; } = new RandomSolutionInitializer();
         public ATSPHeuristic Heuristic { get; private set; } = new RandomHeuristic();
         private string instancesLocation = "../instances";
