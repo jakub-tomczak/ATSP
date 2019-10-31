@@ -46,15 +46,13 @@ namespace ATSP
             return this;
         }
 
-        public bool RunExperiments()
+        public void RunExperiments()
         {
-            var result = true;
             Console.WriteLine($"Experiments to run {experiments.Length}");
             foreach(var experiment in experiments)
             {
-                result &= experiment.Run().Result;
+                experiment.Run();
             }
-            return result;
         }
 
         private Experiment[] experiments;
