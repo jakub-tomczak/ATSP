@@ -13,7 +13,7 @@ namespace ATSP.Runners
                     experiment.Heuristic.NextStep();
                 }
             });
-            Console.WriteLine($"Mean elapsed time in milliseconds {timer.MeanIterationTime}, iterations {timer.Iterations}");
+            Console.WriteLine($"Mean execution time in milliseconds {timer.MeanExecutionTime}, number of the algorithm executions {timer.Executions}");
 
             return new ExperimentResult();
         }

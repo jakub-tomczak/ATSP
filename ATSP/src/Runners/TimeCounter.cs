@@ -7,7 +7,7 @@ namespace ATSP.Runners
     {
         public TimeCounter Run(Action function)
         {
-            Iterations = 0;
+            Executions = 0;
             var timer = new Stopwatch();
             do
             {
@@ -16,8 +16,8 @@ namespace ATSP.Runners
                 timer.Stop();
                 var time = timer.ElapsedTicks;
                 totalTime += (ulong)time;
-                Iterations++;
-            } while( TicksToMillis(totalTime) < timeout * 1000 || Iterations < minIterations );
+                Executions++;
+            } while( TicksToMillis(totalTime) < timeout * 1000 || Executions < minExecutions );
             return this;
         }
 
@@ -27,22 +27,22 @@ namespace ATSP.Runners
             return this;
         }
 
-        public double MeanIterationTime
+        public double MeanExecutionTime
         {
             get
             {
-                if(Iterations == 0)
+                if(Executions == 0)
                 {
                     return 0;
                 }
                 var millis = TicksToMillis(totalTime);
-                return millis / Iterations;
+                return millis / Executions;
             }
         }
 
         private double TicksToMillis(ulong ticks) => (double)ticks / Stopwatch.Frequency * 1000;
 
-        public ulong Iterations
+        public ulong Executions
         {
             get;
             private set;
@@ -50,6 +50,6 @@ namespace ATSP.Runners
 
         private ulong timeout = 1; // in seconds
         private ulong totalTime = 0;
-        private ulong minIterations = 10;
+        private ulong minExecutions = 10;
     }
 }
