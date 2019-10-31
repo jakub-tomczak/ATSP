@@ -15,13 +15,17 @@ namespace ATSP.Heuristics
                 solution[i] = i;
             }
 
-            new DefaultPermutator().SetSeed(this.Seed).Permutate(solution);
+            var permutator = new DefaultPermutator().SetSeed(this.Seed);
+            for(var i = 0;i<NumberOfShufflesOnStartup;i++)
+            {
+                permutator.Permutate(solution);
+            }
 
             return solution;
         }
 
         public int Seed { get; private set; } = 0;
-
+        public uint NumberOfShufflesOnStartup { get; set; } = 1;
         private Random randomizer = new Random(0);
 
     }

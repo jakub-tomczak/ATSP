@@ -56,6 +56,12 @@ namespace ATSP.Runners
             return this;
         }
 
+        public Experiment UseInitializer(ISolutionInitializer solutionInitializer)
+        {
+            this.Initializer = solutionInitializer;
+            return this;
+        }
+
         public ExperimentResult Run()
         {
             Console.WriteLine($"Running experiment with instance {InstanceName}");

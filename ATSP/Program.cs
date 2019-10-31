@@ -34,6 +34,10 @@ namespace ATSP
             bestResults.LoadBestResults($"../instances/{bestInstancesFilename}");
             var permutator = new DefaultPermutator().SetSeed(seed)
                                                     .UseSwapper(new DefaultSwapper());
+            var solutionInitializer =  new RandomSolutionInitializer()
+            {
+                NumberOfShufflesOnStartup = 5
+            };
 
             experiments = new [] {
                 new Experiment("greedy", saveResults: true)
@@ -41,13 +45,15 @@ namespace ATSP
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
-                                .UseHeuristic(new GreedyHeuristic()),
+                                .UseHeuristic(new GreedyHeuristic())
+                                .UseInitializer(solutionInitializer),
                 new Experiment("random", saveResults: true)
                                 .UseInstance(instanceName)
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
                                 .UseHeuristic(new RandomHeuristic())
+                                .UseInitializer(solutionInitializer)
 
             };
 
