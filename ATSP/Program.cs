@@ -39,7 +39,8 @@ namespace ATSP
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
-                                .UseHeuristic(new GreedyHeuristic()),
+                                .UseHeuristic(new GreedyHeuristic())
+                                .SaveResultsAfterRun(true),
                 new Experiment("random")
                                 .UseInstance(instanceName)
                                 .SetInstancesLocation(instancesLocation)
@@ -71,7 +72,7 @@ namespace ATSP
             {
                 if(experiment.Result != null && experiment.SaveResults)
                 {
-                    Console.WriteLine("Saving results");
+                    Console.WriteLine($"Saving results, experiment {experiment.Name} {experiment.InstanceName}");
                     saver.SaveResult(experiment.Result);
                 }
             }

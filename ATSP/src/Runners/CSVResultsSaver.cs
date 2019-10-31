@@ -13,6 +13,12 @@ namespace ATSP.Runners
             {
                 throw new ArgumentException("SaveDirectory is not set");
             }
+
+            if(!Directory.Exists(SaveDirectory))
+            {
+                Directory.CreateDirectory(SaveDirectory);
+            }
+
             var path = Path.Combine(SaveDirectory, $"{experimentResults.Name}_{experimentResults.InstanceName}");
             using(var file = new StreamWriter(path))
             {
