@@ -27,7 +27,7 @@ namespace ATSP
         {
             var instancesLocation = @"../instances";
             var bestInstancesFilename = "best_known_results";
-            var instanceName = "br17";
+            var instanceName = "ft70";
             var seed = 50;
 
             var bestResults = new BestResultsLoader();
@@ -53,6 +53,13 @@ namespace ATSP
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
                                 .UseHeuristic(new RandomHeuristic())
+                                .UseInitializer(solutionInitializer),
+                new Experiment("steepest", saveResults: true)
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UsePermutator(permutator)
+                                .UseHeuristic(new SteepestHeurestic())
                                 .UseInitializer(solutionInitializer)
 
             };
