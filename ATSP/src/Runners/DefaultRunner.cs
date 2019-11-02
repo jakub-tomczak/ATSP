@@ -55,7 +55,8 @@ namespace ATSP.Runners
                         Time = TicksToMillis(time),
                         Steps = experimentToRun.Heuristic.Steps,
                         Cost = experimentToRun.Heuristic.CalculateCost(),
-                        IntermediateCosts = experimentToRun.Heuristic.IntermediateCosts
+                        IntermediateCosts = experimentToRun.Heuristic.IntermediateCosts,
+                        BestKnownCost = experimentToRun.Instance.BestKnownCost
                     });
                 }
                 else

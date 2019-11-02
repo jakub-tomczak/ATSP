@@ -1,5 +1,6 @@
 import csv
 import os
+import numpy as np
 from experiment_result import ExperimentResult
 from execution import Execution
 
@@ -18,14 +19,15 @@ def load_results(directory, files_extension):
             with open(os.path.join(full_dir, filename)) as file:
                 print("Reading {}".format(filename))
                 result.instance = file.readline().split(';')[1]
-                result.mean_execution_time = file.readline().split(';')[1]
+                result.mean_execution_time = float(file.readline().split(';')[1])
                 execution = Execution()
-                execution.time = file.readline().split(';')[1]
-                execution.steps = file.readline().split(';')[1]
-                execution.cost = file.readline().split(';')[1]
+                execution.time = float(file.readline().split(';')[1])
+                execution.steps = int(file.readline().split(';')[1])
+                execution.cost = int(file.readline().split(';')[1])
+                execution.best_known_cost = int(file.readline().split(';')[1])
                 for line in file:
                     row = line.split(';')
-                    execution.intermediate_costs.append(row[0])
+                    execution.intermediate_costs.append(int(row[0]))
                 print('\t{} intermediate costs'.format(len(execution.intermediate_costs)))
                 result.executions.append(execution)
         print("Read {} files\n".format(len(result)))

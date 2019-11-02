@@ -7,6 +7,7 @@ namespace ATSP.Runners
         public double Time;
         public uint Steps;
         public uint Cost;
+        public uint BestKnownCost;
         public List<uint> IntermediateCosts;
     }
 }

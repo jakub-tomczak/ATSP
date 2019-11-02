@@ -36,6 +36,7 @@ namespace ATSP.Runners
                     file.WriteLine($"Execution time;{execution.Time}");
                     file.WriteLine($"Execution steps;{execution.Steps}");
                     file.WriteLine($"Execution final cost;{execution.Cost}");
+                    file.WriteLine($"Best known cost;{execution.BestKnownCost}");
                     foreach(var cost in execution.IntermediateCosts)
                     {
                         file.WriteLine(

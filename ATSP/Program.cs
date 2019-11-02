@@ -20,7 +20,7 @@ namespace ATSP
                 .PrepareExperiments()
                 .RunExperiments()
                 .SaveResults(resultsSaver)
-                .PrepareRaport(resultsSaver.SaveDirectory, resultsSaver.Extension);
+                .PrepareRaport(resultsSaver.SaveDirectory, resultsSaver.Extension, "../Raport/plots");
         }
 
         public Program PrepareExperiments()
@@ -108,7 +108,7 @@ namespace ATSP
             return this;
         }
 
-        public Program PrepareRaport(string resultsDirectory, string raportFilesExtension)
+        public Program PrepareRaport(string resultsDirectory, string raportFilesExtension, string plotsDirectory)
         {
             Console.WriteLine("\nPreparing raport");
             using(var raportProcess =  new Process())
@@ -117,6 +117,7 @@ namespace ATSP
                 raportProcess.StartInfo.ArgumentList.Add("../Raport/raport_generator.py");
                 raportProcess.StartInfo.ArgumentList.Add(Path.GetFullPath(resultsDirectory));
                 raportProcess.StartInfo.ArgumentList.Add(raportFilesExtension);
+                raportProcess.StartInfo.ArgumentList.Add(plotsDirectory);
 
                 // set color for python's output
                 Console.ForegroundColor = ConsoleColor.DarkBlue;

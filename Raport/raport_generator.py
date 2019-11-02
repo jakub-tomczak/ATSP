@@ -1,16 +1,23 @@
 import os
 from utils import load_results
+from draw_plots import PlotDrawer
+import argparse
 
-def main():
-    if len(os.sys.argv) < 3:
-        print("Add experiments' results directory as the first argument, files extensions as the second one")
-        exit(1)
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('experiments_directory', type=str, help='Directory with experiments\' results directories')
+    parser.add_argument('extension', type=str, help='Extension of experiments\' results files')
+    parser.add_argument('plots_path', type=str, help='Path for output plots')
+    parser.add_argument('--display_plots', help='Should plots be displayed', action='store_true')
+    parameters = parser.parse_args()
+    return parameters
 
-    experiments_directory = os.sys.argv[1]
-    extension = os.sys.argv[2]
-
-    print("Using {} directory".format(experiments_directory))
-    load_results(experiments_directory, extension)
+def main(parameters):
+    print("Using {} directory".format(parameters.experiments_directory))
+    data = load_results(parameters.experiments_directory, parameters.extension)
+    plot_drawer = PlotDrawer(parameters.plots_path, parameters.display_plots)
+    plot_drawer.draw_plots(data)
 
 if __name__ == "__main__":
-    main()
+    parameters = parse_args()
+    main(parameters)

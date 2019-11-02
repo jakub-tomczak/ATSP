@@ -64,7 +64,9 @@ namespace ATSP.Runners
 
         public ExperimentResult Run()
         {
-            Console.WriteLine($"Running experiment with instance {InstanceName}");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"\nRunning experiment {Name}");
+            Console.ResetColor();
             if(!InitializeExperiment())
             {
                 Console.WriteLine($"Failed to initialize experiment {InstanceName}");
@@ -72,7 +74,7 @@ namespace ATSP.Runners
             }
             else
             {
-                Console.WriteLine($"\nRunning experiment {Name}");
+                Console.WriteLine($"Running experiment with instance {InstanceName}");
                 Result = runner.Run(this);
                 Result.Name = Name;
                 Result.InstanceName = InstanceName;
