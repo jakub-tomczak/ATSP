@@ -3,11 +3,11 @@ using System;
 
 
 namespace ATSP.Heuristics{
-    public class SimpleHeuristic: ATSPHeuristic{
+    public class SimpleHeuristic2: ATSPHeuristic{
 
         public Permutators.DefaultSwapper Swapper = new Permutators.DefaultSwapper();
 
-        public SimpleHeuristic() : base()
+        public SimpleHeuristic2() : base()
         {
 
         }
