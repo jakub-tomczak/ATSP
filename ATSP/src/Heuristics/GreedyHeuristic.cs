@@ -40,6 +40,8 @@ namespace ATSP.Heuristics{
                         {
                             Swapper.Swap(Solution, i, j);
                         }
+                        Steps++;
+                        SaveCost(currentCost);
                     }
                 }
             }

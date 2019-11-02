@@ -39,6 +39,8 @@ namespace ATSP.Heuristics{
                             currentCost = CurrSolutionCost;
                             Solution.CopyTo(BestSolution,0);
                         }
+                        Steps++;
+                        SaveCost(currentCost);
                         Swapper.Swap(Solution, i, j);
                     }
                 }

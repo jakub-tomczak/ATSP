@@ -47,7 +47,7 @@ namespace ATSP.Heuristics{
                 }
                 Solution[i+1] = nearestNeighbour;
                 Steps++;
-                SaveCost(currentCost);
+                SaveCost();
             }
             IsEnd = true;
         }
