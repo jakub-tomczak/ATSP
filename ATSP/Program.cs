@@ -45,7 +45,7 @@ namespace ATSP
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
-                                .UseHeuristic(new SimpleHeuristic())
+                                .UseHeuristic(new SimpleHeuristic2())
                                 .UseInitializer(solutionInitializer),
                 new Experiment("random", saveResults: true)
                                 .UseInstance(instanceName)
