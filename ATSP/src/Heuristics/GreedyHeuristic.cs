@@ -24,21 +24,16 @@ namespace ATSP.Heuristics{
             int size = Solution.Length;
             currentCost = CalculateCost();
             uint CurrSolutionCost = currentCost;
-            for(int i = 0; i < size ; i++)
+            for(uint i = 0; i < size ; i++)
             {
-                for(int j = 0; j < size ; j++)
+                uint nearestNeighbourCost = UInt32.MaxValue;
+                uint nearestNeighbour = i;
+                for(uint j = i + 1; j < size ; j++)
                 {
-                    if(i != j){
-                        Swapper.Swap(Solution, i, j);
-                        CurrSolutionCost = CalculateCost();
-                        if(CurrSolutionCost < currentCost)
-                        {
-                            currentCost = CurrSolutionCost;
-                        }
-                        else
-                        {
-                            Swapper.Swap(Solution, i, j);
-                        }
+                    if(vertices[i, j] < nearestNeighbourCost)
+                    {
+                        nearestNeighbourCost = vertices[i, j];
+                        nearestNeighbour = j;
                     }
                 }
             }
