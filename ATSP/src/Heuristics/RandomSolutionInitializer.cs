@@ -5,6 +5,11 @@ namespace ATSP.Heuristics
 {
     public class RandomSolutionInitializer : ISolutionInitializer
     {
+        public RandomSolutionInitializer()
+        {
+            permutator = new DefaultPermutator().SetSeed(this.Seed);
+        }
+
         public uint[] InitializeSolution(int size)
         {
             var solution = new uint[size];
@@ -15,7 +20,6 @@ namespace ATSP.Heuristics
                 solution[i] = i;
             }
 
-            var permutator = new DefaultPermutator().SetSeed(this.Seed);
             for(var i = 0;i<NumberOfShufflesOnStartup;i++)
             {
                 permutator.Permutate(solution);
@@ -24,9 +28,23 @@ namespace ATSP.Heuristics
             return solution;
         }
 
-        public int Seed { get; private set; } = 0;
+        public int Seed
+        {
+            get => seed;
+            private set
+            {
+                if(value != seed)
+                {
+                    seed = value;
+                    randomizer = new Random(value);
+                    permutator.SetSeed(value);
+                }
+            }
+        }
+        private int seed = 0;
         public uint NumberOfShufflesOnStartup { get; set; } = 1;
         private Random randomizer = new Random(0);
+        private IPermutator permutator;
 
     }
 }
