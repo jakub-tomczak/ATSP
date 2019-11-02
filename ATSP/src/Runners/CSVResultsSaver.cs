@@ -19,17 +19,31 @@ namespace ATSP.Runners
             {
                 Directory.CreateDirectory(SaveDirectory);
             }
-
-            var path = Path.Combine(SaveDirectory, $"{experimentResults.Name}_{experimentResults.InstanceName}.{Extension}");
-            using(var file = new StreamWriter(path))
+            var experimentsDirectory = Path.Combine(SaveDirectory, experimentResults.Name);
+            if(!Directory.Exists(experimentsDirectory))
             {
-                file.WriteLine("Steps;Time;Cost");
-                foreach(var execution in experimentResults.Executions)
+                Directory.CreateDirectory(experimentsDirectory);
+            }
+
+            var executionIter = 0;
+            foreach(var execution in experimentResults.Executions)
+            {
+                var path = Path.Combine(experimentsDirectory, $"{experimentResults.Name}_{experimentResults.InstanceName}_{executionIter}.{Extension}");
+                using(var file = new StreamWriter(path))
                 {
-                    file.WriteLine(
-                        $"{execution.Steps};{execution.Time};{execution.Cost}"
-                    );
+                    file.WriteLine($"Instance Name;{experimentResults.InstanceName}");
+                    file.WriteLine($"Mean Execution Time;{experimentResults.MeanExecutionTime}");
+                    file.WriteLine($"Execution time;{execution.Time}");
+                    file.WriteLine($"Execution steps;{execution.Steps}");
+                    file.WriteLine($"Execution final cost;{execution.Cost}");
+                    foreach(var cost in execution.IntermediateCosts)
+                    {
+                        file.WriteLine(
+                            $"{cost}"
+                        );
+                    }
                 }
+                executionIter++;
             }
         }
     }
