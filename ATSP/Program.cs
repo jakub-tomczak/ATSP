@@ -40,7 +40,7 @@ namespace ATSP
             };
 
             experiments = new [] {
-                new Experiment("simple", saveResults: true)
+                new Experiment("simple2", saveResults: true)
                                 .UseInstance(instanceName)
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
