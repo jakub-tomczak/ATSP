@@ -60,6 +60,13 @@ namespace ATSP
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
                                 .UseHeuristic(new SteepestHeurestic())
+                                .UseInitializer(solutionInitializer),
+                new Experiment("greedy", saveResults: true)
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UsePermutator(permutator)
+                                .UseHeuristic(new GreedyHeuristic())
                                 .UseInitializer(solutionInitializer)
 
             };
