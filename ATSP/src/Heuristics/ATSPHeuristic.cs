@@ -77,6 +77,6 @@ namespace ATSP.Heuristics
         protected uint[,] vertices;
         protected IPermutator permutator;
 
-        protected List<uint> IntermediateCosts = new List<uint>();
+        public List<uint> IntermediateCosts {get; protected set; } = new List<uint>();
     }
 }
