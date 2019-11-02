@@ -3,11 +3,11 @@ using System;
 
 
 namespace ATSP.Heuristics{
-    public class GreedyHeuristic: ATSPHeuristic{
+    public class SimpleHeuristic: ATSPHeuristic{
 
         public Permutators.DefaultSwapper Swapper = new Permutators.DefaultSwapper();
 
-        public GreedyHeuristic() : base()
+        public SimpleHeuristic() : base()
         {
 
         }
@@ -52,6 +52,5 @@ namespace ATSP.Heuristics{
         }
 
         uint currentCost = 0;
-        uint numberOfSwaps = 0;
     }
 }

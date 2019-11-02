@@ -40,12 +40,12 @@ namespace ATSP
             };
 
             experiments = new [] {
-                new Experiment("greedy", saveResults: true)
+                new Experiment("simple", saveResults: true)
                                 .UseInstance(instanceName)
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
-                                .UseHeuristic(new GreedyHeuristic())
+                                .UseHeuristic(new SimpleHeuristic())
                                 .UseInitializer(solutionInitializer),
                 new Experiment("random", saveResults: true)
                                 .UseInstance(instanceName)
