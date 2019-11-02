@@ -20,7 +20,7 @@ namespace ATSP.Heuristics{
 
 
         public int ChooseClosest(bool[] visited, uint[,] neibours,int currentNode){
-            
+
 
             int ClossestID = 0;
             uint ClossestCost = uint.MaxValue;
@@ -33,6 +33,7 @@ namespace ATSP.Heuristics{
                         ClossestID = i;
                     }
                 }
+                SaveCost();
             }
 
             return ClossestID;
