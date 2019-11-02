@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ATSP.Runners
 {
@@ -43,16 +44,30 @@ namespace ATSP.Runners
                 totalTime += time;
                 NumberOfExecutions++;
 
-                executions.Add(new Execution()
+                if(VerifySolution(experimentToRun.Heuristic.Solution))
                 {
-                    Time = TicksToMillis(time),
-                    Steps = experimentToRun.Heuristic.Steps,
-                    Cost = experimentToRun.Heuristic.CalculateCost(),
-                    IntermediateCosts = experimentToRun.Heuristic.IntermediateCosts
-                });
+                    executions.Add(new Execution()
+                    {
+                        Time = TicksToMillis(time),
+                        Steps = experimentToRun.Heuristic.Steps,
+                        Cost = experimentToRun.Heuristic.CalculateCost(),
+                        IntermediateCosts = experimentToRun.Heuristic.IntermediateCosts
+                    });
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"Experiment {experimentToRun.Name}, execution no {NumberOfExecutions} wrong result.");
+                    Console.ResetColor();
+                }
             } while( NumberOfExecutions < minExecutions );
             Console.WriteLine($"Mean execution time in milliseconds {MeanExecutionTime}, number of the algorithm executions {NumberOfExecutions}");
             return executions;
+        }
+
+        private bool VerifySolution(uint []solution)
+        {
+            return solution.Length == solution.Distinct().Count();
         }
 
         Experiment experimentToRun = null;
