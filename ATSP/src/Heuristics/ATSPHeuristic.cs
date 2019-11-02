@@ -14,6 +14,7 @@ namespace ATSP.Heuristics
         {
             this.IsEnd = false;
             this.Steps = 0;
+            IntermediateCosts.Clear();
             ResetSolution();
         }
 
