@@ -26,23 +26,21 @@ namespace ATSP.Heuristics{
             uint CurrSolutionCost = currentCost;
             for(int i = 0; i < size ; i++)
             {
-                for(int j = 0; j < size ; j++)
+                for(int j = i+1; j < size ; j++)
                 {
-                    if(i != j){
-                        Swapper.Swap(Solution, i, j);
-                        CurrSolutionCost = CalculateCost();
-                        if(CurrSolutionCost < currentCost)
-                        {
-                            currentCost = CurrSolutionCost;
-                            break;
-                        }
-                        else
-                        {
-                            Swapper.Swap(Solution, i, j);
-                        }
-                        Steps++;
-                        SaveCost(currentCost);
+                    Swapper.Swap(Solution, i, j);
+                    CurrSolutionCost = CalculateCost();
+                    if(CurrSolutionCost < currentCost)
+                    {
+                        currentCost = CurrSolutionCost;
+                        break;
                     }
+                    else
+                    {
+                        Swapper.Swap(Solution, i, j);
+                    }
+                    Steps++;
+                    SaveCost(currentCost);
                 }
             }
             IsEnd = true;
