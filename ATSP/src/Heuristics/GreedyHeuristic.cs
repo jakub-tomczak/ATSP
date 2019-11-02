@@ -36,6 +36,8 @@ namespace ATSP.Heuristics{
                         nearestNeighbour = j;
                     }
                 }
+                Steps++;
+                SaveCost(currentCost);
             }
             IsEnd = true;
         }
@@ -50,5 +52,6 @@ namespace ATSP.Heuristics{
         }
 
         uint currentCost = 0;
+        uint numberOfSwaps = 0;
     }
 }
