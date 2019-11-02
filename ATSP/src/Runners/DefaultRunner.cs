@@ -36,6 +36,10 @@ namespace ATSP.Runners
                 experimentToRun.Heuristic.Solution = experimentToRun.Initializer.InitializeSolution(experimentToRun.Instance.N);
                 while(!experimentToRun.Heuristic.IsEnd)
                 {
+                    if(experimentToRun.Heuristic.TimeoutInMillis > 0.0f && timer.ElapsedMilliseconds > experimentToRun.Heuristic.TimeoutInMillis - 1e-2)
+                    {
+                        break;
+                    }
                     experimentToRun.Heuristic.NextStep();
                 }
 

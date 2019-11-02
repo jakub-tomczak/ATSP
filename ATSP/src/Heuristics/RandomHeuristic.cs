@@ -11,6 +11,11 @@ namespace ATSP.Heuristics
             GetRandomMaxSteps();
         }
 
+        public RandomHeuristic(float timeoutInMillis)
+        {
+            this.TimeoutInMillis = timeoutInMillis;
+        }
+
         public override bool IsEnd { get; protected set; }
 
         public override void NextStep()

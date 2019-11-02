@@ -78,5 +78,6 @@ namespace ATSP.Heuristics
         protected IPermutator permutator;
 
         public List<uint> IntermediateCosts {get; protected set; } = new List<uint>();
+        public float TimeoutInMillis { get; protected set; } = 0.0f;
     }
 }
