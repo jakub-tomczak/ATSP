@@ -23,32 +23,33 @@ namespace ATSP.Heuristics{
         {
             int size = Solution.Length;
             currentCost = CalculateCost();
+            var visited = new bool[Solution.Length];
+
             uint CurrSolutionCost = currentCost;
-            for(uint i = 0; i < size ; i++)
+            for(uint i = 0; i < size - 1; i++)
             {
+                uint currentVertex = Solution[i];
+                visited[currentVertex] = true;
                 uint nearestNeighbourCost = UInt32.MaxValue;
-                uint nearestNeighbour = i;
-                for(uint j = i + 1; j < size ; j++)
+                uint nearestNeighbour = currentVertex;
+                for(uint j = 0; j < size ; j++)
                 {
-                    if(vertices[i, j] < nearestNeighbourCost)
+                    if(visited[j])
                     {
-                        nearestNeighbourCost = vertices[i, j];
+                        continue;
+                    }
+
+                    if(vertices[currentVertex, j] < nearestNeighbourCost)
+                    {
+                        nearestNeighbourCost = vertices[currentVertex, j];
                         nearestNeighbour = j;
                     }
                 }
+                Solution[i+1] = nearestNeighbour;
                 Steps++;
                 SaveCost(currentCost);
             }
             IsEnd = true;
-        }
-
-        private uint CalculateCurrSolution(uint[] CurrSolution){
-            var cost = 0u;
-            for(int i=0;i<CurrSolution.Length;i++)
-            {
-                cost += vertices[CurrSolution[i], CurrSolution[(i+1)%CurrSolution.Length]];
-            }
-            return cost;
         }
 
         uint currentCost = 0;
