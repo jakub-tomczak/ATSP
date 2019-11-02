@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ATSP.Data;
 using ATSP.Permutators;
 
@@ -13,6 +14,7 @@ namespace ATSP.Heuristics
         {
             this.IsEnd = false;
             this.Steps = 0;
+            IntermediateCosts = new List<uint>();
             ResetSolution();
         }
 
@@ -55,6 +57,18 @@ namespace ATSP.Heuristics
             Console.WriteLine(string.Join(',', Solution));
         }
 
+        protected void SaveCost(uint cost = 0)
+        {
+            if(cost == 0)
+            {
+                IntermediateCosts.Add(CalculateCost());
+            }
+            else
+            {
+                IntermediateCosts.Add(cost);
+            }
+        }
+
         public uint Steps { get; protected set; }
 
         public abstract bool IsEnd { get; protected set; }
@@ -62,5 +76,7 @@ namespace ATSP.Heuristics
         public uint[] Solution { get; set; }
         protected uint[,] vertices;
         protected IPermutator permutator;
+
+        public List<uint> IntermediateCosts {get; protected set; } = new List<uint>();
     }
 }

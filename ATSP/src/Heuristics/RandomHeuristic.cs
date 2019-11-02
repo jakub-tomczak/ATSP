@@ -20,28 +20,28 @@ namespace ATSP.Heuristics
                 currentCost = CalculateCost();
             }
 
-            Steps++;
-            if(Steps > maxSteps)
+            if(Steps >= maxSteps)
             {
                 IsEnd = true;
-                // PrintSolution();
+                return;
             }
 
-            for(int i=Solution.Length-1;i>0;i--)
+            var i = Solution.Length-1;
+            var swapIndex = randomizer.Next(i);
+            swapper.Swap(Solution, ref swapIndex, ref i);
+            if(CalculateCost() < currentCost)
             {
-                var swapIndex = randomizer.Next(i);
-                swapper.Swap(Solution, ref swapIndex, ref i);
-                if(CalculateCost() < currentCost)
-                {
-                    // swap gives bteter result
-                    currentCost = CalculateCost();
-                }
-                else
-                {
-                    // restore previous state
-                    swapper.Swap(Solution, ref swapIndex, ref i);
-                }
+                // swap gives bteter result
+                currentCost = CalculateCost();
             }
+            else
+            {
+                // restore previous state
+                swapper.Swap(Solution, ref swapIndex, ref i);
+            }
+
+            SaveCost(currentCost);
+            Steps++;
         }
 
         public override void Reset()

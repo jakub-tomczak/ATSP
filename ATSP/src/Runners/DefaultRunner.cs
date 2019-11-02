@@ -47,9 +47,10 @@ namespace ATSP.Runners
                 {
                     Time = TicksToMillis(time),
                     Steps = experimentToRun.Heuristic.Steps,
-                    Cost = experimentToRun.Heuristic.CalculateCost()
+                    Cost = experimentToRun.Heuristic.CalculateCost(),
+                    IntermediateCosts = experimentToRun.Heuristic.IntermediateCosts
                 });
-            } while( TicksToMillis(totalTime) < timeout * 1000 || NumberOfExecutions < minExecutions );
+            } while( NumberOfExecutions < minExecutions );
             Console.WriteLine($"Mean execution time in milliseconds {MeanExecutionTime}, number of the algorithm executions {NumberOfExecutions}");
             return executions;
         }

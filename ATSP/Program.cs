@@ -40,13 +40,6 @@ namespace ATSP
             };
 
             experiments = new [] {
-                new Experiment("greedy", saveResults: true)
-                                .UseInstance(instanceName)
-                                .SetInstancesLocation(instancesLocation)
-                                .UseBestResultsLoader(bestResults)
-                                .UsePermutator(permutator)
-                                .UseHeuristic(new GreedyHeuristic())
-                                .UseInitializer(solutionInitializer),
                 new Experiment("random", saveResults: true)
                                 .UseInstance(instanceName)
                                 .SetInstancesLocation(instancesLocation)
@@ -61,13 +54,27 @@ namespace ATSP
                                 .UsePermutator(permutator)
                                 .UseHeuristic(new SteepestHeurestic())
                                 .UseInitializer(solutionInitializer),
+                new Experiment("greedy", saveResults: true)
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UsePermutator(permutator)
+                                .UseHeuristic(new GreedyHeuristic())
+                                .UseInitializer(solutionInitializer),
                 new Experiment("Simple", saveResults: true)
                                 .UseInstance(instanceName)
                                 .SetInstancesLocation(instancesLocation)
                                 .UseBestResultsLoader(bestResults)
                                 .UsePermutator(permutator)
                                 .UseHeuristic(new SimpleHeuristic())
-                                .UseInitializer(solutionInitializer)
+                                .UseInitializer(solutionInitializer),
+                new Experiment("simple2", saveResults: true)
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UsePermutator(permutator)
+                                .UseHeuristic(new SimpleHeuristic2())
+                                .UseInitializer(solutionInitializer),
 
             };
 
@@ -80,7 +87,7 @@ namespace ATSP
             foreach(var experiment in experiments)
             {
                 var result = experiment.Run();
-                Console.WriteLine($"Number of executions {result.NumberOfExecutions}, best cost {result.Executions.Min(x => x.Cost)}, worst cost {result.Executions.Max(x => x.Cost)}");
+                Console.WriteLine($"Number of executions {result.NumberOfExecutions}, best cost {result.Executions.Min(x => x.Cost)}, worst cost {result.Executions.Max(x => x.Cost)}, best know cost {experiment.Instance.BestKnownCost}");
             }
 
             return this;

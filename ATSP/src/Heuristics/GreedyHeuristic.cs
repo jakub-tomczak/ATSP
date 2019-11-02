@@ -34,24 +34,18 @@ namespace ATSP.Heuristics{
                         if(CurrSolutionCost < currentCost)
                         {
                             currentCost = CurrSolutionCost;
+                            break;
                         }
                         else
                         {
                             Swapper.Swap(Solution, i, j);
                         }
+                        Steps++;
+                        SaveCost(currentCost);
                     }
                 }
             }
             IsEnd = true;
-        }
-
-        private uint CalculateCurrSolution(uint[] CurrSolution){
-            var cost = 0u;
-            for(int i=0;i<CurrSolution.Length;i++)
-            {
-                cost += vertices[CurrSolution[i], CurrSolution[(i+1)%CurrSolution.Length]];
-            }
-            return cost;
         }
 
         uint currentCost = 0;
