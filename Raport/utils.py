@@ -15,6 +15,7 @@ def load_results(directory, files_extension):
 
         with open(os.path.join(directory, file)) as csv_file:
             print("Reading {}".format(file))
+            header = csv_file.readline()
             reader = csv.reader(csv_file, delimiter=';')
             for row in reader:
                 result.steps.append(row[0])
