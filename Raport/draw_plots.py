@@ -34,7 +34,7 @@ class PlotDrawer():
     def get_qualities(self, data, type, return_list=False):
         function = self.get_function(type)
         if function is None:
-            return
+            return np.array([np.array([x.name, [execution.quality for execution in x.executions]]) for x in data])
         if not return_list: # return numpy array
             return np.array([np.array([x.name, function([execution.quality for execution in x.executions])]) for x in data])
         else:
@@ -46,10 +46,12 @@ class PlotDrawer():
             return
         print("drawing quality plots")
         instance_name = data[0].instance
-        mean_qualities = self.get_qualities(data, "mean", return_list=True)
-        best_qualities = self.get_qualities(data, "max", return_list=True)
+        mean_qualities = self.get_qualities(data, None)
+        best_qualities = self.get_qualities(data, "max")
         fig, ax = plt.subplots()
-        plt.plot(mean_qualities)
+        plt.plot()
+        data = mean_qualities[:, 1]
+        sns.boxplot(data=mean_qualities[:, 1])
         self.show_plot()
         self.save_plot("mean_quality")
 
