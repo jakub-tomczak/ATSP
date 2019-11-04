@@ -26,25 +26,7 @@ namespace ATSP.Heuristics
                 currentCost = CalculateCost();
             }
 
-            if(Steps >= maxSteps)
-            {
-                IsEnd = true;
-                return;
-            }
-
-            var i = Solution.Length-1;
-            var swapIndex = randomizer.Next(i);
-            swapper.Swap(Solution, ref swapIndex, ref i);
-            if(CalculateCost() < currentCost)
-            {
-                // swap gives bteter result
-                currentCost = CalculateCost();
-            }
-            else
-            {
-                // restore previous state
-                swapper.Swap(Solution, ref swapIndex, ref i);
-            }
+            permutator.Permutate(Solution);
 
             SaveCost(currentCost);
             Steps++;
