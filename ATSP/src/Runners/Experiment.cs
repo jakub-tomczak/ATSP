@@ -9,10 +9,11 @@ namespace ATSP.Runners
 {
     public class Experiment
     {
-        public Experiment(string experimentName, bool saveResults = false)
+        public Experiment(string experimentName, bool saveResults = false, bool runOnlyOnce = false)
         {
             Name = experimentName;
             SaveResults = saveResults;
+            RunOnlyOnce = runOnlyOnce;
         }
         public Experiment UseInstance(string instanceName)
         {
@@ -67,6 +68,11 @@ namespace ATSP.Runners
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"\nRunning experiment {Name}");
             Console.ResetColor();
+            if(RunOnlyOnce && Runs > 0)
+            {
+                Console.WriteLine("Already run.");
+                return Result;
+            }
             if(!InitializeExperiment())
             {
                 Console.WriteLine($"Failed to initialize experiment {InstanceName}");
@@ -76,6 +82,7 @@ namespace ATSP.Runners
             {
                 Console.WriteLine($"Running experiment with instance {InstanceName}");
                 Result = runner.Run(this);
+                Runs++;
                 Result.Name = Name;
                 Result.InstanceName = InstanceName;
                 Console.Write("\n\n");
@@ -125,6 +132,8 @@ namespace ATSP.Runners
         public ISolutionInitializer Initializer { get; private set; } = new RandomSolutionInitializer();
         public ATSPHeuristic Heuristic { get; private set; } = new RandomHeuristic();
         public readonly bool SaveResults = false;
+        public readonly bool RunOnlyOnce = false;
+        public int Runs {get;private set;} = 0;
         private string instancesLocation = "../instances";
         private bool initialized = false;
         public readonly string Name = "";

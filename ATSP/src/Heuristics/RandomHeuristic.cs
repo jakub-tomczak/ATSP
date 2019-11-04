@@ -11,8 +11,9 @@ namespace ATSP.Heuristics
             GetRandomMaxSteps();
         }
 
-        public RandomHeuristic(float timeoutInMillis)
+        public RandomHeuristic(double timeoutInMillis)
         {
+            Console.WriteLine($"Constraining random execution to {timeoutInMillis} ms");
             this.TimeoutInMillis = timeoutInMillis;
         }
 
