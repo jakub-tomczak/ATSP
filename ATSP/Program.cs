@@ -72,13 +72,6 @@ namespace ATSP
                                 .UsePermutator(permutator)
                                 .UseHeuristic(new SimpleHeuristic())
                                 .UseInitializer(solutionInitializer),
-                new Experiment("simple2", saveResults: true)
-                                .UseInstance(instanceName)
-                                .SetInstancesLocation(instancesLocation)
-                                .UseBestResultsLoader(bestResults)
-                                .UsePermutator(permutator)
-                                .UseHeuristic(new SimpleHeuristic2())
-                                .UseInitializer(solutionInitializer),
 
             };
 
