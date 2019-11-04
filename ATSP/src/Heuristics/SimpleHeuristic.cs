@@ -1,11 +1,11 @@
 using System;
-
+using ATSP.Permutators;
 using System.Linq;
 
 namespace ATSP.Heuristics{
     public class SimpleHeuristic: ATSPHeuristic{
 
-        public Permutators.DefaultSwapper Swapper = new Permutators.DefaultSwapper();
+        public DefaultSwapper swapper = new DefaultSwapper();
 
         public SimpleHeuristic() : base()
         {
@@ -22,18 +22,18 @@ namespace ATSP.Heuristics{
         public int ChooseClosest(bool[] visited, uint[,] neibours,int currentNode){
 
 
-            int ClossestID = 0;
-            uint ClossestCost = uint.MaxValue;
-            for(int i = 0; i < Solution.Length; i++)
+            var ClossestID = 0;
+            var ClossestCost = uint.MaxValue;
+            for(var i = 0; i < Solution.Length; i++)
             {
-                if((!visited[i]) && (i!=currentNode))
+                if(!visited[i])
                 {
                     if(neibours[currentNode,i]<ClossestCost){
                         ClossestCost = neibours[currentNode,i];
                         ClossestID = i;
                     }
                 }
-                SaveCost();
+                SaveCost(currentCost);
             }
 
             return ClossestID;
@@ -41,16 +41,19 @@ namespace ATSP.Heuristics{
 
         public override void NextStep()
         {
-            int size = Solution.Length;
-            bool[] visited = new bool[size];
-            Random r = new Random();
-            int currentNode = r.Next(0,size);
+            if(Steps == 0)
+            {
+                currentCost = CalculateCost();
+            }
+            var size = Solution.Length;
+            var visited = new bool[size];
+            var currentNode = (int)Solution[0];
             visited[currentNode] = true;
-            Solution[0] = (uint) currentNode;
-            int i = 1;
+            var i = 1;
             while(!visited.All(x=>x)){
-                currentNode = ChooseClosest(visited,vertices,currentNode);
-                Solution[i] = (uint) currentNode;
+                currentNode = ChooseClosest(visited, vertices, currentNode);
+                swapper.Swap(Solution, i, currentNode);
+                currentCost = UpdateCost(Solution, currentCost, i, currentNode);
                 visited[currentNode] = true;
                 i++;
             }
@@ -59,6 +62,7 @@ namespace ATSP.Heuristics{
             IsEnd = true;
         }
 
+        private uint currentCost = 0;
 
     }
 }

@@ -22,7 +22,10 @@ namespace ATSP.Heuristics{
         public override void NextStep()
         {
             int size = Solution.Length;
-            currentCost = CalculateCost();
+            if(Steps == 0)
+            {
+                currentCost = CalculateCost();
+            }
             uint CurrSolutionCost = currentCost;
             var numberOfImprovements = 0;
             for(int i = 0; i < size ; i++)
@@ -30,7 +33,7 @@ namespace ATSP.Heuristics{
                 for(int j = i+1; j < size ; j++)
                 {
                     Swapper.Swap(Solution, i, j);
-                    CurrSolutionCost = CalculateCost();
+                    CurrSolutionCost = UpdateCost(Solution, currentCost, i, j);
                     if(CurrSolutionCost < currentCost)
                     {
                         numberOfImprovements++;

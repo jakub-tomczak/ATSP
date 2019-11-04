@@ -8,7 +8,6 @@ namespace ATSP.Heuristics
         public RandomHeuristic()
             : base()
         {
-            GetRandomMaxSteps();
         }
 
         public RandomHeuristic(double timeoutInMillis)
@@ -26,7 +25,16 @@ namespace ATSP.Heuristics
                 currentCost = CalculateCost();
             }
 
-            permutator.Permutate(Solution);
+            // permutator.Permutate(Solution);
+
+            // the same code that is in the permutator, but we need to update cost,
+            // so `for` should be here
+            for(int i=Solution.Length-1;i>0;i--)
+            {
+                var swapIndex = randomizer.Next(i);
+                swapper.Swap(Solution, ref swapIndex, ref i);
+                currentCost = UpdateCost(Solution, currentCost, swapIndex, i);
+            }
 
             SaveCost(currentCost);
             Steps++;
@@ -35,15 +43,7 @@ namespace ATSP.Heuristics
         public override void Reset()
         {
             base.Reset();
-            GetRandomMaxSteps();
         }
-
-        private void GetRandomMaxSteps()
-        {
-            maxSteps = randomizer.Next(30000, 50000);
-        }
-
-        int maxSteps = 30;
         uint currentCost = 0;
         Random randomizer = new Random();
         ISwapper swapper = new DefaultSwapper();
