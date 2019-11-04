@@ -31,29 +31,30 @@ class PlotDrawer():
             return np.max
         return None
 
-    def get_qualities(self, data, type, return_list=False):
-        function = self.get_function(type)
-        if function is None:
-            return np.array([np.array([x.name, [execution.quality for execution in x.executions]]) for x in data])
-        if not return_list: # return numpy array
-            return np.array([np.array([x.name, function([execution.quality for execution in x.executions])]) for x in data])
-        else:
-            names, values = zip(*[(x.name, function([execution.quality for execution in x.executions])) for x in data])
-            return list(names), list(values)
+    def get_qualities(self, data):
+        return np.array([[execution.quality for execution in x.executions] for x in data])
+
+    def get_intermediate_costs(self, data):
+        return np.array([[execution.intermediate_costs for execution in x.executions] for x in data])
 
     def draw_quality_plots(self, data):
         if len(data) < 1:
             return
         print("drawing quality plots")
         instance_name = data[0].instance
-        mean_qualities = self.get_qualities(data, None)
-        best_qualities = self.get_qualities(data, "max")
-        fig, ax = plt.subplots()
-        plt.plot()
-        data = mean_qualities[:, 1]
-        sns.boxplot(data=mean_qualities[:, 1])
-        self.show_plot()
+        print(data[0].executions[0].quality)
+        mean_qualities = self.get_qualities(data)
+        best_qualities = np.max(self.get_qualities(data), axis=1)
+
+        sns.boxplot(data=mean_qualities)
+        # self.show_plot()
         self.save_plot("mean_quality")
+
+        print(mean_qualities)
+
+        sns.boxplot(data=best_qualities)
+        # self.show_plot()
+        self.save_plot("best_qualities")
 
     def draw_time_plots(self, data):
         print("drawing time plots")
