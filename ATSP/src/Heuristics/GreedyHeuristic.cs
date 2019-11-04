@@ -24,6 +24,7 @@ namespace ATSP.Heuristics{
             int size = Solution.Length;
             currentCost = CalculateCost();
             uint CurrSolutionCost = currentCost;
+            var numberOfImprovements = 0;
             for(int i = 0; i < size ; i++)
             {
                 for(int j = i+1; j < size ; j++)
@@ -32,6 +33,7 @@ namespace ATSP.Heuristics{
                     CurrSolutionCost = CalculateCost();
                     if(CurrSolutionCost < currentCost)
                     {
+                        numberOfImprovements++;
                         currentCost = CurrSolutionCost;
                         break;
                     }
@@ -43,7 +45,7 @@ namespace ATSP.Heuristics{
                     SaveCost(currentCost);
                 }
             }
-            IsEnd = true;
+            IsEnd = numberOfImprovements == 0;
         }
 
         uint currentCost = 0;
