@@ -54,16 +54,16 @@ namespace ATSP.Heuristics
 
 
         // should be invoked after swap
-        public uint UpdateCost(uint [] solution, uint currentCost, uint firstIndex, uint secondIndex)
+        public uint UpdateCost(uint [] solution, uint currentCost, int firstIndex, int secondIndex)
         {
-            currentCost -= (vertices[solution[(firstIndex-1)%solution.Length], solution[firstIndex]] +
+            currentCost -= (vertices[solution[(Math.Abs(firstIndex-1))%solution.Length], solution[firstIndex]] +
                 vertices[solution[firstIndex], solution[(firstIndex+1)%solution.Length]] +
-                vertices[solution[(secondIndex-1)%solution.Length], solution[secondIndex]] +
+                vertices[solution[(Math.Abs(secondIndex-1))%solution.Length], solution[secondIndex]] +
                 vertices[solution[secondIndex], solution[(secondIndex+1)%solution.Length]]);
 
-            currentCost += (vertices[solution[(firstIndex-1)%solution.Length], solution[secondIndex]] +
+            currentCost += (vertices[solution[(Math.Abs(firstIndex-1))%solution.Length], solution[secondIndex]] +
                 vertices[solution[secondIndex], solution[(firstIndex+1)%solution.Length]] +
-                vertices[solution[(secondIndex-1)%solution.Length], solution[firstIndex]] +
+                vertices[solution[(Math.Abs(secondIndex-1))%solution.Length], solution[firstIndex]] +
                 vertices[solution[firstIndex], solution[(secondIndex+1)%solution.Length]]);
             return currentCost;
         }
