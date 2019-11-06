@@ -34,25 +34,27 @@ class PlotDrawer():
     def get_qualities(self, data):
         return np.array([[execution.quality for execution in x.executions] for x in data])
 
+
     def get_intermediate_costs(self, data):
         return np.array([[execution.intermediate_costs for execution in x.executions] for x in data])
+
+    def get_alg_names(self,data):
+        return [x.name for x  in data]
 
     def draw_quality_plots(self, data):
         if len(data) < 1:
             return
         print("drawing quality plots")
-        instance_name = data[0].instance
-        print(data[0].executions[0].quality)
         mean_qualities = self.get_qualities(data)
         best_qualities = np.max(self.get_qualities(data), axis=1)
-
-        sns.boxplot(data=mean_qualities)
+        names = self.get_alg_names(data)
+        sns.boxplot(data=mean_qualities.tolist()).set_xticklabels(names)
         # self.show_plot()
         self.save_plot("mean_quality")
 
         print(mean_qualities)
 
-        sns.boxplot(data=best_qualities)
+        sns.boxplot(data=best_qualities.tolist())
         # self.show_plot()
         self.save_plot("best_qualities")
 

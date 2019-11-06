@@ -19,12 +19,12 @@ def load_results(directory, files_extension):
             with open(os.path.join(full_dir, filename)) as file:
                 print("Reading {}".format(filename))
                 result.instance = file.readline().split(';')[1]
-                result.mean_execution_time = float(file.readline().split(';')[1])
+                result.mean_execution_time = float(file.readline().split(';')[1].rstrip("\n").replace(",","."))
                 execution = Execution()
-                execution.time = float(file.readline().split(';')[1])
-                execution.steps = int(file.readline().split(';')[1])
-                execution.cost = int(file.readline().split(';')[1])
-                execution.best_known_cost = int(file.readline().split(';')[1])
+                execution.time = float(file.readline().split(';')[1].rstrip("\n").replace(",","."))
+                execution.steps = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
+                execution.cost = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
+                execution.best_known_cost = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
                 for line in file:
                     row = line.split(';')
                     execution.intermediate_costs.append(int(row[0]))
