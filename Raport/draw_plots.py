@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
+
 class PlotDrawer():
     def __init__(self, plots_path, display_plots):
         self.save_plots = True if plots_path is not None and plots_path != "" else False
@@ -39,6 +40,14 @@ class PlotDrawer():
     def get_qualities(self, data):
         return np.array([[execution.quality for execution in x.executions] for x in data])
 
+    def get_first_last_qualities(self,data):
+        qualities = self.get_qualities(data)
+        firsts = []
+        lasts = []
+        for i in range(len(qualities)):
+            firsts.append(qualities[i,0])
+            lasts.append(qualities[i,-1])
+        return firsts,lasts
 
     def get_intermediate_costs(self, data):
         return np.array([[execution.intermediate_costs for execution in x.executions] for x in data])
@@ -62,6 +71,15 @@ class PlotDrawer():
         plt.plot(names,best_qualities,'o',color='red')
         # self.show_plot()
         self.save_plot("best_qualities", instance=instance_name)
+
+        print("drawing first last ")
+        plt.figure(2)
+        firsts, lasts = self.get_first_last_qualities(data)
+        for i in range(len(names)):
+            plt.plot(firsts[i],lasts[i],'o',label=names[i])
+        plt.legend()
+        
+        self.save_plot("first_last",instance=instance_name)
 
     def draw_time_plots(self, data):
         print("drawing time plots")
