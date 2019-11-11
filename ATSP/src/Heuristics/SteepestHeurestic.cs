@@ -34,9 +34,10 @@ namespace ATSP.Heuristics{
             {
                 for(int j = 0; j < size ; j++)
                 {
-                    if(i != j){
+                    if(i != j)
+                    {
+                        CurrSolutionCost = CalculateSwapCost(Solution, CurrSolutionCost, i, j);
                         Swapper.Swap(Solution, i, j);
-                        CurrSolutionCost = UpdateCost(Solution, currentCost, i, j);
                         if(CurrSolutionCost < currentCost)
                         {
                             currentCost = CurrSolutionCost;

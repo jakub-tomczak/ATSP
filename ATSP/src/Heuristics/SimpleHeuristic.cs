@@ -52,8 +52,8 @@ namespace ATSP.Heuristics{
             var i = 1;
             while(!visited.All(x=>x)){
                 currentNode = ChooseClosest(visited, vertices, currentNode);
+                currentCost = CalculateSwapCost(Solution, currentCost, i, currentNode);
                 swapper.Swap(Solution, i, currentNode);
-                currentCost = UpdateCost(Solution, currentCost, i, currentNode);
                 visited[currentNode] = true;
                 i++;
             }

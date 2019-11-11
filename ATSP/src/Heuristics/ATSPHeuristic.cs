@@ -53,18 +53,50 @@ namespace ATSP.Heuristics
         }
 
 
-        // should be invoked after swap
-        public uint UpdateCost(uint [] solution, uint currentCost, int firstIndex, int secondIndex)
+        // should be invoked before swap
+        public uint CalculateSwapCost(uint [] solution, uint currentCost, int firstIndex, int secondIndex)
         {
-            currentCost -= (vertices[solution[(Math.Abs(firstIndex-1))%solution.Length], solution[firstIndex]] +
-                vertices[solution[firstIndex], solution[(firstIndex+1)%solution.Length]] +
-                vertices[solution[(Math.Abs(secondIndex-1))%solution.Length], solution[secondIndex]] +
-                vertices[solution[secondIndex], solution[(secondIndex+1)%solution.Length]]);
+            if(Math.Abs(firstIndex - secondIndex)%(solution.Length-2) == 1)
+            {
+                // corner case - swapping two neighbours
+                var lowerIndex = Math.Min(firstIndex, secondIndex);
+                var higherIndex = Math.Max(firstIndex, secondIndex);
 
-            currentCost += (vertices[solution[(Math.Abs(firstIndex-1))%solution.Length], solution[secondIndex]] +
-                vertices[solution[secondIndex], solution[(firstIndex+1)%solution.Length]] +
-                vertices[solution[(Math.Abs(secondIndex-1))%solution.Length], solution[firstIndex]] +
-                vertices[solution[firstIndex], solution[(secondIndex+1)%solution.Length]]);
+                // swap lower with higher
+                // if firstIndex = 0 and secondIndex = solution.Length-1 then lower = solution.Length-1, higher = 0
+                if(lowerIndex == 0 && higherIndex == solution.Length-1)
+                {
+                    var temp = lowerIndex;
+                    lowerIndex = higherIndex;
+                    higherIndex = temp;
+                }
+
+                var previousLowerIndex = lowerIndex == 0 ? solution.Length - 1 : lowerIndex - 1 % solution.Length;
+                var previousHigherIndex = higherIndex == 0 ? solution.Length - 1 : higherIndex - 1 % solution.Length;
+                // first and second index are neighbours
+                currentCost -= (vertices[solution[previousLowerIndex], solution[lowerIndex]] +
+                    vertices[solution[higherIndex], solution[(higherIndex+1)%solution.Length]] +
+                    vertices[solution[lowerIndex], solution[higherIndex]]);
+
+                currentCost += (vertices[solution[previousLowerIndex], solution[higherIndex]] +
+                    vertices[solution[lowerIndex], solution[(higherIndex+1)%solution.Length]] +
+                    vertices[solution[higherIndex], solution[lowerIndex]]);
+
+            }
+            else
+            {
+                var previousFirstIndex = firstIndex == 0 ? solution.Length - 1 : firstIndex - 1;
+                var previousSecondIndex = secondIndex == 0 ? solution.Length - 1 : secondIndex - 1;
+                currentCost -= (vertices[solution[previousFirstIndex], solution[firstIndex]] +
+                    vertices[solution[firstIndex], solution[(firstIndex+1)%solution.Length]] +
+                    vertices[solution[previousSecondIndex], solution[secondIndex]] +
+                    vertices[solution[secondIndex], solution[(secondIndex+1)%solution.Length]]);
+
+                currentCost += (vertices[solution[previousFirstIndex], solution[secondIndex]] +
+                    vertices[solution[secondIndex], solution[(firstIndex+1)%solution.Length]] +
+                    vertices[solution[previousSecondIndex], solution[firstIndex]] +
+                    vertices[solution[firstIndex], solution[(secondIndex+1)%solution.Length]]);
+            }
             return currentCost;
         }
 

@@ -32,8 +32,8 @@ namespace ATSP.Heuristics{
             {
                 for(int j = i+1; j < size ; j++)
                 {
+                    CurrSolutionCost = CalculateSwapCost(Solution, currentCost, i, j);
                     Swapper.Swap(Solution, i, j);
-                    CurrSolutionCost = UpdateCost(Solution, currentCost, i, j);
                     if(CurrSolutionCost < currentCost)
                     {
                         numberOfImprovements++;
