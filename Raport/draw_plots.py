@@ -85,7 +85,7 @@ class PlotDrawer():
         for experiment_result in data:
             best_value_experiment = min(experiment_result.executions, key=lambda x: x.cost)
             plt.plot(best_value_experiment.intermediate_costs, label=experiment_result.name)
-        if len(data) > 0 and len(data.executions) > 0:
+        if len(data) > 0 and len(data[0].executions) > 0:
             axes = plt.gca()
             axes.axhline(y=data[0].executions[0].best_known_cost, linestyle='--', linewidth=.5, color='magenta', label='best known cost')
             plt.legend()
