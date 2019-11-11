@@ -1,3 +1,5 @@
+import numpy as np
+
 class Execution:
     def __init__(self):
         self.time = 0.0
@@ -9,6 +11,13 @@ class Execution:
     @property
     def quality(self):
         return (self.cost - self.best_known_cost) / self.best_known_cost
+
+    def get_effectiveness(self, worst_result):
+        distance = worst_result - self.best_known_cost
+        return 1 - float(self.cost - self.best_known_cost) / distance
+
+    def get_effectiveness2(self, worst_result):
+        return self.get_effectiveness(worst_result) / self.time * self.steps
 
     def __len__(self):
         return len(self.intermediate_costs)

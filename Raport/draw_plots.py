@@ -11,7 +11,7 @@ class PlotDrawer():
         self.show_plots = display_plots
         self.save_directory = plots_path
 
-    def save_plot(self, name, extension='png',instance=''):
+    def save_plot(self, name, extension='png', instance='', set_title=True):
         if not self.save_plots:
             return
         if name == "":
@@ -20,7 +20,8 @@ class PlotDrawer():
         if not os.path.exists(self.save_directory):
             if not os.makedirs(self.save_directory):
                 print("Failed to create directory for plots {}".format(self.save_directory))
-        plt.title(name + ' ' + instance)
+        if set_title:
+            plt.title(name + ' ' + instance)
         plt.savefig(os.path.join(self.save_directory, '{}_{}.{}'.format(name,instance, extension)))
 
     def show_plot(self):
@@ -33,12 +34,15 @@ class PlotDrawer():
         elif type == "max":
             return np.max
         return None
-    
+
     def get_instance_name(self,data):
         return data[0].instance.replace('\n','')
 
     def get_qualities(self, data):
         return np.array([[execution.quality for execution in x.executions] for x in data])
+
+    def get_costs(self, data):
+        return np.array([[execution.cost for execution in x.executions] for x in data])
 
     def get_first_last_qualities(self,data):
         qualities = self.get_qualities(data)
@@ -78,19 +82,49 @@ class PlotDrawer():
         for i in range(len(names)):
             plt.plot(firsts[i],lasts[i],'o',label=names[i])
         plt.legend()
-        
+
         self.save_plot("first_last",instance=instance_name)
 
     def draw_time_plots(self, data):
+        print("drawing time plots")
         for experiment_result in data:
-            print('experiment {}'.format(experiment_result.name))
             best_value_experiment = min(experiment_result.executions, key=lambda x: x.cost)
             plt.plot(best_value_experiment.intermediate_costs, label=experiment_result.name)
         if len(data) > 0 and len(data[0].executions) > 0:
             axes = plt.gca()
             axes.axhline(y=data[0].executions[0].best_known_cost, linestyle='--', linewidth=.5, color='magenta', label='best known cost')
             plt.legend()
-            self.save_plot("intermediate_costs".format(experiment_result.name), instance=experiment_result.instance)
+            self.save_plot("intermediate_costs".format(data[0].name), instance=data[0].instance)
+            self.show_plot()
+
+
+    def draw_effectiveness_plots(self, data):
+        worst_cost = np.max(self.get_costs(data))
+        names = self.get_alg_names(data)
+        fig, ax = plt.subplots(figsize=(10, 5))
+        ax.set_ylabel('Effectiveness %')
+        ax.set_xticks(range(len(names)))
+        ax.set_xticklabels(names)
+        ax.set_title("")
+        width = 1
+        bar_width = (float)(width)/len(data)
+        offsets = np.linspace(-width/len(data), width/len(data), len(data))
+        points = [np.mean([execution.get_effectiveness(worst_cost) for execution in experiment_result.executions]) for experiment_result in data]
+
+        rects = [ax.bar(i, point, label = name) for (i, point), name in zip(enumerate(points), names)]
+        def autolabel(rects):
+            for rect, name in zip(rects, names):
+                height = rect[0].get_height()
+                ax.annotate('{}%'.format(100*round(height, 4)),
+                            xy=(rect[0].get_x() + rect[0].get_width() / 2, height),
+                            xytext=(0, 3),  # 3 points vertical offset
+                            textcoords="offset points",
+                            ha='center', va='bottom')
+        autolabel(rects)
+
+        if len(data) > 0:
+            # plt.legend()
+            self.save_plot('effectiveness', instance=data[0].instance, set_title=False)
             self.show_plot()
 
     def draw_plots(self, data):
@@ -98,4 +132,5 @@ class PlotDrawer():
             print("\n{}\ndrawing graphs for intance {}".format('*'*20, data[0].instance))
             self.draw_time_plots(data)
             self.draw_quality_plots(data)
+            self.draw_effectiveness_plots(data)
 
