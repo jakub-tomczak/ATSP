@@ -20,11 +20,7 @@ namespace ATSP.Heuristics
                 solution[i] = i;
             }
 
-            for(var i = 0;i<NumberOfShufflesOnStartup;i++)
-            {
-                permutator.Permutate(solution);
-            }
-
+            permutator.Permutate(solution);
             return solution;
         }
 
@@ -42,7 +38,6 @@ namespace ATSP.Heuristics
             }
         }
         private int seed = 0;
-        public uint NumberOfShufflesOnStartup { get; set; } = 1;
         private Random randomizer = new Random(0);
         private IPermutator permutator;
 

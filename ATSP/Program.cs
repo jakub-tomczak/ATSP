@@ -34,10 +34,7 @@ namespace ATSP
             bestResults.LoadBestResults($"../instances/{bestInstancesFilename}");
             var permutator = new DefaultPermutator().SetSeed(seed)
                                                     .UseSwapper(new DefaultSwapper());
-            var solutionInitializer =  new RandomSolutionInitializer()
-            {
-                NumberOfShufflesOnStartup = 5
-            };
+            var solutionInitializer = new RandomSolutionInitializer();
 
             var greedy = new Experiment("greedy", saveResults: true, runOnlyOnce: true)
                                 .UseInstance(instanceName)
