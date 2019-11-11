@@ -71,8 +71,8 @@ namespace ATSP.Heuristics
                     higherIndex = temp;
                 }
 
-                var previousLowerIndex = lowerIndex == 0 ? solution.Length - 1 : lowerIndex - 1 % solution.Length;
-                var previousHigherIndex = higherIndex == 0 ? solution.Length - 1 : higherIndex - 1 % solution.Length;
+                var previousLowerIndex = (lowerIndex - 1 + solution.Length) % solution.Length;
+                var previousHigherIndex = (higherIndex - 1 + solution.Length) % solution.Length;
                 // first and second index are neighbours
                 currentCost -= (vertices[solution[previousLowerIndex], solution[lowerIndex]] +
                     vertices[solution[higherIndex], solution[(higherIndex+1)%solution.Length]] +
@@ -85,8 +85,9 @@ namespace ATSP.Heuristics
             }
             else
             {
-                var previousFirstIndex = firstIndex == 0 ? solution.Length - 1 : firstIndex - 1;
-                var previousSecondIndex = secondIndex == 0 ? solution.Length - 1 : secondIndex - 1;
+                var previousFirstIndex = (firstIndex - 1 + solution.Length) % solution.Length;
+                var previousSecondIndex = (secondIndex - 1 + solution.Length) % solution.Length;
+
                 currentCost -= (vertices[solution[previousFirstIndex], solution[firstIndex]] +
                     vertices[solution[firstIndex], solution[(firstIndex+1)%solution.Length]] +
                     vertices[solution[previousSecondIndex], solution[secondIndex]] +
