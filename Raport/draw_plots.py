@@ -82,7 +82,12 @@ class PlotDrawer():
         self.save_plot("first_last",instance=instance_name)
 
     def draw_time_plots(self, data):
-        print("drawing time plots")
+        for experiment_result in data:
+            best_value_experiment = min(experiment_result.executions, key=lambda x: x.cost)
+            plt.plot(best_value_experiment.intermediate_costs, label=experiment_result.name)
+        plt.legend()
+        self.save_plot("intermediate_costs".format(experiment_result.name), instance=experiment_result.instance)
+        self.show_plot()
 
     def draw_plots(self, data):
         print("drawing graphs")
