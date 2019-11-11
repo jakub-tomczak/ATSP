@@ -21,36 +21,34 @@ namespace ATSP.Heuristics{
 
         public override void NextStep()
         {
-            int size = Solution.Length;
             if(Steps == 0)
             {
                 currentCost = CalculateCost();
             }
-            uint CurrSolutionCost = currentCost;
-            var BestSolution = new uint[size];
-            Solution.CopyTo(BestSolution,0);
+            uint bestSolutionCost = currentCost;
+            var numberOfImprovements = 0;
+            var bestChange = (firstIndex: 0, secondIndex: 0, cost: bestSolutionCost);
 
-            for(int i = 0; i < size ; i++)
+            for(int i = 0; i < Solution.Length ; i++)
             {
-                for(int j = 0; j < size ; j++)
+                for(int j = i+1; j < Solution.Length ; j++)
                 {
-                    if(i != j)
+                    bestSolutionCost = CalculateSwapCost(Solution, currentCost, i, j);
+                    if(bestSolutionCost < bestChange.cost)
                     {
-                        CurrSolutionCost = CalculateSwapCost(Solution, CurrSolutionCost, i, j);
-                        Swapper.Swap(Solution, i, j);
-                        if(CurrSolutionCost < currentCost)
-                        {
-                            currentCost = CurrSolutionCost;
-                            Solution.CopyTo(BestSolution,0);
-                        }
-                        Steps++;
-                        SaveCost(currentCost);
-                        Swapper.Swap(Solution, i, j);
+                        numberOfImprovements++;
+                        bestChange = (i, j, bestSolutionCost);
                     }
+                    Steps++;
+                    SaveCost(currentCost);
                 }
             }
-            BestSolution.CopyTo(Solution,0);
-            IsEnd = true;
+            if(numberOfImprovements > 0)
+            {
+                currentCost = CalculateSwapCost(Solution, currentCost, bestChange.firstIndex, bestChange.secondIndex);
+                Swapper.Swap(Solution, bestChange.firstIndex, bestChange.secondIndex);
+            }
+            IsEnd = numberOfImprovements == 0;
         }
 
 
