@@ -4,13 +4,17 @@ import numpy as np
 from experiment_result import ExperimentResult
 from execution import Execution
 
-def find_experiments_directories(root_directory):
-    return [d for d in os.listdir(root_directory) if os.path.isdir(os.path.join(root_directory, d))]
+def get_list_of_directories(root_directory, add_root_directory=True):
+    return [os.path.join(root_directory, d) if add_root_directory else d
+        for d in os.listdir(root_directory) if os.path.isdir(os.path.join(root_directory, d))]
 
-def load_results(directory, files_extension):
+def load_instances(instances_directories, files_extension):
+    return [load_instance_results(instance, files_extension) for instance in instances_directories]
+
+def load_instance_results(directory, files_extension):
     experiments_results = []
 
-    for experiment_dir in find_experiments_directories(directory):
+    for experiment_dir in get_list_of_directories(directory, False):
         full_dir = os.path.join(directory, experiment_dir)
         files = [file for file in os.listdir(full_dir) if files_extension in file]
         result = ExperimentResult()

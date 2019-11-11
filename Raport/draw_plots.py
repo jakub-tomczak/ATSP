@@ -83,6 +83,7 @@ class PlotDrawer():
 
     def draw_time_plots(self, data):
         for experiment_result in data:
+            print('experiment {}'.format(experiment_result.name))
             best_value_experiment = min(experiment_result.executions, key=lambda x: x.cost)
             plt.plot(best_value_experiment.intermediate_costs, label=experiment_result.name)
         if len(data) > 0 and len(data[0].executions) > 0:
@@ -93,7 +94,8 @@ class PlotDrawer():
             self.show_plot()
 
     def draw_plots(self, data):
-        print("drawing graphs")
-        self.draw_time_plots(data)
-        self.draw_quality_plots(data)
+        if len(data) > 0:
+            print("\n{}\ndrawing graphs for intance {}".format('*'*20, data[0].instance))
+            self.draw_time_plots(data)
+            self.draw_quality_plots(data)
 

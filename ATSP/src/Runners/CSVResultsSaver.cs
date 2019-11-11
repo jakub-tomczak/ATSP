@@ -19,7 +19,7 @@ namespace ATSP.Runners
             {
                 Directory.CreateDirectory(SaveDirectory);
             }
-            var experimentsDirectory = Path.Combine(SaveDirectory, experimentResults.Name);
+            var experimentsDirectory = Path.Combine(SaveDirectory, experimentResults.InstanceName, experimentResults.Name);
             if(!Directory.Exists(experimentsDirectory))
             {
                 Directory.CreateDirectory(experimentsDirectory);

@@ -1,5 +1,5 @@
 import os
-from utils import load_results
+from utils import load_instances, get_list_of_directories
 from draw_plots import PlotDrawer
 import argparse
 
@@ -14,9 +14,11 @@ def parse_args():
 
 def main(parameters):
     print("Using {} directory".format(parameters.experiments_directory))
-    data = load_results(parameters.experiments_directory, parameters.extension)
+    instances_directories = get_list_of_directories(parameters.experiments_directory)
+    instances = load_instances(instances_directories, parameters.extension)
     plot_drawer = PlotDrawer(parameters.plots_path, parameters.display_plots)
-    plot_drawer.draw_plots(data)
+    for instance in instances:
+        plot_drawer.draw_plots(instance)
 
 if __name__ == "__main__":
     parameters = parse_args()
