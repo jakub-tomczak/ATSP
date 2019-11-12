@@ -27,7 +27,7 @@ namespace ATSP.Heuristics{
                 currentCost = CalculateCost();
             }
             uint CurrSolutionCost = currentCost;
-            var numberOfImprovements = 0;
+            var improvements = 0;
             for(int i = 0; i < size ; i++)
             {
                 for(int j = i+1; j < size ; j++)
@@ -36,7 +36,8 @@ namespace ATSP.Heuristics{
                     Swapper.Swap(Solution, i, j);
                     if(CurrSolutionCost < currentCost)
                     {
-                        numberOfImprovements++;
+                        NumberOfImprovements++;
+                        improvements++;
                         currentCost = CurrSolutionCost;
                         break;
                     }
@@ -48,7 +49,7 @@ namespace ATSP.Heuristics{
                     SaveCost(currentCost);
                 }
             }
-            IsEnd = numberOfImprovements == 0;
+            IsEnd = improvements == 0;
         }
 
         uint currentCost = 0;

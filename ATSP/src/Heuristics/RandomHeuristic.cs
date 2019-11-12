@@ -32,7 +32,12 @@ namespace ATSP.Heuristics
             for(int i=Solution.Length-1;i>0;i--)
             {
                 var swapIndex = randomizer.Next(i);
-                currentCost = CalculateSwapCost(Solution, currentCost, swapIndex, i);
+                var temp = CalculateSwapCost(Solution, currentCost, swapIndex, i);
+                if(temp < currentCost)
+                {
+                    NumberOfImprovements++;
+                }
+                currentCost = temp;
                 swapper.Swap(Solution, ref swapIndex, ref i);
             }
 

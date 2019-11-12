@@ -31,6 +31,7 @@ namespace ATSP.Heuristics{
                     if(neibours[currentNode,i]<ClossestCost){
                         ClossestCost = neibours[currentNode,i];
                         ClossestID = i;
+                        NumberOfImprovements++;
                     }
                 }
                 SaveCost(currentCost);

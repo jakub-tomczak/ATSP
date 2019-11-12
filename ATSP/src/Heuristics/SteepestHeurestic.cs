@@ -45,6 +45,7 @@ namespace ATSP.Heuristics{
             }
             if(numberOfImprovements > 0)
             {
+                NumberOfImprovements++;
                 currentCost = CalculateSwapCost(Solution, currentCost, bestChange.firstIndex, bestChange.secondIndex);
                 Swapper.Swap(Solution, bestChange.firstIndex, bestChange.secondIndex);
             }

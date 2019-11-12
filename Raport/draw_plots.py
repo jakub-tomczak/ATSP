@@ -38,6 +38,9 @@ class PlotDrawer():
     def get_instance_name(self,data):
         return data[0].instance.replace('\n','')
 
+    def get_effectiveness(self, data, worst_cost):
+        return np.array([[execution.get_effectiveness(worst_cost) for execution in x.executions] for x in data])
+
     def get_qualities(self, data):
         return np.array([[execution.quality for execution in x.executions] for x in data])
 
@@ -107,34 +110,22 @@ class PlotDrawer():
 
 
     def draw_effectiveness_plots(self, data):
+        if len(data) == 0:
+            return
         worst_cost = np.max(self.get_costs(data))
         names = self.get_alg_names(data)
-        fig, ax = plt.subplots(figsize=(10, 5))
+        fig, ax = plt.subplots(figsize=(8, 5))
+        points = np.array(self.get_effectiveness(data, worst_cost))
+        axes = sns.boxplot(data=points.tolist()).set_xticklabels(names)
         ax.set_ylabel('Effectiveness %')
         ax.set_xticks(range(len(names)))
         ax.set_xticklabels(names)
         ax.set_title("")
-        width = 1
-        bar_width = (float)(width)/len(data)
-        offsets = np.linspace(-width/len(data), width/len(data), len(data))
-        points = [np.mean([execution.get_effectiveness(worst_cost) for execution in experiment_result.executions]) for experiment_result in data]
 
-        rects = [ax.bar(i, point, label = name) for (i, point), name in zip(enumerate(points), names)]
-        def autolabel(rects):
-            for rect, name in zip(rects, names):
-                height = rect[0].get_height()
-                ax.annotate('{}%'.format(100*round(height, 4)),
-                            xy=(rect[0].get_x() + rect[0].get_width() / 2, height),
-                            xytext=(0, 3),  # 3 points vertical offset
-                            textcoords="offset points",
-                            ha='center', va='bottom')
-        autolabel(rects)
+        self.save_plot('effectiveness', instance=data[0].instance, set_title=False)
 
-        if len(data) > 0:
-            # plt.legend()
-            self.save_plot('effectiveness', instance=data[0].instance, set_title=False)
+        self.show_plot()
 
-            self.show_plot()
 
     def draw_first_last_plots(self,data):
         instance_name = self.get_instance_name(data)
@@ -164,14 +155,14 @@ class PlotDrawer():
     def draw_plots(self, data):
         if len(data) > 0:
             print("\n{}\ndrawing graphs for intance {}".format('*'*20, data[0].instance))
-            self.draw_time_plots(data)
-            plt.clf()
-            self.draw_quality_plots(data)
-            plt.clf()
+            # self.draw_time_plots(data)
+            # plt.clf()
+            # self.draw_quality_plots(data)
+            # plt.clf()
             self.draw_effectiveness_plots(data)
-            plt.clf()
-            self.draw_first_last_plots(data)
-            plt.clf()
-            self.draw_steps_quanted_results(data)
+            # plt.clf()
+            # self.draw_first_last_plots(data)
+            # plt.clf()
+            # self.draw_steps_quanted_results(data)
 
 
