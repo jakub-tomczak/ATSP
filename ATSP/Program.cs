@@ -13,25 +13,66 @@ namespace ATSP
     {
         static void Main(string[] args)
         {
-            var resultsSaver = new CSVResultSaver();
-            resultsSaver.SaveDirectory = "results";
+            var resultsSaver = new CSVResultSaver()
+            {
+                SaveDirectory = "results"
+            };
 
-            new Program()
-                .PrepareExperiments()
-                .RunExperiments()
-                .SaveResults(resultsSaver)
-                .PrepareRaport(resultsSaver.SaveDirectory, resultsSaver.Extension, "../Raport/plots");
+            var bestResults = new BestResultsLoader();
+            bestResults.LoadBestResults($"../instances/{bestInstancesFilename}");
+
+            var instances = new []
+            {
+                "br17",
+                "ft53",
+                "ft70",
+                "ftv33",
+                "ftv35",
+                "ftv38",
+                "ftv44",
+                "ftv47",
+                "ftv55",
+                "ftv64",
+                "ftv70",
+                "ftv170",
+                "kro124p",
+                "p43",
+                "rbg323",
+                "rbg358",
+                "rbg403",
+                "rbg443",
+                "ry48p"
+            };
+            instances.ToList()
+                .AsParallel()
+                .ForAll(x =>
+                    {
+                        new Program()
+                            .UseInstance(x)
+                            .UseBestResults(bestResults)
+                            .PrepareExperiments()
+                            .RunExperiments()
+                            .SaveResults(resultsSaver);
+                    }
+                );
+
+            // Program.PrepareRaport(resultsSaver.SaveDirectory, resultsSaver.Extension, "../Raport/plots");
+        }
+
+        public Program UseInstance(string instanceName)
+        {
+            this.instanceName = instanceName;
+            return this;
+        }
+
+        public Program UseBestResults(BestResultsLoader bestResults)
+        {
+            this.bestResults = bestResults;
+            return this;
         }
 
         public Program PrepareExperiments()
         {
-            var instancesLocation = @"../instances";
-            var bestInstancesFilename = "best_known_results";
-            var instanceName = "ft70";
-            var seed = 50;
-
-            var bestResults = new BestResultsLoader();
-            bestResults.LoadBestResults($"../instances/{bestInstancesFilename}");
             var permutator = new DefaultPermutator().SetSeed(seed)
                                                     .UseSwapper(new DefaultSwapper());
             var solutionInitializer = new RandomSolutionInitializer();
@@ -108,7 +149,7 @@ namespace ATSP
             return this;
         }
 
-        public Program PrepareRaport(string resultsDirectory, string raportFilesExtension, string plotsDirectory)
+        public static void PrepareRaport(string resultsDirectory, string raportFilesExtension, string plotsDirectory)
         {
             Console.WriteLine("\nPreparing raport");
             using(var raportProcess =  new Process())
@@ -150,10 +191,14 @@ namespace ATSP
                 }
 
             }
-
-            return this;
         }
 
         private Experiment[] experiments;
+        private static string instancesLocation = @"../instances";
+        private static string bestInstancesFilename = "best_known_results";
+        private string instanceName = string.Empty;
+        private int seed = 50;
+
+        private BestResultsLoader bestResults = new BestResultsLoader();
     }
 }
