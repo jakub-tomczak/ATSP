@@ -26,7 +26,7 @@ namespace ATSP.Heuristics{
                 currentCost = CalculateCost();
             }
             uint bestSolutionCost = currentCost;
-            var numberOfImprovements = 0;
+            var improvements = 0;
             var bestChange = (firstIndex: 0, secondIndex: 0, cost: bestSolutionCost);
 
             for(int i = 0; i < Solution.Length ; i++)
@@ -36,19 +36,21 @@ namespace ATSP.Heuristics{
                     bestSolutionCost = CalculateSwapCost(Solution, currentCost, i, j);
                     if(bestSolutionCost < bestChange.cost)
                     {
-                        numberOfImprovements++;
+                        NumberOfImprovements++;
+                        improvements++;
                         bestChange = (i, j, bestSolutionCost);
                     }
                     Steps++;
                     SaveCost(currentCost);
                 }
             }
-            if(numberOfImprovements > 0)
+            if(improvements > 0)
             {
+                NumberOfImprovements++;
                 currentCost = CalculateSwapCost(Solution, currentCost, bestChange.firstIndex, bestChange.secondIndex);
                 Swapper.Swap(Solution, bestChange.firstIndex, bestChange.secondIndex);
             }
-            IsEnd = numberOfImprovements == 0;
+            IsEnd = improvements == 0;
         }
 
 

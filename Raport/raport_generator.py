@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 from utils import load_instances, get_list_of_directories
 from draw_plots import PlotDrawer

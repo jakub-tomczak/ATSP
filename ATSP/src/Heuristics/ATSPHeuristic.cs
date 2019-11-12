@@ -14,6 +14,7 @@ namespace ATSP.Heuristics
         {
             this.IsEnd = false;
             this.Steps = 0;
+            this.NumberOfImprovements = 0;
             IntermediateCosts = new List<uint>();
             ResetSolution();
         }
@@ -119,6 +120,7 @@ namespace ATSP.Heuristics
         }
 
         public uint Steps { get; protected set; }
+        public uint NumberOfImprovements { get; protected set; }
 
         public abstract bool IsEnd { get; protected set; }
         public TravellingSalesmanProblemInstance Instance { get; private set; }
