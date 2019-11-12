@@ -56,7 +56,9 @@ namespace ATSP.Runners
                         Steps = experimentToRun.Heuristic.Steps,
                         Cost = experimentToRun.Heuristic.CalculateCost(),
                         IntermediateCosts = experimentToRun.Heuristic.IntermediateCosts,
-                        BestKnownCost = experimentToRun.Instance.BestKnownCost
+                        BestKnownCost = experimentToRun.Instance.BestKnownCost,
+                        NumberOfImprovements = experimentToRun.Heuristic.NumberOfImprovements,
+                        FinalSolution = experimentToRun.Heuristic.Solution
                     });
                 }
                 else

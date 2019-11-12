@@ -39,9 +39,9 @@ namespace ATSP.Heuristics
                 }
                 currentCost = temp;
                 swapper.Swap(Solution, ref swapIndex, ref i);
+                SaveCost(currentCost);
             }
 
-            SaveCost(currentCost);
             Steps++;
         }
 

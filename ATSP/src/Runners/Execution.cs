@@ -8,6 +8,9 @@ namespace ATSP.Runners
         public uint Steps;
         public uint Cost;
         public uint BestKnownCost;
+        public uint NumberOfImprovements;
         public List<uint> IntermediateCosts;
+
+        public uint[] FinalSolution;
     }
 }

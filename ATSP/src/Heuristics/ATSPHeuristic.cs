@@ -14,6 +14,7 @@ namespace ATSP.Heuristics
         {
             this.IsEnd = false;
             this.Steps = 0;
+            this.NumberOfImprovements = 0;
             IntermediateCosts = new List<uint>();
             ResetSolution();
         }

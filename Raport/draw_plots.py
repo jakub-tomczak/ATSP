@@ -38,8 +38,14 @@ class PlotDrawer():
     def get_instance_name(self,data):
         return data[0].instance.replace('\n','')
 
+    def get_times(self, data):
+        return np.array([[execution.time for execution in x.executions] for x in data])
+
     def get_effectiveness(self, data, worst_cost):
-        return np.array([[execution.get_effectiveness(worst_cost) for execution in x.executions] for x in data])
+        return np.array([[execution.get_effectiveness2(worst_cost) for execution in x.executions] for x in data])
+
+    def get_improvements(self, data):
+        return np.array([[execution.number_of_improvements for execution in x.executions] for x in data])
 
     def get_qualities(self, data):
         return np.array([[execution.quality for execution in x.executions] for x in data])
@@ -109,6 +115,24 @@ class PlotDrawer():
             self.show_plot()
 
 
+    def draw_improvements_plots(self, data):
+        if len(data) == 0:
+            return
+        worst_cost = np.max(self.get_costs(data))
+        names = self.get_alg_names(data)
+        fig, ax = plt.subplots(figsize=(8, 5))
+        points = np.array(self.get_effectiveness(data, worst_cost))
+        axes = sns.boxplot(data=points.tolist()).set_xticklabels(names)
+        ax.set_ylabel('Effectiveness %')
+        ax.set_xticks(range(len(names)))
+        ax.set_xticklabels(names)
+        ax.set_title("")
+
+        self.save_plot('improvements', instance=data[0].instance, set_title=False)
+
+        self.show_plot()
+
+
     def draw_effectiveness_plots(self, data):
         if len(data) == 0:
             return
@@ -155,14 +179,16 @@ class PlotDrawer():
     def draw_plots(self, data):
         if len(data) > 0:
             print("\n{}\ndrawing graphs for intance {}".format('*'*20, data[0].instance))
-            # self.draw_time_plots(data)
-            # plt.clf()
-            # self.draw_quality_plots(data)
-            # plt.clf()
+            self.draw_time_plots(data)
+            plt.clf()
+            self.draw_quality_plots(data)
+            plt.clf()
             self.draw_effectiveness_plots(data)
-            # plt.clf()
-            # self.draw_first_last_plots(data)
-            # plt.clf()
-            # self.draw_steps_quanted_results(data)
+            plt.clf()
+            self.draw_improvements_plots(data)
+            plt.clf()
+            self.draw_first_last_plots(data)
+            plt.clf()
+            self.draw_steps_quanted_results(data)
 
 

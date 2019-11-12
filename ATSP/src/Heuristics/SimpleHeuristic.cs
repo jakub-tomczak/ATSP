@@ -34,6 +34,7 @@ namespace ATSP.Heuristics{
                         NumberOfImprovements++;
                     }
                 }
+                Steps++;
                 SaveCost(currentCost);
             }
 

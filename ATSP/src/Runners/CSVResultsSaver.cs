@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 
 namespace ATSP.Runners
 {
@@ -37,6 +38,14 @@ namespace ATSP.Runners
                     file.WriteLine($"Execution steps;{execution.Steps}");
                     file.WriteLine($"Execution final cost;{execution.Cost}");
                     file.WriteLine($"Best known cost;{execution.BestKnownCost}");
+                    file.WriteLine($"NumberOfImprovements;{execution.NumberOfImprovements}");
+                    file.WriteLine(execution.FinalSolution.
+                        Select(
+                            x => x.ToString()
+                        ).
+                        Aggregate(
+                            (x, y) => $"{x};{y}")
+                        );
                     foreach(var cost in execution.IntermediateCosts)
                     {
                         file.WriteLine(
