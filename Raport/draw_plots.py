@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-
 class PlotDrawer():
     def __init__(self, plots_path, display_plots):
         self.save_plots = True if plots_path is not None and plots_path != "" else False
@@ -42,7 +41,7 @@ class PlotDrawer():
         return np.array([[execution.time for execution in x.executions] for x in data])
 
     def get_effectiveness(self, data, worst_cost):
-        return np.array([[execution.get_effectiveness2(worst_cost) for execution in x.executions] for x in data])
+        return np.array([[execution.get_effectiveness(worst_cost) for execution in x.executions] for x in data])
 
     def get_improvements(self, data):
         return np.array([[execution.number_of_improvements for execution in x.executions] for x in data])
@@ -73,10 +72,11 @@ class PlotDrawer():
             return
         print("drawing quality plots")
         plt.clf()
-        mean_qualities = self.get_qualities(data)
-        best_qualities = np.max(self.get_qualities(data), axis=1)
+        qualities = self.get_qualities(data)
+        mean_qualities = qualities
+        best_qualities = np.max(qualities, axis=1)
         names = self.get_alg_names(data)
-        sns.boxplot(data=mean_qualities.tolist()).set_xticklabels(names)
+        sns.violinplot(data=mean_qualities.tolist()).set_xticklabels(names)
         instance_name = self.get_instance_name(data)
         plt.xlabel('Algorytmy')
         plt.ylabel('srednia jakosc rozwiazania')
@@ -85,13 +85,15 @@ class PlotDrawer():
         plt.clf()
         for i in range(len(names)):
             plt.plot(names[i],best_qualities[i],'o')
-        plt.legend()
         plt.xlabel('Algorytmy')
         plt.ylabel('najlepsza jakosc rozwiazania')
         # self.show_plot()
         self.save_plot("best_qualities", instance=instance_name)
 
+    def draw_first_plot_best_plot(self, data):
         print("drawing first last ")
+        plt.clf()
+        names = self.get_alg_names(data)
         plt.figure(2)
         firsts, lasts = self.get_first_last_qualities(data)
         for i in range(len(names)):
@@ -102,6 +104,20 @@ class PlotDrawer():
 
     def draw_time_plots(self, data):
         print("drawing time plots")
+        plt.clf()
+        times = self.get_times(data)
+        names = self.get_alg_names(data)
+        sns.violinplot(data=times.tolist()).set_xticklabels(names)
+        instance_name = self.get_instance_name(data)
+        plt.xlabel('Algorytm')
+        plt.ylabel('Czas dzialania')
+        # self.show_plot()
+        self.save_plot("times", instance=instance_name)
+        self.show_plot()
+
+    def draw_intermediate_costs_plots(self, data):
+        print("drawing intermediate costs plots")
+        plt.clf()
         for experiment_result in data:
             best_value_experiment = min(experiment_result.executions, key=lambda x: x.cost)
             plt.plot(best_value_experiment.intermediate_costs, label=experiment_result.name)
@@ -115,27 +131,27 @@ class PlotDrawer():
             self.show_plot()
 
 
-    def draw_improvements_plots(self, data):
-        if len(data) == 0:
-            return
-        worst_cost = np.max(self.get_costs(data))
-        names = self.get_alg_names(data)
-        fig, ax = plt.subplots(figsize=(8, 5))
-        points = np.array(self.get_effectiveness(data, worst_cost))
-        axes = sns.boxplot(data=points.tolist()).set_xticklabels(names)
-        ax.set_ylabel('Effectiveness %')
-        ax.set_xticks(range(len(names)))
-        ax.set_xticklabels(names)
-        ax.set_title("")
+    # def draw_improvements_plots(self, data):
+    #     print("drawing improvements plots")
+    #     plt.clf()
+    #     worst_cost = np.max(self.get_costs(data))
+    #     names = self.get_alg_names(data)
+    #     fig, ax = plt.subplots(figsize=(8, 5))
+    #     points = np.array(self.get_effectiveness(data, worst_cost))
+    #     axes = sns.boxplot(data=points.tolist()).set_xticklabels(names)
+    #     ax.set_ylabel('Effectiveness %')
+    #     ax.set_xticks(range(len(names)))
+    #     ax.set_xticklabels(names)
+    #     ax.set_title("")
 
-        self.save_plot('improvements', instance=data[0].instance, set_title=False)
+    #     self.save_plot('improvements', instance=data[0].instance, set_title=False)
 
-        self.show_plot()
+    #     self.show_plot()
 
 
     def draw_effectiveness_plots(self, data):
-        if len(data) == 0:
-            return
+        print("drawing effectiveness plots")
+        plt.clf()
         worst_cost = np.max(self.get_costs(data))
         names = self.get_alg_names(data)
         fig, ax = plt.subplots(figsize=(8, 5))
@@ -152,6 +168,8 @@ class PlotDrawer():
 
 
     def draw_first_last_plots(self,data):
+        print("drawing first last plots")
+        plt.clf()
         instance_name = self.get_instance_name(data)
         firsts, lasts = self.get_first_last_qualities(data)
         names = self.get_alg_names(data)
@@ -161,8 +179,11 @@ class PlotDrawer():
         plt.xlabel('Jakosc pierwotnego rozwiazania')
         plt.ylabel('Jakosc ostatecznego rozwiazania')
         self.save_plot("first_last",instance=instance_name)
+        self.show_plot()
 
     def draw_steps_quanted_results(self,data):
+        print("drawing quanted plots")
+        plt.clf()
         instance_name = self.get_instance_name(data)
         firsts, lasts = self.get_first_last_qualities(data)
         names = self.get_alg_names(data)
@@ -174,21 +195,17 @@ class PlotDrawer():
         plt.ylabel('')
         plt.legend()
         self.save_plot("steps_results",instance=instance_name)
+        self.show_plot()
 
 
     def draw_plots(self, data):
         if len(data) > 0:
             print("\n{}\ndrawing graphs for intance {}".format('*'*20, data[0].instance))
             self.draw_time_plots(data)
-            plt.clf()
             self.draw_quality_plots(data)
-            plt.clf()
             self.draw_effectiveness_plots(data)
-            plt.clf()
-            self.draw_improvements_plots(data)
-            plt.clf()
+            # self.draw_improvements_plots(data)
             self.draw_first_last_plots(data)
-            plt.clf()
             self.draw_steps_quanted_results(data)
 
 
