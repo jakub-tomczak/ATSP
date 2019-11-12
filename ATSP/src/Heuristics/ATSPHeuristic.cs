@@ -109,6 +109,10 @@ namespace ATSP.Heuristics
 
         protected void SaveCost(uint cost = 0)
         {
+            if(Instance.N > 100)
+            {
+                return;
+            }
             if(cost == 0)
             {
                 IntermediateCosts.Add(CalculateCost());
