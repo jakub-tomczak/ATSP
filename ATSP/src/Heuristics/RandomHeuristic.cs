@@ -34,9 +34,9 @@ namespace ATSP.Heuristics
                 var swapIndex = randomizer.Next(i);
                 currentCost = CalculateSwapCost(Solution, currentCost, swapIndex, i);
                 swapper.Swap(Solution, ref swapIndex, ref i);
+                SaveCost(currentCost);
             }
 
-            SaveCost(currentCost);
             Steps++;
         }
 
