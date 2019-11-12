@@ -27,19 +27,9 @@ namespace ATSP
                 "ft53",
                 "ft70",
                 "ftv33",
-                "ftv35",
-                "ftv38",
-                "ftv44",
-                "ftv47",
-                "ftv55",
-                "ftv64",
-                "ftv70",
                 "ftv170",
                 "kro124p",
-                "p43",
                 "rbg323",
-                "rbg358",
-                "rbg403",
                 "rbg443",
                 "ry48p"
             };
@@ -56,7 +46,7 @@ namespace ATSP
                     }
                 );
 
-            // Program.PrepareRaport(resultsSaver.SaveDirectory, resultsSaver.Extension, "../Raport/plots");
+            Program.PrepareRaport(resultsSaver.SaveDirectory, resultsSaver.Extension, "../Raport/plots");
         }
 
         public Program UseInstance(string instanceName)
