@@ -2,6 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from utils import calculate_arrays_similarity
 
 
 class PlotDrawer():
@@ -51,6 +52,32 @@ class PlotDrawer():
 
     def get_costs(self, data):
         return np.array([[execution.cost for execution in x.executions] for x in data])
+
+    def compare_instances(self, data):
+        algorithms_for_comparison = ["greedy", "steepest"]
+        best_executions = [
+            (experiment.name, min(experiment.executions, key=lambda x: x.cost))
+            for experiment in data
+            if experiment.name in algorithms_for_comparison
+            ]
+
+        worst_executions = [
+            (experiment.name, max(experiment.executions, key=lambda x: x.cost))
+            for experiment in data
+            if experiment.name in algorithms_for_comparison
+            ]
+
+
+        def calculate_comparision_matrix(executions):
+            comparison_result = np.ones((len(executions), len(executions)))
+            for i, execution in enumerate(executions):
+                for j, other in enumerate(executions):
+                    if execution[0] != other[0]:
+                        comparison_result[i, j] = calculate_arrays_similarity(execution[1].solution, other[1].solution)
+
+            return comparison_result
+
+        return calculate_comparison_matrix(best_executions), calculate_comparison_matrix(worst_executions)
 
     def get_first_last_qualities(self,data):
         qualities = self.get_qualities(data)
@@ -200,6 +227,7 @@ class PlotDrawer():
 
     def draw_plots(self, data):
         if len(data) > 0:
+            best_executions_comparison, worst_executions_comparison = self.compare_instances(data)
             print("\n{}\ndrawing graphs for intance {}".format('*'*20, data[0].instance))
             self.draw_time_plots(data)
             self.draw_quality_plots(data)
