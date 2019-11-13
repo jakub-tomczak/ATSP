@@ -19,7 +19,7 @@ class Execution:
         return 1 - float(self.cost - self.best_known_cost) / distance
 
     def get_effectiveness2(self, worst_result):
-        return self.get_effectiveness(worst_result) * (self.number_of_improvements / self.steps)
+        return self.get_effectiveness(worst_result) * (1/self.time)
 
     def __len__(self):
         return len(self.intermediate_costs)

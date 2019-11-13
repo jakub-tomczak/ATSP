@@ -41,7 +41,7 @@ class PlotDrawer():
         return np.array([[execution.time for execution in x.executions] for x in data])
 
     def get_effectiveness(self, data, worst_cost):
-        return np.array([[execution.get_effectiveness(worst_cost) for execution in x.executions] for x in data])
+        return np.array([[execution.get_effectiveness2(worst_cost) for execution in x.executions] for x in data])
 
     def get_improvements(self, data):
         return np.array([[execution.number_of_improvements for execution in x.executions] for x in data])
