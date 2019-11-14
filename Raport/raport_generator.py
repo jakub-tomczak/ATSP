@@ -18,8 +18,7 @@ def main(parameters):
     instances_directories = get_list_of_directories(parameters.experiments_directory)
     instances = load_instances(instances_directories, parameters.extension)
     plot_drawer = PlotDrawer(parameters.plots_path, parameters.display_plots)
-    for instance in instances:
-        plot_drawer.draw_plots(instance)
+    plot_drawer.draw_plots(instances)
 
 if __name__ == "__main__":
     parameters = parse_args()

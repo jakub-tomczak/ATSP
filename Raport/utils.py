@@ -22,7 +22,7 @@ def load_instance_results(directory, files_extension):
             result.name = experiment_dir
             with open(os.path.join(full_dir, filename)) as file:
                 print("Reading {}".format(filename))
-                result.instance = file.readline().split(';')[1]
+                result.instance = file.readline().split(';')[1].rstrip("\n")
                 result.mean_execution_time = float(file.readline().split(';')[1].rstrip("\n").replace(",","."))
                 execution = Execution()
                 execution.time = float(file.readline().split(';')[1].rstrip("\n").replace(",","."))

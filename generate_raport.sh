@@ -1,2 +1,2 @@
 #!/bin/bash
-./Raport/raport_generator.py ./ATSP/results csv ./Raport/plots
+./Raport/raport_generator.py ./ATSP/results csv ./Raport/plots $@
