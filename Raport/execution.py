@@ -12,7 +12,11 @@ class Execution:
 
     @property
     def quality(self):
-        return (self.cost - self.best_known_cost) / self.best_known_cost
+        return (float)(self.cost - self.best_known_cost) / self.best_known_cost
+
+    @property
+    def simple_quality(self):
+        return (self.cost - self.best_known_cost)
 
     def get_effectiveness(self, worst_result):
         distance = worst_result - self.best_known_cost
