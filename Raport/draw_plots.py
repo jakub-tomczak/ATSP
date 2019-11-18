@@ -46,6 +46,19 @@ class PlotDrawer():
                 algorithms[experiment.name].append(experiment)
         return algorithms
 
+
+    def get_algorithm_qualities(self, data, kind="max"):
+        names = []
+        qualities = []
+        for key, value in data.items():
+            names.append(key)
+            if kind == "min":
+                qualities.append([min(x.executions, key=lambda x: x.quality).quality for x in value])
+            elif kind == "max":
+                qualities.append([max(x.executions, key=lambda x: x.quality).quality for x in value])
+
+        return names, qualities
+
     def get_algorithm_times(self, data, kind="max"):
         names = []
         times = []
@@ -80,20 +93,41 @@ class PlotDrawer():
     def get_costs(self, data):
         return np.array([[execution.cost for execution in x.executions] for x in data])
 
-    def compare_instances(self, data):
+    def plot_instances_comparisons(self, data):
+        kinds = ["min", "max"]
         algorithms_for_comparison = ["greedy", "steepest"]
-        best_executions = [
-            (experiment.name, min(experiment.executions, key=lambda x: x.cost))
+        # iterate over experiments performed with greedy to get instances names
+        instances_names = [x.instance for x in data[algorithms_for_comparison[0]]]
+
+        for kind in kinds:
+            comparisons = [
+                self.compare_instances(instance_data, algorithms_for_comparison, kind)[1, 0]
+                for instance_data in data
+                ]
+
+            plt.clf()
+            markers = PlotDrawer.markers[:len(algorithms_for_comparison)]
+            fig, ax = plt.subplots(1, 1)
+            plt.plot(comparisons, markers[0], label='{}'.format(algorithms_for_comparison.join(' vs. '), kind))
+
+            fig.canvas.draw()
+            ax.set_xticks(np.arange(0, len(instances_names)))
+            ax.set_xticklabels(instances_names)
+            plt.xticks(rotation=90)
+            plt.xlabel('instancja')
+            plt.ylabel('{} podobienstwo'.format(kind))
+            plt.legend()
+            plt.subplots_adjust(bottom=.2)
+            self.save_plot('algos_comparison_{}'.format(kind), instance='all')
+            self.show_plot()
+
+    def compare_instances(self, data, algorithms_for_comparison, kind="max"):
+        func = min if kind == "min" else max
+        execution = [
+            (experiment.name, func(experiment.executions, key=lambda x: x.cost))
             for experiment in data
             if experiment.name in algorithms_for_comparison
-            ]
-
-        worst_executions = [
-            (experiment.name, max(experiment.executions, key=lambda x: x.cost))
-            for experiment in data
-            if experiment.name in algorithms_for_comparison
-            ]
-
+        ]
 
         def calculate_comparison_matrix(executions):
             comparison_result = np.ones((len(executions), len(executions)))
@@ -104,7 +138,7 @@ class PlotDrawer():
 
             return comparison_result
 
-        return calculate_comparison_matrix(best_executions), calculate_comparison_matrix(worst_executions)
+        return calculate_comparison_matrix(execution)
 
     def get_first_last_qualities(self,data):
         #qualities = self.get_qualities(data)
@@ -147,6 +181,32 @@ class PlotDrawer():
     def get_alg_names(self,data):
         return [x.name for x  in data]
 
+
+    def draw_quality_plots_algo(self, data):
+        def draw_quality_plot_for_algorithm(algo_data, names, instances_names, kind):
+            plt.clf()
+            markers = PlotDrawer.markers[:len(names)]
+            fig, ax = plt.subplots(1, 1)
+            for alg_name, plot_data, marker in zip(names, algo_data, markers):
+                plt.plot(plot_data, marker, label='{}'.format(alg_name, kind))
+
+            fig.canvas.draw()
+            ax.set_xticks(np.arange(0, len(instances_names)))
+            ax.set_xticklabels(instances_names)
+            plt.xticks(rotation=90)
+            plt.xlabel('instancja')
+            plt.ylabel('{} jakosc'.format(kind))
+            plt.legend()
+            plt.subplots_adjust(bottom=.2)
+            self.save_plot('algos_quality_{}'.format(kind), instance='all')
+            self.show_plot()
+
+        for kind in ['min', 'max']:
+            names, algos_qualities = self.get_algorithm_qualities(data, kind=kind)
+            instances_names = [x.instance for x in data[names[0]]]
+            draw_quality_plot_for_algorithm(algos_qualities, names, instances_names, kind)
+
+
     def draw_quality_plots(self, data):
         if len(data) < 1:
             return
@@ -162,13 +222,6 @@ class PlotDrawer():
         plt.ylabel('srednia jakosc rozwiazania')
         self.save_plot("mean_quality", instance=instance_name)
 
-        plt.clf()
-        for i, marker in zip(range(len(names)), PlotDrawer.markers[:len(names)]):
-            plt.plot(names[i],best_qualities[i], marker)
-        plt.xlabel('Algorytmy')
-        plt.ylabel('najlepsza jakosc rozwiazania')
-        self.show_plot()
-        self.save_plot("best_qualities", instance=instance_name)
 
     def draw_first_plot_best_plot(self, data):
         print("drawing first last ")
@@ -305,16 +358,21 @@ class PlotDrawer():
     def draw_plots(self, data):
         if len(data) > 0:
             algos_data = self.transform_instances_to_algorithms(data)
-            self.draw_time_plots_algo(algos_data)
-
+            # self.draw_time_plots_algo(algos_data)
+            # self.draw_quality_plots_algo(algos_data)
+            self.plot_instances_comparisons(algos_data)
             for instance_data in data:
                 print("\n{}\ndrawing graphs for intance {}".format('*'*20, instance_data[0].instance))
                 self.draw_time_plots(instance_data)
                 self.draw_quality_plots(instance_data)
                 self.draw_effectiveness_plots(instance_data)
+<<<<<<< HEAD
                 self.draw_improvements_plots(instance_data)
+=======
+                self.draw_intermediate_costs_plots(instance_data)
+>>>>>>> ece43160ebb04831727eac59fed314439dde4ecc
                 self.draw_first_last_plots(instance_data)
                 self.draw_steps_quanted_results(instance_data)
-                best_executions_comparison, worst_executions_comparison = self.compare_instances(instance_data)
+                print('ok')
 
 
