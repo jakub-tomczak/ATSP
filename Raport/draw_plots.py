@@ -107,13 +107,39 @@ class PlotDrawer():
         return calculate_comparison_matrix(best_executions), calculate_comparison_matrix(worst_executions)
 
     def get_first_last_qualities(self,data):
-        qualities = self.get_qualities(data)
+        #qualities = self.get_qualities(data)
+        #np.array([[execution.quality for execution in x.executions] for x in data])
+        qualities = np.array([[execution.intermediate_costs for execution in x.executions] for x in data])
         firsts = []
         lasts = []
-        for i in range(len(qualities)):
-            firsts.append(qualities[i,0])
-            lasts.append(qualities[i,-1])
+        for i in range(4):
+            firsts.append([])
+            lasts.append([])
+            for j in range(len(qualities[i])):
+                if (len(qualities[i,j])!=0):
+                    firsts[i].append(qualities[i,j][0])
+                    lasts[i].append(min(qualities[i,j]))
+            
         return firsts,lasts
+
+    def get_first_last_qualities2(self,data):
+        #qualities = self.get_qualities(data)
+        #np.array([[execution.quality for execution in x.executions] for x in data])
+        qualities = np.array([[execution.intermediate_costs for execution in x.executions] for x in data])
+        firsts = []
+        lasts = []
+        i = 0
+        for x in data:
+            firsts.append([])
+            lasts.append([])
+            for execution in x.executions:
+                f, l = execution.first_best_quality()
+                firsts[i].append(f)
+                lasts[i].append(l)
+            i+=1
+
+        return firsts,lasts
+
 
     def get_intermediate_costs(self, data):
         return np.array([[execution.intermediate_costs for execution in x.executions] for x in data])
@@ -236,12 +262,28 @@ class PlotDrawer():
         firsts, lasts = self.get_first_last_qualities(data)
         names = self.get_alg_names(data)
         for i, marker in zip(range(len(names)), PlotDrawer.markers[:len(names)]):
-            plt.plot(firsts[i],lasts[i], marker,label=names[i])
+            print(firsts[i],lasts[i])
+            plt.scatter(firsts[i],lasts[i], label=names[i])
         plt.legend()
         plt.xlabel('Jakosc pierwotnego rozwiazania')
         plt.ylabel('Jakosc ostatecznego rozwiazania')
         self.save_plot("first_last",instance=instance_name)
         self.show_plot()
+
+    def draw_first_last_plots2(self,data):
+        print("drawing first last plots")
+        plt.clf()
+        instance_name = self.get_instance_name(data)
+        firsts, lasts = self.get_first_last_qualities2(data)
+        names = self.get_alg_names(data)
+        for i, marker in zip(range(len(names)), PlotDrawer.markers[:len(names)]):
+            plt.scatter(firsts[i],lasts[i], label=names[i])
+        plt.legend()
+        plt.xlabel('Jakosc pierwotnego rozwiazania')
+        plt.ylabel('Jakosc ostatecznego rozwiazania')
+        self.save_plot("first_last_3_",instance=instance_name)
+        self.show_plot()
+
 
     def draw_steps_quanted_results(self,data):
         print("drawing quanted plots")
@@ -270,7 +312,7 @@ class PlotDrawer():
                 self.draw_time_plots(instance_data)
                 self.draw_quality_plots(instance_data)
                 self.draw_effectiveness_plots(instance_data)
-                # self.draw_improvements_plots(instance_data)
+                self.draw_improvements_plots(instance_data)
                 self.draw_first_last_plots(instance_data)
                 self.draw_steps_quanted_results(instance_data)
                 best_executions_comparison, worst_executions_comparison = self.compare_instances(instance_data)
