@@ -7,6 +7,8 @@ from utils import calculate_arrays_similarity
 
 class PlotDrawer():
     markers = ['o--', '+--', 's--', 'v--', '*--', 'p--', 'x--', '|--']
+    instances_for_comparison = ['br17', 'ft53', 'ft70', 'rbg443']
+    algorithms_for_comparison = ["greedy", "steepest", "Simple", 'random']
 
     def __init__(self, plots_path, display_plots):
         self.save_plots = True if plots_path is not None and plots_path != "" else False
@@ -93,52 +95,49 @@ class PlotDrawer():
     def get_costs(self, data):
         return np.array([[execution.cost for execution in x.executions] for x in data])
 
-    def plot_instances_comparisons(self, data):
-        kinds = ["min", "max"]
-        algorithms_for_comparison = ["greedy", "steepest"]
-        # iterate over experiments performed with greedy to get instances names
-        instances_names = [x.instance for x in data[algorithms_for_comparison[0]]]
+    def plot_solution_comparisons(self, data):
+        if len(data)<1:
+            print('No data for solution comparisons')
+            return
+        instance_name = data[0].instance
+        if instance_name not in PlotDrawer.instances_for_comparison:
+            return
 
-        for kind in kinds:
-            comparisons = [
-                self.compare_instances(instance_data, algorithms_for_comparison, kind)[1, 0]
-                for instance_data in data
-                ]
-
-            plt.clf()
-            markers = PlotDrawer.markers[:len(algorithms_for_comparison)]
-            fig, ax = plt.subplots(1, 1)
-            plt.plot(comparisons, markers[0], label='{}'.format(algorithms_for_comparison.join(' vs. '), kind))
-
-            fig.canvas.draw()
-            ax.set_xticks(np.arange(0, len(instances_names)))
-            ax.set_xticklabels(instances_names)
-            plt.xticks(rotation=90)
-            plt.xlabel('instancja')
-            plt.ylabel('{} podobienstwo'.format(kind))
-            plt.legend()
-            plt.subplots_adjust(bottom=.2)
-            self.save_plot('algos_comparison_{}'.format(kind), instance='all')
-            self.show_plot()
-
-    def compare_instances(self, data, algorithms_for_comparison, kind="max"):
-        func = min if kind == "min" else max
-        execution = [
-            (experiment.name, func(experiment.executions, key=lambda x: x.cost))
-            for experiment in data
-            if experiment.name in algorithms_for_comparison
+        print('plotting solution comparisons')
+        # creates a list [(([similarities], [costs]), algorithm.name)]
+        comparisons = [
+            (self.compare_instances(algorithm.executions), algorithm.name)
+            for algorithm in data
+            if algorithm.name in PlotDrawer.algorithms_for_comparison
         ]
 
-        def calculate_comparison_matrix(executions):
-            comparison_result = np.ones((len(executions), len(executions)))
-            for i, execution in enumerate(executions):
-                for j, other in enumerate(executions):
-                    if execution[0] != other[0]:
-                        comparison_result[i, j] = calculate_arrays_similarity(execution[1].solution, other[1].solution)
+        plt.clf()
+        markers = PlotDrawer.markers[:len(PlotDrawer.algorithms_for_comparison)]
+        fig, ax = plt.subplots(1, 1)
+        x_pos = 1
+        for comparison in comparisons:
+            plt.scatter(comparison[0][1], comparison[0][0], label=comparison[1])
+        fig.canvas.draw()
+        ax.minorticks_on()
+        plt.grid(True, linestyle='-', linewidth=1.2, which='major')
+        plt.grid(True, linestyle=':', linewidth=.3, which='minor')
+        plt.xticks(rotation=90)
+        plt.xlabel('jakosc')
+        plt.ylabel('podobienstwo')
+        plt.legend()
+        plt.subplots_adjust(bottom=.2)
+        self.save_plot('algos_comparison', instance=instance_name)
+        self.show_plot()
 
-            return comparison_result
-
-        return calculate_comparison_matrix(execution)
+    def compare_instances(self, data):
+        best_instance = min(data, key=lambda x: x.cost)
+        similarities = [
+            calculate_arrays_similarity(best_instance.solution, x.solution)
+            for x in data
+            if x is not best_instance
+        ]
+        qualities = [x.quality for x in data if x is not best_instance]
+        return (similarities, qualities)
 
     def get_first_last_qualities(self,data):
         qualities = self.get_qualities(data)
@@ -316,11 +315,11 @@ class PlotDrawer():
     def draw_plots(self, data):
         if len(data) > 0:
             algos_data = self.transform_instances_to_algorithms(data)
-            # self.draw_time_plots_algo(algos_data)
-            # self.draw_quality_plots_algo(algos_data)
-            self.plot_instances_comparisons(algos_data)
+            self.draw_time_plots_algo(algos_data)
+            self.draw_quality_plots_algo(algos_data)
             for instance_data in data:
                 print("\n{}\ndrawing graphs for intance {}".format('*'*20, instance_data[0].instance))
+                self.plot_solution_comparisons(instance_data)
                 self.draw_time_plots(instance_data)
                 self.draw_quality_plots(instance_data)
                 self.draw_effectiveness_plots(instance_data)
