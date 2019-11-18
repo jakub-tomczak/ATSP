@@ -30,7 +30,7 @@ def load_instance_results(directory, files_extension):
                 execution.cost = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
                 execution.best_known_cost = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
                 execution.number_of_improvements = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
-                execution.solution = file.readline().split(';')
+                execution.solution = file.readline().rstrip('\n').split(';')
                 for line in file:
                     row = line.split(';')
                     execution.intermediate_costs.append(int(row[0]))
