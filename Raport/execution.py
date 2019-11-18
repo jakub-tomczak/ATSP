@@ -27,3 +27,8 @@ class Execution:
 
     def __len__(self):
         return len(self.intermediate_costs)
+
+    def first_best_quality(self):
+        if len(self.intermediate_costs)>0: 
+            return (self.intermediate_costs[0]- self.best_known_cost) / self.best_known_cost, self.quality
+        return 0,0
