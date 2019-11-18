@@ -152,7 +152,7 @@ class PlotDrawer():
                 if (len(qualities[i,j])!=0):
                     firsts[i].append(qualities[i,j][0])
                     lasts[i].append(min(qualities[i,j]))
-            
+
         return firsts,lasts
 
     def get_first_last_qualities2(self,data):
@@ -365,11 +365,7 @@ class PlotDrawer():
                 self.draw_time_plots(instance_data)
                 self.draw_quality_plots(instance_data)
                 self.draw_effectiveness_plots(instance_data)
-<<<<<<< HEAD
-                self.draw_improvements_plots(instance_data)
-=======
                 self.draw_intermediate_costs_plots(instance_data)
->>>>>>> ece43160ebb04831727eac59fed314439dde4ecc
                 self.draw_first_last_plots(instance_data)
                 self.draw_steps_quanted_results(instance_data)
                 print('ok')
