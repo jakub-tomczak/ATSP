@@ -78,5 +78,9 @@ namespace ATSP.Runners
         }
 
         Experiment experimentToRun = null;
+
+
+        public ulong MinExecutions { get => minExecutions; set => minExecutions = value; }
+        private ulong minExecutions = 10;
     }
 }

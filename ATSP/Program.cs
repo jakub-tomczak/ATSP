@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -63,45 +64,52 @@ namespace ATSP
 
         public Program PrepareExperiments()
         {
-            var permutator = new DefaultPermutator().SetSeed(seed)
-                                                    .UseSwapper(new DefaultSwapper());
-            var solutionInitializer = new RandomSolutionInitializer();
+            var numberOfExecutions = new ulong[] {10, 50, 100, 150, 200, 250, 300};
+            foreach(var minExecutions in numberOfExecutions)
+            {
+                var permutator = new DefaultPermutator().SetSeed(seed)
+                                                        .UseSwapper(new DefaultSwapper());
+                var solutionInitializer = new RandomSolutionInitializer();
 
-            var greedy = new Experiment("greedy", saveResults: true, runOnlyOnce: true)
-                                .UseInstance(instanceName)
-                                .SetInstancesLocation(instancesLocation)
-                                .UseBestResultsLoader(bestResults)
-                                .UsePermutator(permutator)
-                                .UseHeuristic(new GreedyHeuristic())
-                                .UseInitializer(solutionInitializer);
-            // run greedy to get max time for random experiment execution
-            RunExperiment(greedy);
+                var greedy = new Experiment($"greedy_{minExecutions}", saveResults: true)
+                                    .UseInstance(instanceName)
+                                    .SetInstancesLocation(instancesLocation)
+                                    .UseBestResultsLoader(bestResults)
+                                    .UsePermutator(permutator)
+                                    .UseHeuristic(new GreedyHeuristic())
+                                    .UseInitializer(solutionInitializer)
+                                    .SetNumberOfExecutions(minExecutions);
+                // run greedy to get max time for random experiment execution
+                RunExperiment(greedy);
+                experiments.Add(greedy);
 
-            experiments = new [] {
-                greedy, // add to list with experiments to save its result
-                new Experiment("random", saveResults: true)
-                                .UseInstance(instanceName)
-                                .SetInstancesLocation(instancesLocation)
-                                .UseBestResultsLoader(bestResults)
-                                .UsePermutator(permutator)
-                                .UseHeuristic(new RandomHeuristic(timeoutInMillis: greedy.Result.MeanExecutionTime))
-                                .UseInitializer(solutionInitializer),
-                new Experiment("steepest", saveResults: true)
-                                .UseInstance(instanceName)
-                                .SetInstancesLocation(instancesLocation)
-                                .UseBestResultsLoader(bestResults)
-                                .UsePermutator(permutator)
-                                .UseHeuristic(new SteepestHeurestic())
-                                .UseInitializer(solutionInitializer),
-                new Experiment("Simple", saveResults: true)
-                                .UseInstance(instanceName)
-                                .SetInstancesLocation(instancesLocation)
-                                .UseBestResultsLoader(bestResults)
-                                .UsePermutator(permutator)
-                                .UseHeuristic(new SimpleHeuristic())
-                                .UseInitializer(solutionInitializer),
+                experiments.Add(new Experiment($"steepest_{minExecutions}", saveResults: true)
+                                    .UseInstance(instanceName)
+                                    .SetInstancesLocation(instancesLocation)
+                                    .UseBestResultsLoader(bestResults)
+                                    .UsePermutator(permutator)
+                                    .UseHeuristic(new SteepestHeurestic())
+                                    .UseInitializer(solutionInitializer)
+                                    .SetNumberOfExecutions(minExecutions));
 
-            };
+                experiments.Add(new Experiment($"random_{minExecutions}", saveResults: true)
+                                    .UseInstance(instanceName)
+                                    .SetInstancesLocation(instancesLocation)
+                                    .UseBestResultsLoader(bestResults)
+                                    .UsePermutator(permutator)
+                                    .UseHeuristic(new RandomHeuristic(timeoutInMillis: greedy.Result.MeanExecutionTime))
+                                    .UseInitializer(solutionInitializer)
+                                    .SetNumberOfExecutions(minExecutions));
+
+                experiments.Add(new Experiment($"Simple_{minExecutions}", saveResults: true)
+                                    .UseInstance(instanceName)
+                                    .SetInstancesLocation(instancesLocation)
+                                    .UseBestResultsLoader(bestResults)
+                                    .UsePermutator(permutator)
+                                    .UseHeuristic(new SimpleHeuristic())
+                                    .UseInitializer(solutionInitializer)
+                                    .SetNumberOfExecutions(minExecutions));
+            }
 
             return this;
         }
@@ -115,7 +123,7 @@ namespace ATSP
 
         public Program RunExperiments()
         {
-            Console.WriteLine($"Experiments to run {experiments.Length}");
+            Console.WriteLine($"Experiments to run {experiments.Count}");
             foreach(var experiment in experiments)
             {
                 RunExperiment(experiment);
@@ -183,7 +191,7 @@ namespace ATSP
             }
         }
 
-        private Experiment[] experiments;
+        private List<Experiment> experiments = new List<Experiment>();
         private static string instancesLocation = @"../instances";
         private static string bestInstancesFilename = "best_known_results";
         private string instanceName = string.Empty;

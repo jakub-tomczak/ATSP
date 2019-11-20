@@ -63,6 +63,17 @@ namespace ATSP.Runners
             return this;
         }
 
+        public Experiment SetNumberOfExecutions(ulong numberOfExecutions)
+        {
+            if(this.runner is null)
+            {
+                Console.WriteLine("Runner is null, cannot set number of executions");
+                return this;
+            }
+            this.runner.MinExecutions = numberOfExecutions;
+            return this;
+        }
+
         public ExperimentResult Run()
         {
             Console.ForegroundColor = ConsoleColor.Green;

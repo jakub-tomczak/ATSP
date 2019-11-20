@@ -37,6 +37,5 @@ namespace ATSP.Runners
 
         protected ulong timeout = 1; // in seconds
         protected ulong totalTime = 0;
-        protected ulong minExecutions = 10;
     }
 }
