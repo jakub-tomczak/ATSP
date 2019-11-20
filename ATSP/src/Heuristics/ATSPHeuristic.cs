@@ -109,6 +109,7 @@ namespace ATSP.Heuristics
 
         protected void SaveCost(uint cost = 0)
         {
+            return;
             if(Instance.N > 100)
             {
                 return;
