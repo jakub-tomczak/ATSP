@@ -7,17 +7,24 @@ namespace ATSP.Heuristics{
 
         public Permutators.DefaultSwapper Swapper = new Permutators.DefaultSwapper();
 
+        uint currentCost = 0;
+
+        int temp_iteration = 0;
+        int  cool_iteration = 0;
+
 
         public float T{get;set;}
 
         public float alfa = 0.95f;
+
+        
 
         public float minimalT = 0.01f;
         Random rd = new Random();
         public int maxsteps{get;set;}
         public SAHeuristic() : base()
         {
-            T = 0.9f;
+            T = 0.95f;
             maxsteps = 100;
         }
         public SAHeuristic(float temperature,int maxsteps):base(){
@@ -32,32 +39,46 @@ namespace ATSP.Heuristics{
         public override bool IsEnd { get; protected set; }
 
 
+
         public override void NextStep()
         {
-            // TODO : TO JEST ŹLE XDDD I NA 2 ETAP
-            uint currentCost = 0;
-            int size = Solution.Length;
-            currentCost = CalculateCost();
-            uint CurrSolutionCost = currentCost;
-            var BestSolution = new uint[size];
-            Solution.CopyTo(BestSolution,0);
-            for(int i = 0 ; i < size ; i++){
-                for(int j = 0 ; j < size ; j++){
-                        Swapper.Swap(Solution, i, j);
-                        CurrSolutionCost = CalculateCost();
-                        if((CurrSolutionCost < currentCost) || rd.NextDouble() <= T)
-                        {
-                            currentCost = CurrSolutionCost;
-                            Solution.CopyTo(BestSolution,0);
-                            goto End;
+            if(Steps==0)
+            {
+                currentCost = CalculateCost();
+            }
+            temp_iteration=0;
+            uint bestSolutionCost = currentCost;
+            var improvements = 0;
+            var bestChange = (firstIndex: 0, secondIndex: 0, cost: bestSolutionCost);
+            while(temp_iteration<maxsteps)
+            {
+                temp_iteration++;
+                for(int i = 0; i < Solution.Length ; i++)
+                {
+                    for(int j = 0 ; j < Solution.Length ; j++)
+                    {
+                        bestSolutionCost = CalculateSwapCost(Solution,currentCost,i,j);
+                        if((bestSolutionCost<bestChange.cost)||(rd.NextDouble()<=T)){
+                            bestChange = (i,j,bestSolutionCost);
+                            improvements++;
                         }
-                        Swapper.Swap(Solution, i, j);
-
+                        
+                    }
                 }
             }
-            End:
-                T *= alfa;
-                IsEnd = true;
+            if(improvements>0)
+            {
+                NumberOfImprovements++;
+                currentCost = CalculateSwapCost(Solution, currentCost, bestChange.firstIndex, bestChange.secondIndex);
+                Swapper.Swap(Solution, bestChange.firstIndex, bestChange.secondIndex);
+            }
+
+
+            IsEnd = (improvements == 0) || (T <= minimalT);
+            T *= alfa;
+
+            Steps++;
+
         }
 
     }
