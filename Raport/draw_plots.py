@@ -353,6 +353,61 @@ class PlotDrawer():
         self.save_plot("steps_results",instance=instance_name)
         self.show_plot()
 
+    def draw_restarts(self, data):
+        print("drawing restart plots")
+        instance_name = data[0].instance
+        algorithms_names = ['greedy', 'steepest']
+        data_sorted = sorted(data, key=lambda x: len(x.executions))
+        number_of_executions = sorted(list(set([int(x.name.split('_')[1]) for x in data])))
+
+        best_plot_data = [
+                (algo_name, [min(x.executions, key=lambda x: x.cost).cost
+                for x in data_sorted
+                if algo_name in x.name])
+            for algo_name in algorithms_names
+        ]
+
+        bar_indices = np.arange(len(number_of_executions))
+        bar_width = .4
+        colors = ['tab:blue', 'tab:orange']
+        offsets = [-.25, .25]
+        plt.clf()
+        min_val = 1e6
+        max_val = 0
+        for (algo, algo_data), offset, color in zip(best_plot_data, offsets, colors):
+            plt.bar(bar_indices+offset, algo_data, bar_width, label=algo, color=color)
+            min_ = min(algo_data)
+            if min_< min_val:
+                min_val = min_
+            max_ = max(algo_data)
+            if max_ > max_val:
+                max_val = max_
+        plt.xlabel('Liczba restartow')
+        plt.ylabel('Najlepszy koszt')
+        axes = plt.gca()
+        ticks = number_of_executions
+        ticks.insert(0, 0)
+        axes.set_xticklabels(number_of_executions)
+        plt.legend()
+        axes.set_ylim([int(min_val*.95), int(max_val*1.05)])
+        self.save_plot("best_number_of_starts_vs_cost_{}".format(algo), instance=instance_name)
+        self.show_plot()
+
+        mean_plot_data = [
+                (algo_name, [[execution.cost for execution in x.executions]
+                for x in data_sorted
+                if algo_name in x.name])
+            for algo_name in algorithms_names
+        ]
+
+        for (algo, algo_data), color in zip(mean_plot_data, colors):
+            plt.clf()
+            sns.violinplot(data=algo_data, color=color).set_xticklabels(number_of_executions)
+            plt.xlabel('Liczba restartow')
+            plt.ylabel('Sredni koszt')
+            self.save_plot("mean_number_of_starts_vs_cost_{}".format(algo), instance=instance_name)
+            self.show_plot()
+
 
     def draw_plots(self, data):
         if len(data) > 0:
@@ -361,6 +416,7 @@ class PlotDrawer():
             self.draw_quality_plots_algo(algos_data)
             for instance_data in data:
                 print("\n{}\ndrawing graphs for intance {}".format('*'*20, instance_data[0].instance))
+                self.draw_restarts(instance_data)
                 self.plot_solution_comparisons(instance_data)
                 self.draw_time_plots(instance_data)
                 self.draw_quality_plots(instance_data)
