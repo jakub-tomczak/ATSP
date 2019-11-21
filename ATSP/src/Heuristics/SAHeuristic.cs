@@ -24,8 +24,8 @@ namespace ATSP.Heuristics{
         public int maxsteps{get;set;}
         public SAHeuristic() : base()
         {
-            T = 0.95f;
-            maxsteps = 100;
+            T = 0.9f;
+            maxsteps = 1000;
         }
         public SAHeuristic(float temperature,int maxsteps):base(){
             this.T = temperature;
@@ -50,20 +50,17 @@ namespace ATSP.Heuristics{
             uint bestSolutionCost = currentCost;
             var improvements = 0;
             var bestChange = (firstIndex: 0, secondIndex: 0, cost: bestSolutionCost);
+            int i = 0 ;
+            int j = 0;
             while(temp_iteration<maxsteps)
             {
                 temp_iteration++;
-                for(int i = 0; i < Solution.Length ; i++)
-                {
-                    for(int j = 0 ; j < Solution.Length ; j++)
-                    {
-                        bestSolutionCost = CalculateSwapCost(Solution,currentCost,i,j);
-                        if((bestSolutionCost<bestChange.cost)||(rd.NextDouble()<=T)){
-                            bestChange = (i,j,bestSolutionCost);
-                            improvements++;
-                        }
-                        
-                    }
+                i = rd.Next(Solution.Length);
+                j = rd.Next(Solution.Length);
+                bestSolutionCost = CalculateSwapCost(Solution,currentCost,i,j);
+                if((bestSolutionCost<bestChange.cost)||(rd.NextDouble()<=T)){
+                    bestChange = (i,j,bestSolutionCost);
+                    improvements++;
                 }
             }
             if(improvements>0)
