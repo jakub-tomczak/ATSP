@@ -114,6 +114,36 @@ namespace ATSP
             return this;
         }
 
+        public Program PrepareAdvancedExperiments()
+        {
+            var numberOfExecutions = new ulong[] {10 } ; //, 50, 100, 150, 200, 250, 300};
+            foreach(var minExecutions in numberOfExecutions)
+            {
+                var permutator = new DefaultPermutator().SetSeed(seed)
+                                                        .UseSwapper(new DefaultSwapper());
+                var solutionInitializer = new RandomSolutionInitializer();
+                experiments.Add(new Experiment($"greedy_{minExecutions}", saveResults: true)
+                                    .UseInstance(instanceName)
+                                    .SetInstancesLocation(instancesLocation)
+                                    .UseBestResultsLoader(bestResults)
+                                    .UsePermutator(permutator)
+                                    .UseHeuristic(new GreedyHeuristic())
+                                    .UseInitializer(solutionInitializer)
+                                    .SetNumberOfExecutions(minExecutions));
+
+                experiments.Add(new Experiment($"SA_{minExecutions}", saveResults: true)
+                                    .UseInstance(instanceName)
+                                    .SetInstancesLocation(instancesLocation)
+                                    .UseBestResultsLoader(bestResults)
+                                    .UsePermutator(permutator)
+                                    .UseHeuristic(new SAHeuristic())
+                                    .UseInitializer(solutionInitializer)
+                                    .SetNumberOfExecutions(minExecutions));
+            }
+
+            return this;
+        }
+
         private Program RunExperiment(Experiment experiment)
         {
             var result = experiment.Run();
