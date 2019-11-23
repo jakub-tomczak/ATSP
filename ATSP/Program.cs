@@ -136,7 +136,7 @@ namespace ATSP
                                     .SetInstancesLocation(instancesLocation)
                                     .UseBestResultsLoader(bestResults)
                                     .UsePermutator(permutator)
-                                    .UseHeuristic(new SAHeuristic())
+                                    .UseHeuristic(new SAHeuristic(coolingDownTime: 1000, initialAcceptanceCoefficient: 0.98f))
                                     .UseInitializer(solutionInitializer)
                                     .SetNumberOfExecutions(minExecutions));
             }
