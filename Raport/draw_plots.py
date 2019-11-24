@@ -367,31 +367,32 @@ class PlotDrawer():
             for algo_name in algorithms_names
         ]
 
-        bar_indices = np.arange(len(number_of_executions))
-        bar_width = .4
-        colors = ['tab:blue', 'tab:orange']
-        offsets = [-.25, .25]
-        plt.clf()
-        min_val = 1e6
-        max_val = 0
-        for (algo, algo_data), offset, color in zip(best_plot_data, offsets, colors):
-            plt.bar(bar_indices+offset, algo_data, bar_width, label=algo, color=color)
-            min_ = min(algo_data)
-            if min_< min_val:
-                min_val = min_
-            max_ = max(algo_data)
-            if max_ > max_val:
-                max_val = max_
-        plt.xlabel('Liczba restartow')
-        plt.ylabel('Najlepszy koszt')
-        axes = plt.gca()
-        ticks = number_of_executions
-        ticks.insert(0, 0)
-        axes.set_xticklabels(number_of_executions)
-        plt.legend()
-        axes.set_ylim([int(min_val*.95), int(max_val*1.05)])
-        self.save_plot("best_number_of_starts_vs_cost_{}".format(algo), instance=instance_name)
-        self.show_plot()
+        if len(best_plot_data) > 0:
+            bar_indices = np.arange(len(number_of_executions))
+            bar_width = .4
+            colors = ['tab:blue', 'tab:orange']
+            offsets = [-.25, .25]
+            plt.clf()
+            min_val = 1e6
+            max_val = 0
+            for (algo, algo_data), offset, color in zip(best_plot_data, offsets, colors):
+                plt.bar(bar_indices+offset, algo_data, bar_width, label=algo, color=color)
+                min_ = min(algo_data)
+                if min_< min_val:
+                    min_val = min_
+                max_ = max(algo_data)
+                if max_ > max_val:
+                    max_val = max_
+            plt.xlabel('Liczba restartow')
+            plt.ylabel('Najlepszy koszt')
+            axes = plt.gca()
+            ticks = number_of_executions
+            ticks.insert(0, 0)
+            axes.set_xticklabels(number_of_executions)
+            plt.legend()
+            axes.set_ylim([int(min_val*.95), int(max_val*1.05)])
+            self.save_plot("best_number_of_starts_vs_cost_{}".format(algo), instance=instance_name)
+            self.show_plot()
 
         mean_plot_data = [
                 (algo_name, [[execution.cost for execution in x.executions]
@@ -400,13 +401,14 @@ class PlotDrawer():
             for algo_name in algorithms_names
         ]
 
-        for (algo, algo_data), color in zip(mean_plot_data, colors):
-            plt.clf()
-            sns.violinplot(data=algo_data, color=color).set_xticklabels(number_of_executions)
-            plt.xlabel('Liczba restartow')
-            plt.ylabel('Sredni koszt')
-            self.save_plot("mean_number_of_starts_vs_cost_{}".format(algo), instance=instance_name)
-            self.show_plot()
+        if len(mean_plot_data) > 0:
+            for (algo, algo_data), color in zip(mean_plot_data, colors):
+                plt.clf()
+                sns.violinplot(data=algo_data, color=color).set_xticklabels(number_of_executions[1:])
+                plt.xlabel('Liczba restartow')
+                plt.ylabel('Sredni koszt')
+                self.save_plot("mean_number_of_starts_vs_cost_{}".format(algo), instance=instance_name)
+                self.show_plot()
 
 
     def draw_plots(self, data):
