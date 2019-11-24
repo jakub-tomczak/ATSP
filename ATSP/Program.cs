@@ -121,7 +121,11 @@ namespace ATSP
             {
                 var permutator = new DefaultPermutator().SetSeed(seed)
                                                         .UseSwapper(new DefaultSwapper());
-                var solutionInitializer = new RandomSolutionInitializer();
+                var solutionInitializer = new RandomSolutionInitializer()
+                {
+                    Seed = seed
+                };
+
                 experiments.Add(new Experiment($"greedy_{minExecutions}", saveResults: true)
                                     .UseInstance(instanceName)
                                     .SetInstancesLocation(instancesLocation)

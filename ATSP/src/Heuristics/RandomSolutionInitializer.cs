@@ -27,7 +27,7 @@ namespace ATSP.Heuristics
         public int Seed
         {
             get => seed;
-            private set
+            set
             {
                 if(value != seed)
                 {
