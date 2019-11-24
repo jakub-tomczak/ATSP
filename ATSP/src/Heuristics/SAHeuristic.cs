@@ -18,7 +18,7 @@ namespace ATSP.Heuristics{
 
         // the fraction of the initial solution that will achieve the final solution
         // used to estimate the initial temperature
-        public float ExpectedInitialSolutionImprovementFraction = .3f;
+        public float ExpectedInitialSolutionImprovementFraction = .90f;
         Random rd = new Random();
         public int coolingDownTime { get; set; }
         public SAHeuristic() : base()
@@ -42,11 +42,12 @@ namespace ATSP.Heuristics{
         {
             if(Steps==0)
             {
+                // Console.WriteLine($"SA, instance {Instance.Name}, fraction {ExpectedInitialSolutionImprovementFraction}");
                 currentCost = CalculateCost();
                 temperature = CalculateInitialTemperature(currentCost);
             }
             temp_iteration=0;
-            uint bestSolutionCost = currentCost;
+            uint nextSolutionCost = currentCost;
             var improvements = 0;
             // do we need to store change? I think that we can update the solution immediately
             // var bestChange = (firstIndex: 0, secondIndex: 0, cost: bestSolutionCost);
@@ -58,38 +59,36 @@ namespace ATSP.Heuristics{
                 i = rd.Next(Solution.Length);
 
                 // get j such that i!=j
-                while(i == j)
+                do
                 {
                     j = rd.Next(Solution.Length);
-                }
+                } while(i == j);
 
-                bestSolutionCost = CalculateSwapCost(Solution,currentCost,i,j);
-                if(bestSolutionCost > currentCost ||
-                    AcceptanceProbability(currentCost, bestSolutionCost) > rd.NextDouble())
+                nextSolutionCost = CalculateSwapCost(Solution,currentCost,i,j);
+                if(nextSolutionCost <= currentCost ||
+                    AcceptanceProbability(currentCost, nextSolutionCost) > rd.NextDouble())
                 {
-                    // currentCost = CalculateSwapCost(Solution, currentCost, bestChange.firstIndex, bestChange.secondIndex);
-                    // Swapper.Swap(Solution, bestChange.firstIndex, bestChange.secondIndex);
                     currentCost = CalculateSwapCost(Solution, currentCost, i, j);
                     Swapper.Swap(Solution, i, j);
                     improvements++;
                 }
+                SaveCost(currentCost);
                 Steps++;
             }
 
-            IsEnd = (improvements == 0) || (temperature <= minimalT);
-
             // UpdateTemperature
             temperature *= alfa;
-
-            Steps++;
-
+            IsEnd = temperature <= minimalT;
         }
 
         private double AcceptanceProbability(uint currentSolutionCost, uint newSolutionCost)
-            => Math.Exp((currentSolutionCost - newSolutionCost)/temperature);
+        {
+            var delta = (float)((int)currentSolutionCost - newSolutionCost);
+            return Math.Exp(delta/temperature);
+        }
 
         private double CalculateInitialTemperature(uint initialCost)
-            => (ExpectedInitialSolutionImprovementFraction*initialCost) / Math.Log(initialAcceptanceCoefficient);
+            => -(ExpectedInitialSolutionImprovementFraction*initialCost) / Math.Log(initialAcceptanceCoefficient);
 
     }
 }

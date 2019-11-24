@@ -117,6 +117,19 @@ namespace ATSP
         public Program PrepareAdvancedExperiments()
         {
             var numberOfExecutions = new ulong[] {10 } ; //, 50, 100, 150, 200, 250, 300};
+            var initialImprovementsForSA = new Dictionary<string, float>()
+            {
+                {"br17", 0.157f},
+                {"ft53", 0.255f},
+                {"ft70", 0.535f},
+                {"ftv33", 0.288f},
+                {"ftv170", 0.104f},
+                {"kro124p", 0.188f},
+                {"rbg323", 0.215f},
+                {"rbg443", 0.331f},
+                {"ry48p", 0.271f}
+            };
+
             foreach(var minExecutions in numberOfExecutions)
             {
                 var permutator = new DefaultPermutator().SetSeed(seed)
@@ -140,7 +153,12 @@ namespace ATSP
                                     .SetInstancesLocation(instancesLocation)
                                     .UseBestResultsLoader(bestResults)
                                     .UsePermutator(permutator)
-                                    .UseHeuristic(new SAHeuristic(coolingDownTime: 1000, initialAcceptanceCoefficient: 0.98f))
+                                    .UseHeuristic(
+                                        new SAHeuristic(coolingDownTime: 1000, initialAcceptanceCoefficient: 0.5f)
+                                        {
+                                            ExpectedInitialSolutionImprovementFraction = initialImprovementsForSA[this.instanceName]
+                                        }
+                                        )
                                     .UseInitializer(solutionInitializer)
                                     .SetNumberOfExecutions(minExecutions));
             }
