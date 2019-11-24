@@ -8,10 +8,11 @@ def get_list_of_directories(root_directory, add_root_directory=True):
     return [os.path.join(root_directory, d) if add_root_directory else d
         for d in os.listdir(root_directory) if os.path.isdir(os.path.join(root_directory, d))]
 
-def load_instances(instances_directories, files_extension):
-    return [load_instance_results(instance, files_extension) for instance in instances_directories]
+def load_instances(instances_directories, files_extension, load_intermediate_costs = False):
+    return [load_instance_results(instance, files_extension, load_intermediate_costs)
+        for instance in instances_directories]
 
-def load_instance_results(directory, files_extension):
+def load_instance_results(directory, files_extension, load_intermediate_costs = False):
     experiments_results = []
 
     for experiment_dir in get_list_of_directories(directory, False):
@@ -31,10 +32,12 @@ def load_instance_results(directory, files_extension):
                 execution.best_known_cost = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
                 execution.number_of_improvements = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
                 execution.solution = file.readline().rstrip('\n').split(';')
-                # for line in file:
-                #     row = line.split(';')
-                #     execution.intermediate_costs.append(int(row[0]))
-                # print('\t{} intermediate costs'.format(len(execution.intermediate_costs)))
+                if load_intermediate_costs:
+                    for line in file:
+                        row = line.split(';')
+                        execution.intermediate_costs.append(int(row[0]))
+                    print('read {} intermediate costs'.format(len(execution.intermediate_costs)))
+
                 result.executions.append(execution)
         print("Read {} files\n".format(len(result)))
         experiments_results.append(result)

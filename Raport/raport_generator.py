@@ -16,7 +16,7 @@ def parse_args():
 def main(parameters):
     print("Using {} directory".format(parameters.experiments_directory))
     instances_directories = get_list_of_directories(parameters.experiments_directory)
-    instances = load_instances(instances_directories, parameters.extension)
+    instances = load_instances(instances_directories, parameters.extension, load_intermediate_costs=True)
     plot_drawer = PlotDrawer(parameters.plots_path, parameters.display_plots)
     plot_drawer.draw_plots(instances)
 

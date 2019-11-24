@@ -113,10 +113,6 @@ namespace ATSP.Heuristics
             {
                 return;
             }
-            if(Instance.N > 100)
-            {
-                return;
-            }
             if(cost == 0)
             {
                 IntermediateCosts.Add(CalculateCost());
@@ -130,7 +126,7 @@ namespace ATSP.Heuristics
         public uint Steps { get; protected set; }
         public uint NumberOfImprovements { get; protected set; }
 
-        public bool SaveIntermediateCosts { get; set; } = false;
+        public bool SaveIntermediateCosts { get; set; } = true;
 
         public abstract bool IsEnd { get; protected set; }
         public TravellingSalesmanProblemInstance Instance { get; private set; }
