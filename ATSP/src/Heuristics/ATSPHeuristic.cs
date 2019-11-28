@@ -123,6 +123,19 @@ namespace ATSP.Heuristics
             }
         }
 
+        protected Tuple<int, int> GetIndicesForSwap(int arraySize)
+        {
+            int j = 0;
+            var i = Randomizer.Next(arraySize);
+            // get j such that i!=j
+            do
+            {
+                j = Randomizer.Next(arraySize);
+            } while(i == j);
+
+            return new Tuple<int, int>(i, j);
+        }
+
         public uint Steps { get; protected set; }
         public uint NumberOfImprovements { get; protected set; }
 
@@ -136,5 +149,7 @@ namespace ATSP.Heuristics
 
         public List<uint> IntermediateCosts {get; protected set; } = new List<uint>();
         public double TimeoutInMillis { get; protected set; } = 0.0f;
+
+        public Random Randomizer { get; set; } = new Random();
     }
 }

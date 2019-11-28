@@ -154,7 +154,7 @@ namespace ATSP
                                     .UseBestResultsLoader(bestResults)
                                     .UsePermutator(permutator)
                                     .UseHeuristic(
-                                        new SAHeuristic(coolingDownTime: 1000, initialAcceptanceCoefficient: 0.5f)
+                                        new SAHeuristic(coolingDownTime: 1000, acceptanceCoefficient: 0.95f)
                                         {
                                             ExpectedInitialSolutionImprovementFraction = initialImprovementsForSA[this.instanceName]
                                         }

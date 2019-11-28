@@ -14,22 +14,22 @@ namespace ATSP.Heuristics{
         public float alfa = 0.95f;
 
         private float minimalT = 0.01f;
-        private float initialAcceptanceCoefficient = .98f;
+        private float acceptanceCoefficient = .98f;
 
         // the fraction of the initial solution that will achieve the final solution
         // used to estimate the initial temperature
         public float ExpectedInitialSolutionImprovementFraction = .90f;
-        Random rd = new Random();
         public int coolingDownTime { get; set; }
         public SAHeuristic() : base()
         {
             coolingDownTime = 1000;
         }
-        public SAHeuristic(int coolingDownTime, float initialAcceptanceCoefficient)
+        public SAHeuristic(int coolingDownTime, 
+        float acceptanceCoefficient)
             :base()
         {
             this.coolingDownTime = coolingDownTime;
-            this.initialAcceptanceCoefficient = initialAcceptanceCoefficient;
+            this.acceptanceCoefficient = acceptanceCoefficient;
         }
 
         public override void Reset()
@@ -42,31 +42,22 @@ namespace ATSP.Heuristics{
         {
             if(Steps==0)
             {
-                // Console.WriteLine($"SA, instance {Instance.Name}, fraction {ExpectedInitialSolutionImprovementFraction}");
+                var meanDiff = GetMeanInitialSolutionChange(20);
                 currentCost = CalculateCost();
-                temperature = CalculateInitialTemperature(currentCost);
+                temperature = CalculateInitialTemperature(meanDiff);
             }
             temp_iteration=0;
             uint nextSolutionCost = currentCost;
             var improvements = 0;
-            // do we need to store change? I think that we can update the solution immediately
-            // var bestChange = (firstIndex: 0, secondIndex: 0, cost: bestSolutionCost);
-            int i = 0 ;
-            int j = 0;
+
             while(temp_iteration < coolingDownTime)
             {
                 temp_iteration++;
-                i = rd.Next(Solution.Length);
-
-                // get j such that i!=j
-                do
-                {
-                    j = rd.Next(Solution.Length);
-                } while(i == j);
+                (var i, var j) = GetIndicesForSwap(Instance.N);
 
                 nextSolutionCost = CalculateSwapCost(Solution,currentCost,i,j);
                 if(nextSolutionCost <= currentCost ||
-                    AcceptanceProbability(currentCost, nextSolutionCost) > rd.NextDouble())
+                    AcceptanceProbability(currentCost, nextSolutionCost) > Randomizer.NextDouble())
                 {
                     currentCost = CalculateSwapCost(Solution, currentCost, i, j);
                     Swapper.Swap(Solution, i, j);
@@ -88,7 +79,31 @@ namespace ATSP.Heuristics{
         }
 
         private double CalculateInitialTemperature(uint initialCost)
-            => -(ExpectedInitialSolutionImprovementFraction*initialCost) / Math.Log(initialAcceptanceCoefficient);
+            => -(ExpectedInitialSolutionImprovementFraction*initialCost) / Math.Log(acceptanceCoefficient);
 
+
+        private double CalculateInitialTemperature(double iniitialDelta)
+            => -iniitialDelta / Math.Log(acceptanceCoefficient);
+
+        private double GetMeanInitialSolutionChange(int numberOfSamples)
+        {
+            long improvements = 0;
+            var numberOfImprovements = 0;
+            Solution = initializer.InitializeSolution(Instance.N);
+            var initialCost = CalculateCost();
+            do
+            {
+                (var i, var j) = GetIndicesForSwap(Instance.N);
+                var diff = initialCost - (int)CalculateSwapCost(Solution, initialCost, i, j);
+                if(diff > 0)
+                {
+                    numberOfImprovements++;
+                    improvements += diff;
+                }
+            } while(numberOfImprovements < numberOfSamples);
+
+            return (double)improvements / numberOfImprovements;
+        }
+        private RandomSolutionInitializer initializer = new RandomSolutionInitializer();
     }
 }
