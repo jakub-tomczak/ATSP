@@ -36,9 +36,9 @@ namespace ATSP.Heuristics
                 if(temp < currentCost)
                 {
                     NumberOfImprovements++;
+                    currentCost = temp;
+                    swapper.Swap(Solution, ref swapIndex, ref i);
                 }
-                currentCost = temp;
-                swapper.Swap(Solution, ref swapIndex, ref i);
                 SaveCost(currentCost);
             }
 
