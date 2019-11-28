@@ -64,71 +64,7 @@ namespace ATSP
 
         public Program PrepareExperiments()
         {
-            var numberOfExecutions = new ulong[] {10, 50, 100, 150, 200, 250, 300};
-            foreach(var minExecutions in numberOfExecutions)
-            {
-                var permutator = new DefaultPermutator().SetSeed(seed)
-                                                        .UseSwapper(new DefaultSwapper());
-                var solutionInitializer = new RandomSolutionInitializer();
-
-                var greedy = new Experiment($"greedy_{minExecutions}", saveResults: true)
-                                    .UseInstance(instanceName)
-                                    .SetInstancesLocation(instancesLocation)
-                                    .UseBestResultsLoader(bestResults)
-                                    .UsePermutator(permutator)
-                                    .UseHeuristic(new GreedyHeuristic())
-                                    .UseInitializer(solutionInitializer)
-                                    .SetNumberOfExecutions(minExecutions);
-                // run greedy to get max time for random experiment execution
-                RunExperiment(greedy);
-                experiments.Add(greedy);
-
-                experiments.Add(new Experiment($"steepest_{minExecutions}", saveResults: true)
-                                    .UseInstance(instanceName)
-                                    .SetInstancesLocation(instancesLocation)
-                                    .UseBestResultsLoader(bestResults)
-                                    .UsePermutator(permutator)
-                                    .UseHeuristic(new SteepestHeurestic())
-                                    .UseInitializer(solutionInitializer)
-                                    .SetNumberOfExecutions(minExecutions));
-
-                experiments.Add(new Experiment($"random_{minExecutions}", saveResults: true)
-                                    .UseInstance(instanceName)
-                                    .SetInstancesLocation(instancesLocation)
-                                    .UseBestResultsLoader(bestResults)
-                                    .UsePermutator(permutator)
-                                    .UseHeuristic(new RandomHeuristic(timeoutInMillis: greedy.Result.MeanExecutionTime))
-                                    .UseInitializer(solutionInitializer)
-                                    .SetNumberOfExecutions(minExecutions));
-
-                experiments.Add(new Experiment($"Simple_{minExecutions}", saveResults: true)
-                                    .UseInstance(instanceName)
-                                    .SetInstancesLocation(instancesLocation)
-                                    .UseBestResultsLoader(bestResults)
-                                    .UsePermutator(permutator)
-                                    .UseHeuristic(new SimpleHeuristic())
-                                    .UseInitializer(solutionInitializer)
-                                    .SetNumberOfExecutions(minExecutions));
-            }
-
-            return this;
-        }
-
-        public Program PrepareAdvancedExperiments()
-        {
-            var numberOfExecutions = new ulong[] {10 } ; //, 50, 100, 150, 200, 250, 300};
-            var initialImprovementsForSA = new Dictionary<string, float>()
-            {
-                {"br17", 0.157f},
-                {"ft53", 0.255f},
-                {"ft70", 0.535f},
-                {"ftv33", 0.288f},
-                {"ftv170", 0.104f},
-                {"kro124p", 0.188f},
-                {"rbg323", 0.215f},
-                {"rbg443", 0.331f},
-                {"ry48p", 0.271f}
-            };
+            var numberOfExecutions = new ulong[] { 10 };//, 50, 100, 150, 200, 250, 300};
 
             foreach(var minExecutions in numberOfExecutions)
             {
@@ -139,14 +75,27 @@ namespace ATSP
                     Seed = seed
                 };
 
-                experiments.Add(new Experiment($"greedy_{minExecutions}", saveResults: true)
+                var greedy = new Experiment($"greedy_{minExecutions}", saveResults: true, runOnlyOnce: true)
                                     .UseInstance(instanceName)
                                     .SetInstancesLocation(instancesLocation)
                                     .UseBestResultsLoader(bestResults)
                                     .UsePermutator(permutator)
                                     .UseHeuristic(new GreedyHeuristic())
                                     .UseInitializer(solutionInitializer)
+                                    .SetNumberOfExecutions(minExecutions);
+
+                RunExperiment(greedy);
+                experiments.Add(greedy);
+
+                experiments.Add(new Experiment($"random_{minExecutions}", saveResults: true)
+                                    .UseInstance(instanceName)
+                                    .SetInstancesLocation(instancesLocation)
+                                    .UseBestResultsLoader(bestResults)
+                                    .UsePermutator(permutator)
+                                    .UseHeuristic(new RandomHeuristic(timeoutInMillis: greedy.Result.MeanExecutionTime))
+                                    .UseInitializer(solutionInitializer)
                                     .SetNumberOfExecutions(minExecutions));
+
 
                 experiments.Add(new Experiment($"SA_{minExecutions}", saveResults: true)
                                     .UseInstance(instanceName)
@@ -155,9 +104,9 @@ namespace ATSP
                                     .UsePermutator(permutator)
                                     .UseHeuristic(
                                         new SAHeuristic(coolingDownTime: 1000, acceptanceCoefficient: 0.95f)
-                                        {
-                                            ExpectedInitialSolutionImprovementFraction = initialImprovementsForSA[this.instanceName]
-                                        }
+                                        // {
+                                        //     ExpectedInitialSolutionImprovementFraction = initialImprovementsForSA[this.instanceName]
+                                        // }
                                         )
                                     .UseInitializer(solutionInitializer)
                                     .SetNumberOfExecutions(minExecutions));
@@ -250,5 +199,18 @@ namespace ATSP
         private int seed = 50;
 
         private BestResultsLoader bestResults = new BestResultsLoader();
+
+        private Dictionary<string, float> initialImprovementsForSA = new Dictionary<string, float>()
+        {
+            {"br17", 0.157f},
+            {"ft53", 0.255f},
+            {"ft70", 0.535f},
+            {"ftv33", 0.288f},
+            {"ftv170", 0.104f},
+            {"kro124p", 0.188f},
+            {"rbg323", 0.215f},
+            {"rbg443", 0.331f},
+            {"ry48p", 0.271f}
+        };
     }
 }
