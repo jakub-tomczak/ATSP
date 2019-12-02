@@ -62,6 +62,7 @@ namespace ATSP.Heuristics{
                     currentCost = CalculateSwapCost(Solution, currentCost, i, j);
                     Swapper.Swap(Solution, i, j);
                     improvements++;
+                    NumberOfImprovements++;
                 }
                 SaveCost(currentCost);
                 Steps++;
