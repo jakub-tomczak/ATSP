@@ -3,16 +3,16 @@ using ATSP.Permutators;
 
 namespace ATSP.Heuristics
 {
-    public class RandomHeuristic : ATSPHeuristic
+    public class RandomWalkHeuristic : ATSPHeuristic
     {
-        public RandomHeuristic()
+        public RandomWalkHeuristic()
             : base()
         {
         }
 
-        public RandomHeuristic(double timeoutInMillis)
+        public RandomWalkHeuristic(double timeoutInMillis)
         {
-            Console.WriteLine($"Constraining random execution to {timeoutInMillis} ms");
+            Console.WriteLine($"Constraining random walk execution to {timeoutInMillis} ms");
             this.TimeoutInMillis = timeoutInMillis;
         }
 
@@ -24,11 +24,6 @@ namespace ATSP.Heuristics
             {
                 currentCost = CalculateCost();
             }
-
-            // permutator.Permutate(Solution);
-
-            // the same code that is in the permutator, but we need to update cost,
-            // so `for` should be here
             for(int i=Solution.Length-1;i>0;i--)
             {
                 var swapIndex = randomizer.Next(i);
@@ -36,13 +31,12 @@ namespace ATSP.Heuristics
                 if(temp < currentCost)
                 {
                     NumberOfImprovements++;
-                    currentCost = temp;
-                    swapper.Swap(Solution, ref swapIndex, ref i);
                 }
+                currentCost = temp;
+                swapper.Swap(Solution, ref swapIndex, ref i);
                 SaveCost(currentCost);
                 Steps++;
             }
-
         }
 
         public override void Reset()
