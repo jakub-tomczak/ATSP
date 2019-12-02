@@ -7,8 +7,15 @@ class Execution:
         self.cost = 0
         self.intermediate_costs = []
         self.best_known_cost = 0
+        self.initial_cost = 0
         self.number_of_improvements = 0
         self.solution = []
+
+    @property
+    def initial_to_final_execution_improvement(self):
+        if self.cost == 0:
+            return 0
+        return (float)(self.initial_cost) / self.cost
 
     @property
     def quality(self):
@@ -29,6 +36,6 @@ class Execution:
         return len(self.intermediate_costs)
 
     def first_best_quality(self):
-        if len(self.intermediate_costs)>0: 
+        if len(self.intermediate_costs)>0:
             return (self.intermediate_costs[0]- self.best_known_cost) / self.best_known_cost, self.quality
         return 0,0

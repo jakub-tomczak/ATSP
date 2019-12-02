@@ -19,9 +19,8 @@ namespace ATSP.Heuristics{
         public override bool IsEnd { get; protected set; }
 
 
-        public int ChooseClosest(bool[] visited, uint[,] neibours,int currentNode){
-
-
+        public int ChooseClosest(bool[] visited, uint[,] neibours,int currentNode)
+        {
             var ClossestID = 0;
             var ClossestCost = uint.MaxValue;
             for(var i = 0; i < Solution.Length; i++)
@@ -34,8 +33,8 @@ namespace ATSP.Heuristics{
                         NumberOfImprovements++;
                     }
                 }
-                Steps++;
                 SaveCost(currentCost);
+                Steps++;
             }
 
             return ClossestID;

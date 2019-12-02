@@ -11,6 +11,8 @@ namespace ATSP.Runners
         public uint NumberOfImprovements;
         public List<uint> IntermediateCosts;
 
+        public uint InitialCost;
+
         public uint[] FinalSolution;
     }
 }

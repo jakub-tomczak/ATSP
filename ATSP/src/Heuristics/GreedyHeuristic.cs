@@ -45,8 +45,8 @@ namespace ATSP.Heuristics{
                     {
                         Swapper.Swap(Solution, i, j);
                     }
-                    Steps++;
                     SaveCost(currentCost);
+                    Steps++;
                 }
             }
             IsEnd = improvements == 0;

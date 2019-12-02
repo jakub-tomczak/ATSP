@@ -24,19 +24,17 @@ namespace ATSP.Heuristics
             {
                 currentCost = CalculateCost();
             }
-            for(int i=Solution.Length-1;i>0;i--)
+            (var i, var j) = GetIndicesForSwap(Solution.Length);
+            // check whether this is the improvement
+            var temp = CalculateSwapCost(Solution, currentCost, i, j);
+            if(temp < currentCost)
             {
-                var swapIndex = randomizer.Next(i);
-                var temp = CalculateSwapCost(Solution, currentCost, swapIndex, i);
-                if(temp < currentCost)
-                {
-                    NumberOfImprovements++;
-                }
-                currentCost = temp;
-                swapper.Swap(Solution, ref swapIndex, ref i);
-                SaveCost(currentCost);
-                Steps++;
+                NumberOfImprovements++;
             }
+            currentCost = temp;
+            swapper.Swap(Solution, ref j, ref i);
+            SaveCost(currentCost);
+            Steps++;
         }
 
         public override void Reset()

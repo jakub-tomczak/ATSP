@@ -40,8 +40,8 @@ namespace ATSP.Heuristics{
                         improvements++;
                         bestChange = (i, j, bestSolutionCost);
                     }
-                    Steps++;
                     SaveCost(currentCost);
+                    Steps++;
                 }
             }
             if(improvements > 0)

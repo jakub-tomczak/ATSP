@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ATSP.Data;
 using ATSP.Permutators;
 
@@ -50,6 +51,10 @@ namespace ATSP.Heuristics
                 cost += vertices[Solution[i], Solution[(i+1)%Solution.Length]];
             }
 
+            if(Steps == 0)
+            {
+                InitialCost = cost;
+            }
             return cost;
         }
 
@@ -113,13 +118,16 @@ namespace ATSP.Heuristics
             {
                 return;
             }
-            if(cost == 0)
+            if(SaveCostPoints.Contains(Steps))
             {
-                IntermediateCosts.Add(CalculateCost());
-            }
-            else
-            {
-                IntermediateCosts.Add(cost);
+                if(cost == 0)
+                {
+                    IntermediateCosts.Add(CalculateCost());
+                }
+                else
+                {
+                    IntermediateCosts.Add(cost);
+                }
             }
         }
 
@@ -140,6 +148,10 @@ namespace ATSP.Heuristics
         public uint NumberOfImprovements { get; protected set; }
 
         public bool SaveIntermediateCosts { get; set; } = true;
+        protected uint[] SaveCostPoints = Enumerable.
+            Range(0, 40).
+            Select(x => (uint)x*10).
+            ToArray();
 
         public abstract bool IsEnd { get; protected set; }
         public TravellingSalesmanProblemInstance Instance { get; private set; }
@@ -151,5 +163,8 @@ namespace ATSP.Heuristics
         public double TimeoutInMillis { get; protected set; } = 0.0f;
 
         public Random Randomizer { get; set; } = new Random();
+
+        public uint InitialCost { get; protected set; } = 0;
+
     }
 }

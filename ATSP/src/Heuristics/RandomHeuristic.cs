@@ -27,6 +27,7 @@ namespace ATSP.Heuristics
 
             // permutator.Permutate(Solution);
 
+            // find new permutation
             // the same code that is in the permutator, but we need to update cost,
             // so `for` should be here
             for(int i=Solution.Length-1;i>0;i--)
@@ -36,9 +37,9 @@ namespace ATSP.Heuristics
                 if(temp < currentCost)
                 {
                     NumberOfImprovements++;
-                    currentCost = temp;
-                    swapper.Swap(Solution, ref swapIndex, ref i);
                 }
+                currentCost = temp;
+                swapper.Swap(Solution, ref swapIndex, ref i);
                 SaveCost(currentCost);
                 Steps++;
             }

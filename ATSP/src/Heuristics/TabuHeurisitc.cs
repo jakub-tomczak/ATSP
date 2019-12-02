@@ -54,8 +54,8 @@ namespace ATSP.Heuristics{
                         bestChange = (i,j,bestsolutionCost);
                         tabuList[i,j] = false;
                     }
-                    Steps++;
                     SaveCost(currentCost);
+                    Steps++;
                 }
             }
             if(improvements>0)
