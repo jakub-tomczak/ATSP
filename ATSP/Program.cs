@@ -66,75 +66,71 @@ namespace ATSP
 
         public Program PrepareExperiments()
         {
-            var numberOfExecutions = new ulong[] { 10 }; //50, 100, 150, 200, 250, 300};
+            var minExecutions = 10u;
 
-            foreach(var minExecutions in numberOfExecutions)
+            var permutator = new DefaultPermutator().SetSeed(seed)
+                                                    .UseSwapper(new DefaultSwapper());
+            var solutionInitializer = new RandomSolutionInitializer()
             {
-                var permutator = new DefaultPermutator().SetSeed(seed)
-                                                        .UseSwapper(new DefaultSwapper());
-                var solutionInitializer = new RandomSolutionInitializer()
-                {
-                    Seed = seed
-                };
+                Seed = seed
+            };
 
-                var greedy = new Experiment($"greedy", saveResults: true, runOnlyOnce: true)
-                                    .UseInstance(instanceName)
-                                    .SetInstancesLocation(instancesLocation)
-                                    .UseBestResultsLoader(bestResults)
-                                    .UsePermutator(permutator)
-                                    .UseHeuristic(new GreedyHeuristic())
-                                    .UseInitializer(solutionInitializer)
-                                    .SetNumberOfExecutions(minExecutions);
+            var greedy = new Experiment($"greedy", saveResults: true, runOnlyOnce: true)
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UsePermutator(permutator)
+                                .UseHeuristic(new GreedyHeuristic())
+                                .UseInitializer(solutionInitializer)
+                                .SetNumberOfExecutions(minExecutions);
 
-                RunExperiment(greedy);
-                experiments.Add(greedy);
-                continue;
+            RunExperiment(greedy);
+            experiments.Add(greedy);
 
-                experiments.Add(new Experiment($"random", saveResults: true)
-                                    .UseInstance(instanceName)
-                                    .SetInstancesLocation(instancesLocation)
-                                    .UseBestResultsLoader(bestResults)
-                                    .UsePermutator(permutator)
-                                    .UseHeuristic(new RandomHeuristic(timeoutInMillis: greedy.Result.MeanExecutionTime))
-                                    .UseInitializer(solutionInitializer)
-                                    .SetNumberOfExecutions(minExecutions));
+            experiments.Add(new Experiment($"random", saveResults: true)
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UsePermutator(permutator)
+                                .UseHeuristic(new RandomHeuristic(timeoutInMillis: greedy.Result.MeanExecutionTime))
+                                .UseInitializer(solutionInitializer)
+                                .SetNumberOfExecutions(minExecutions));
 
-                experiments.Add(new Experiment($"random walk", saveResults: true)
-                                    .UseInstance(instanceName)
-                                    .SetInstancesLocation(instancesLocation)
-                                    .UseBestResultsLoader(bestResults)
-                                    .UsePermutator(permutator)
-                                    .UseHeuristic(new RandomWalkHeuristic(timeoutInMillis: greedy.Result.MeanExecutionTime))
-                                    .UseInitializer(solutionInitializer)
-                                    .SetNumberOfExecutions(minExecutions));
+            experiments.Add(new Experiment($"random walk", saveResults: true)
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UsePermutator(permutator)
+                                .UseHeuristic(new RandomWalkHeuristic(timeoutInMillis: greedy.Result.MeanExecutionTime))
+                                .UseInitializer(solutionInitializer)
+                                .SetNumberOfExecutions(minExecutions));
 
-                experiments.Add(new Experiment($"steepest", saveResults: true)
-                                    .UseInstance(instanceName)
-                                    .SetInstancesLocation(instancesLocation)
-                                    .UseBestResultsLoader(bestResults)
-                                    .UsePermutator(permutator)
-                                    .UseHeuristic(new SteepestHeurestic())
-                                    .UseInitializer(solutionInitializer)
-                                    .SetNumberOfExecutions(minExecutions));
+            // experiments.Add(new Experiment($"steepest", saveResults: true)
+            //                     .UseInstance(instanceName)
+            //                     .SetInstancesLocation(instancesLocation)
+            //                     .UseBestResultsLoader(bestResults)
+            //                     .UsePermutator(permutator)
+            //                     .UseHeuristic(new SteepestHeurestic())
+            //                     .UseInitializer(solutionInitializer)
+            //                     .SetNumberOfExecutions(minExecutions));
 
-                experiments.Add(new Experiment($"SA", saveResults: true)
-                                    .UseInstance(instanceName)
-                                    .SetInstancesLocation(instancesLocation)
-                                    .UseBestResultsLoader(bestResults)
-                                    .UsePermutator(permutator)
-                                    .UseHeuristic(
-                                        new SAHeuristic(coolingDownTime: 1000, acceptanceCoefficient: 0.95f))
-                                    .UseInitializer(solutionInitializer)
-                                    .SetNumberOfExecutions(minExecutions));
-                // experiments.Add(new Experiment($"Tabu", saveResults: true)
-                //                     .UseInstance(instanceName)
-                //                     .SetInstancesLocation(instancesLocation)
-                //                     .UseBestResultsLoader(bestResults)
-                //                     .UsePermutator(permutator)
-                //                     .UseHeuristic(new TabuHeuristic())
-                //                     .UseInitializer(solutionInitializer)
-                //                     .SetNumberOfExecutions(minExecutions));
-            }
+            experiments.Add(new Experiment($"SA", saveResults: true)
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UsePermutator(permutator)
+                                .UseHeuristic(
+                                    new SAHeuristic(coolingDownTime: 1000, acceptanceCoefficient: 0.95f))
+                                .UseInitializer(solutionInitializer)
+                                .SetNumberOfExecutions(minExecutions));
+            // experiments.Add(new Experiment($"Tabu", saveResults: true)
+            //                     .UseInstance(instanceName)
+            //                     .SetInstancesLocation(instancesLocation)
+            //                     .UseBestResultsLoader(bestResults)
+            //                     .UsePermutator(permutator)
+            //                     .UseHeuristic(new TabuHeuristic())
+            //                     .UseInitializer(solutionInitializer)
+            //                     .SetNumberOfExecutions(minExecutions));
 
             return this;
         }
