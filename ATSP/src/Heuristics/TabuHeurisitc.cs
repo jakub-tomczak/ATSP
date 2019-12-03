@@ -1,6 +1,6 @@
 using System;
-
-
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ATSP.Heuristics{
     public class TabuHeuristic: ATSPHeuristic{
@@ -11,6 +11,8 @@ namespace ATSP.Heuristics{
         int [,] tabuList;
         uint bestsolutionCost=0;
         Random rd = new Random();
+
+        List<Tuple<int, int, uint>> masterList = new List<Tuple<int, int, uint>>();
         public TabuHeuristic() : base()
         {
         }
@@ -42,8 +44,25 @@ namespace ATSP.Heuristics{
             }
         }
 
-        // master list: poleca komos
-        
+        void generateMasterList()
+        {
+            masterList.Clear();
+            var numberOfCandidates = Solution.Length*Solution.Length*.2;
+            for(var i=0;i<numberOfCandidates;i++)
+            {
+                (var candidate1, var candidate2) = GetIndicesForSwap(Solution.Length);
+                var swapCost = CalculateSwapCost(Solution, currentCost, candidate1, candidate2);
+                masterList.Add(Tuple.Create(candidate1, candidate2, swapCost));
+            }
+            masterList.Sort((x, y) => x.Item3.CompareTo(y.Item3));
+        }
+
+        bool aspiration(int i, int j){
+            
+
+
+            return false;
+        }        
 
         public override void NextStep()
         {
