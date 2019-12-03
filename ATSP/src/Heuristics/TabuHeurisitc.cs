@@ -1,6 +1,6 @@
 using System;
-
-
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ATSP.Heuristics{
     public class TabuHeuristic: ATSPHeuristic{
@@ -8,9 +8,11 @@ namespace ATSP.Heuristics{
         public Permutators.DefaultSwapper Swapper = new Permutators.DefaultSwapper();
 
         uint currentCost = 0;
-        Boolean [,] tabuList;
+        int [,] tabuList;
         uint bestsolutionCost=0;
         Random rd = new Random();
+
+        List<Tuple<int, int, uint>> masterList = new List<Tuple<int, int, uint>>();
         public TabuHeuristic() : base()
         {
         }
@@ -23,12 +25,45 @@ namespace ATSP.Heuristics{
 
         void initTabuList(){
             int n = Solution.Length;
-            tabuList = new Boolean[n,n];
+            tabuList = new int[n,n];
             for(int i = 0; i < n; i++){
                 for(int j = 0; j < n; j++){
-                    tabuList[i,j] = true;
+                    tabuList[i,j] = 0;
                 }
             }
+        }
+
+        void decrementTabuList(){
+            int n = Solution.Length;
+            for(int i = 0 ; i < n ; i++)
+            {
+                for(int j = 0; j < n ; j++)
+                {
+                    tabuList[i,j] = (tabuList[i,j]>0) ? tabuList[i,j]-- : 0; 
+                }
+            }
+        }
+
+        void generateMasterList()
+        {
+            masterList.Clear();
+            var numberOfCandidates = Solution.Length*Solution.Length*.2;
+            for(var i=0;i<numberOfCandidates;i++)
+            {
+                (var candidate1, var candidate2) = GetIndicesForSwap(Solution.Length);
+                var swapCost = CalculateSwapCost(Solution, currentCost, candidate1, candidate2);
+                masterList.Add(Tuple.Create(candidate1, candidate2, swapCost));
+            }
+            masterList.Sort((x, y) => x.Item3.CompareTo(y.Item3));
+        }
+
+        void updateMasterList(){
+            var numberOfCandidates = Solution.Length*Solution.Length*.2;
+            for(var i = 0; i < numberOfCandidates; i++){
+                var swapCost = CalculateSwapCost(Solution,currentCost, masterList[i].Item1,masterList[i].Item2);
+                masterList[i] = Tuple.Create(masterList[i].Item1,masterList[i].Item2,swapCost);
+            }
+            masterList.Sort((x, y) => x.Item3.CompareTo(y.Item3));
 
         }
 
@@ -38,36 +73,47 @@ namespace ATSP.Heuristics{
             {
                 currentCost = CalculateCost();
                 initTabuList();
+                generateMasterList();
+                bestsolutionCost = currentCost;
             }
-        bestsolutionCost = currentCost;
-        var improvements = 0;
-        var bestChange = (firstIndex: 0, secondIndex: 0, cost: bestsolutionCost);
+            else 
+                updateMasterList();
+            var improvements = 0;
+            var bestChange = (firstIndex: 0, secondIndex: 0, cost: bestsolutionCost);
 
-            for(int i = 0; i < Solution.Length; i++)
+            for(int i = 0; i < masterList.Count(); i++)
             {
-                for(int j = 0; j < Solution.Length; j++)
+                var x = masterList[i].Item1;
+                var y = masterList[i].Item2;
+                if(tabuList[x,y]==0)
                 {
-                    bestsolutionCost = CalculateSwapCost(Solution,currentCost,i,j);
-                    if((bestsolutionCost<bestChange.cost)&&(tabuList[i,j])){
+                    currentCost = CalculateSwapCost(Solution, currentCost, x, y);
+                    tabuList[x,y] = 4;
+                    if(bestsolutionCost >= currentCost)
+                    {
+                        bestsolutionCost = currentCost;
+                        bestChange = (firstIndex: x,secondIndex:  y,cost: bestsolutionCost);
                         NumberOfImprovements++;
-                        improvements++;
-                        bestChange = (i,j,bestsolutionCost);
-                        tabuList[i,j] = false;
                     }
-                    SaveCost(currentCost);
-                    Steps++;
+                    improvements++;
+                    break;
                 }
             }
+
             if(improvements>0)
             {
                 NumberOfImprovements++;
-                currentCost = CalculateSwapCost(Solution,currentCost,bestChange.firstIndex,bestChange.secondIndex);
-                Swapper.Swap(Solution, bestChange.firstIndex, bestChange.secondIndex);
+                //currentCost = CalculateSwapCost(Solution,currentCost,bestChange.firstIndex,bestChange.secondIndex);
+                //Swapper.Swap(Solution, bestChange.firstIndex, bestChange.secondIndex);
             }
 
             IsEnd = improvements == 0;
-
+            decrementTabuList();
             Steps++;
+            if(IsEnd){
+                currentCost = CalculateSwapCost(Solution,currentCost,bestChange.firstIndex,bestChange.secondIndex);
+                Swapper.Swap(Solution, bestChange.firstIndex, bestChange.secondIndex);
+            }
 
         }
 
