@@ -47,7 +47,8 @@ def load_instance_results(directory, files_extension, load_intermediate_costs = 
 
 
 def calculate_arrays_similarity(arr1, arr2):
-    return float(get_the_longest_subsequence(arr1, arr2)) / len(arr1)
+    return compare_arrays_by_pair(arr1, arr2)
+    # return float(get_the_longest_subsequence(arr1, arr2)) / len(arr1)
 
 
 def find_starting_index(first_array, second_array):
@@ -74,3 +75,24 @@ def get_the_longest_subsequence(arr1, arr2):
             else:
                 result[i, j] = max(result[i-1, j], result[i, j-1])
     return 0 if result[-1, -1] <= 1 else result[-1, -1]+1
+
+
+def compare_arrays_by_pair(arr1, arr2, strict = False):
+    '''
+    Compares two arrays of the same length (with the same sequences)
+    by checking each index two neighbours. When strict = False then we check
+    every second element.
+
+    Returns the number of matches to the number of checks ratio.
+    '''
+    matches = 0
+    checks = 0
+    for i in range(0, len(arr1), 1 if strict else 2):
+        for j in range(len(arr2)):
+            if arr1[i] == arr2[j]:
+                checks += 2
+                if arr1[i-1] == arr2[j-1]:
+                    matches += 1
+                if arr1[(i+1)%len(arr1)] == arr2[(j+1)%len(arr2)]:
+                    matches += 1
+    return matches/checks
