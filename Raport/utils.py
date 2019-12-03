@@ -8,7 +8,7 @@ def calculate_effectiveness(data):
     meanExecutionTime = np.mean(data.Execution_time)
 
     data.loc[:, 'Effectiveness'] = (data.Number_of_improvements/maxImprovements) \
-        / (data.Execution_time / meanExecutionTime * data.Execution_steps / maxSteps * data.Quality)
+        / (data.Execution_time / meanExecutionTime * data.Execution_steps / maxSteps * (data.Quality+0.001)*10)
 
 def get_list_of_directories(root_directory, add_root_directory=True):
     return [os.path.join(root_directory, d) if add_root_directory else d
@@ -28,6 +28,7 @@ def load_instance_results(directory, files_extension):
 
     # calculate effectiveness based on all results from one instance
     calculate_effectiveness(experiments_results)
+    experiments_results[experiments_results==float('Inf')].head()
 
     print("Read {} experiments, from {}".format(len(files), directory))
     print("Experiemnts {}".format(experiments_results.shape))

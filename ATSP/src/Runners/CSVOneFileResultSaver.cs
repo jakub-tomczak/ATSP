@@ -32,7 +32,7 @@ namespace ATSP.Runners
             using(var file = new StreamWriter(path))
             {
                 var header = "Algorithm;Instance name;Instance size;Number of executions;Execution time;" +
-                    "Execution steps;Final cost;Initial cost;Best known cost;Similarity;Number of improvements;" +
+                    "Execution steps;Final cost;Initial quality;Best known cost;Similarity;Number of improvements;" +
                     "Quality;Initial to final execution ratio";
 
                 file.WriteLine(header.Replace(' ', '_'));
@@ -47,7 +47,7 @@ namespace ATSP.Runners
                     line.Append($"{execution.Time};");
                     line.Append($"{execution.Steps};");
                     line.Append($"{execution.Cost};");
-                    line.Append($"{execution.InitialCost};");
+                    line.Append($"{execution.InitialQuality};");
                     line.Append($"{execution.BestKnownCost};");
                     line.Append($"{execution.SimilarityWithBest};");
                     line.Append($"{execution.NumberOfImprovements};");

@@ -32,6 +32,8 @@ namespace ATSP.Runners
 
         public double Quality => (double)(Cost - BestKnownCost) / BestKnownCost ;
 
+        public double InitialQuality => (double)(InitialCost - BestKnownCost) / BestKnownCost ;
+
         // it is easier to calculate effectiveness after importing data to python
         // effectiveness = 
         //  (Number_of_improvements/maxImprovements) / (Execution_time / meanExecutionTime * Execution_steps / maxSteps * Quality)

@@ -17,6 +17,7 @@ def main(parameters):
     print("Using {} directory".format(parameters.experiments_directory))
     instances_directories = get_list_of_directories(parameters.experiments_directory)
     data = load_instances(instances_directories, parameters.extension)
+    # data.to_csv('all_data.csv', sep=';')
     plot_drawer = PlotDrawer(parameters.plots_path, parameters.display_plots)
     plot_drawer.draw_plots(data)
 
