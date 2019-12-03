@@ -8,7 +8,7 @@ namespace ATSP.Heuristics{
         public Permutators.DefaultSwapper Swapper = new Permutators.DefaultSwapper();
 
         uint currentCost = 0;
-        Boolean [,] tabuList;
+        int [,] tabuList;
         uint bestsolutionCost=0;
         Random rd = new Random();
         public TabuHeuristic() : base()
@@ -23,14 +23,27 @@ namespace ATSP.Heuristics{
 
         void initTabuList(){
             int n = Solution.Length;
-            tabuList = new Boolean[n,n];
+            tabuList = new int[n,n];
             for(int i = 0; i < n; i++){
                 for(int j = 0; j < n; j++){
-                    tabuList[i,j] = true;
+                    tabuList[i,j] = 0;
                 }
             }
-
         }
+
+        void decrementTabuList(){
+            int n = Solution.Length;
+            for(int i = 0 ; i < n ; i++)
+            {
+                for(int j = 0; j < n ; j++)
+                {
+                    tabuList[i,j] = (tabuList[i,j]>0) ? tabuList[i,j]-- : 0; 
+                }
+            }
+        }
+
+        // master list: poleca komos
+        
 
         public override void NextStep()
         {
@@ -48,11 +61,11 @@ namespace ATSP.Heuristics{
                 for(int j = 0; j < Solution.Length; j++)
                 {
                     bestsolutionCost = CalculateSwapCost(Solution,currentCost,i,j);
-                    if((bestsolutionCost<bestChange.cost)&&(tabuList[i,j])){
+                    if((bestsolutionCost<bestChange.cost)&&(tabuList[i,j]<=0)){
                         NumberOfImprovements++;
                         improvements++;
                         bestChange = (i,j,bestsolutionCost);
-                        tabuList[i,j] = false;
+                        tabuList[i,j] = 4;
                     }
                     SaveCost(currentCost);
                     Steps++;
@@ -66,7 +79,7 @@ namespace ATSP.Heuristics{
             }
 
             IsEnd = improvements == 0;
-
+            decrementTabuList();
             Steps++;
 
         }
