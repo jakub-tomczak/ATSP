@@ -39,6 +39,7 @@ namespace ATSP.Runners
                     file.WriteLine($"Execution final cost;{execution.Cost}");
                     file.WriteLine($"Best known cost;{execution.BestKnownCost}");
                     file.WriteLine($"InitialCost;{execution.InitialCost}");
+                    file.WriteLine($"Similarity;{execution.SimilarityWithBest}");
                     file.WriteLine($"NumberOfImprovements;{execution.NumberOfImprovements}");
                     file.WriteLine(execution.FinalSolution.
                         Select(

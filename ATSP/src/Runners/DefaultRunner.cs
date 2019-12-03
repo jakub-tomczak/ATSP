@@ -52,6 +52,8 @@ namespace ATSP.Runners
                 {
                     executions.Add(new Execution()
                     {
+                        AlgorithmName = experimentToRun.Name,
+                        ExecutionID = NumberOfExecutions,
                         Time = TicksToMillis(time),
                         Steps = experimentToRun.Heuristic.Steps,
                         Cost = experimentToRun.Heuristic.CalculateCost(),

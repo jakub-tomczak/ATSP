@@ -8,6 +8,7 @@ class Execution:
         self.intermediate_costs = []
         self.best_known_cost = 0
         self.initial_cost = 0
+        self.similarity = 0.0
         self.number_of_improvements = 0
         self.solution = []
 

@@ -31,6 +31,7 @@ def load_instance_results(directory, files_extension, load_intermediate_costs = 
                 execution.cost = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
                 execution.best_known_cost = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
                 execution.initial_cost = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
+                execution.similarity = float(file.readline().split(';')[1].rstrip("\n").replace(",","."))
                 execution.number_of_improvements = int(file.readline().split(';')[1].rstrip("\n").replace(",","."))
                 execution.solution = file.readline().rstrip('\n').split(';')
                 if load_intermediate_costs:

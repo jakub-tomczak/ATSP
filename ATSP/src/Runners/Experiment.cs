@@ -4,6 +4,7 @@ using ATSP.Data;
 using ATSP.DataLoading;
 using System.IO;
 using ATSP.Heuristics;
+using System.Linq;
 
 namespace ATSP.Runners
 {
@@ -94,6 +95,8 @@ namespace ATSP.Runners
                 Console.WriteLine($"Running experiment with instance {InstanceName}");
                 Result = runner.Run(this);
                 Runs++;
+                var minValue = Result.Executions.Select(x => x.Cost).Min();
+                BestExecution = Result.Executions.FirstOrDefault(x => x.Cost == minValue);
                 Result.Name = Name;
                 Result.InstanceName = InstanceName;
                 Console.Write("\n\n");
@@ -144,6 +147,7 @@ namespace ATSP.Runners
         public ATSPHeuristic Heuristic { get; private set; } = new RandomHeuristic();
         public readonly bool SaveResults = false;
         public readonly bool RunOnlyOnce = false;
+        public Execution BestExecution { get; private set; }
         public int Runs {get;private set;} = 0;
         private string instancesLocation = "../instances";
         private bool initialized = false;

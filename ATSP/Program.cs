@@ -7,6 +7,7 @@ using ATSP.DataLoading;
 using ATSP.Heuristics;
 using ATSP.Permutators;
 using ATSP.Runners;
+using ATSP.Metrics;
 
 namespace ATSP
 {
@@ -43,6 +44,7 @@ namespace ATSP
                             .UseBestResults(bestResults)
                             .PrepareExperiments()
                             .RunExperiments()
+                            .CompareSolutions()
                             .SaveResults(resultsSaver);
                     }
                 );
@@ -119,6 +121,27 @@ namespace ATSP
         {
             var result = experiment.Run();
             Console.WriteLine($"Number of executions {result.NumberOfExecutions}, best cost {result.Executions.Min(x => x.Cost)}, worst cost {result.Executions.Max(x => x.Cost)}, best know cost {experiment.Instance.BestKnownCost}");
+            return this;
+        }
+
+        private Program CompareSolutions()
+        {
+            ISolutionComparator comparator = new PairsComparator();
+            var bestExecution = experiments
+                .Select(x => x.BestExecution)
+                .OrderBy(x => x.Cost)
+                .First();
+
+            foreach(var experiment in experiments)
+            {
+                for(var i = 0;i<experiment.Result.Executions.Count;i++)
+                {
+                    experiment.Result.Executions[i].SimilarityWithBest =
+                        comparator.CompareSolutions(bestExecution.FinalSolution,
+                                                    experiment.Result.Executions[i].FinalSolution);
+                }
+            }
+
             return this;
         }
 
