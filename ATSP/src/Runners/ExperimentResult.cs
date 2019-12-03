@@ -5,6 +5,7 @@ namespace ATSP.Runners
 {
     public class ExperimentResult
     {
+        public int InstanceSize { get; set; }
         public int NumberOfExecutions => Executions.Count;
         public double MeanExecutionTime = 0.0;
         public string InstanceName { get; set; }

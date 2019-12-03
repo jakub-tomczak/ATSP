@@ -30,6 +30,20 @@ namespace ATSP.Runners
         public double SimilarityWithBest { get; set; }
         public uint InitialCost { get; set; }
 
+        public double Quality => (double)(Cost - BestKnownCost) / BestKnownCost ;
+
+        // it is easier to calculate effectiveness after importing data to python
+        // effectiveness = 
+        //  (Number_of_improvements/maxImprovements) / (Execution_time / meanExecutionTime * Execution_steps / maxSteps * Quality)
+        // public double CalculateEffectiveness(uint worstResult)
+        //     => Effectiveness = 1 - (double)(Cost - BestKnownCost) / (worstResult - BestKnownCost);
+
+
+        public double InitialToFinalExecutionRatio
+            => (double)(InitialCost) / Cost;
+
+        public double Effectiveness { get; private set; }
+
         public uint[] FinalSolution { get; set; }
     }
 }

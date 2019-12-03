@@ -15,7 +15,7 @@ namespace ATSP
     {
         static void Main(string[] args)
         {
-            var resultsSaver = new CSVResultSaver()
+            var resultsSaver = new CSVOneFileResultSaver()
             {
                 SaveDirectory = "results"
             };
@@ -66,7 +66,7 @@ namespace ATSP
 
         public Program PrepareExperiments()
         {
-            var numberOfExecutions = new ulong[] { 10 };//, 50, 100, 150, 200, 250, 300};
+            var numberOfExecutions = new ulong[] { 10 }; //50, 100, 150, 200, 250, 300};
 
             foreach(var minExecutions in numberOfExecutions)
             {
@@ -77,7 +77,7 @@ namespace ATSP
                     Seed = seed
                 };
 
-                var greedy = new Experiment($"greedy_{minExecutions}", saveResults: true, runOnlyOnce: true)
+                var greedy = new Experiment($"greedy", saveResults: true, runOnlyOnce: true)
                                     .UseInstance(instanceName)
                                     .SetInstancesLocation(instancesLocation)
                                     .UseBestResultsLoader(bestResults)
@@ -88,8 +88,9 @@ namespace ATSP
 
                 RunExperiment(greedy);
                 experiments.Add(greedy);
+                continue;
 
-                experiments.Add(new Experiment($"random_{minExecutions}", saveResults: true)
+                experiments.Add(new Experiment($"random", saveResults: true)
                                     .UseInstance(instanceName)
                                     .SetInstancesLocation(instancesLocation)
                                     .UseBestResultsLoader(bestResults)
@@ -98,20 +99,41 @@ namespace ATSP
                                     .UseInitializer(solutionInitializer)
                                     .SetNumberOfExecutions(minExecutions));
 
+                experiments.Add(new Experiment($"random walk", saveResults: true)
+                                    .UseInstance(instanceName)
+                                    .SetInstancesLocation(instancesLocation)
+                                    .UseBestResultsLoader(bestResults)
+                                    .UsePermutator(permutator)
+                                    .UseHeuristic(new RandomWalkHeuristic(timeoutInMillis: greedy.Result.MeanExecutionTime))
+                                    .UseInitializer(solutionInitializer)
+                                    .SetNumberOfExecutions(minExecutions));
 
-                experiments.Add(new Experiment($"SA_{minExecutions}", saveResults: true)
+                experiments.Add(new Experiment($"steepest", saveResults: true)
+                                    .UseInstance(instanceName)
+                                    .SetInstancesLocation(instancesLocation)
+                                    .UseBestResultsLoader(bestResults)
+                                    .UsePermutator(permutator)
+                                    .UseHeuristic(new SteepestHeurestic())
+                                    .UseInitializer(solutionInitializer)
+                                    .SetNumberOfExecutions(minExecutions));
+
+                experiments.Add(new Experiment($"SA", saveResults: true)
                                     .UseInstance(instanceName)
                                     .SetInstancesLocation(instancesLocation)
                                     .UseBestResultsLoader(bestResults)
                                     .UsePermutator(permutator)
                                     .UseHeuristic(
-                                        new SAHeuristic(coolingDownTime: 1000, acceptanceCoefficient: 0.95f)
-                                        // {
-                                        //     ExpectedInitialSolutionImprovementFraction = initialImprovementsForSA[this.instanceName]
-                                        // }
-                                        )
+                                        new SAHeuristic(coolingDownTime: 1000, acceptanceCoefficient: 0.95f))
                                     .UseInitializer(solutionInitializer)
                                     .SetNumberOfExecutions(minExecutions));
+                // experiments.Add(new Experiment($"Tabu", saveResults: true)
+                //                     .UseInstance(instanceName)
+                //                     .SetInstancesLocation(instancesLocation)
+                //                     .UseBestResultsLoader(bestResults)
+                //                     .UsePermutator(permutator)
+                //                     .UseHeuristic(new TabuHeuristic())
+                //                     .UseInitializer(solutionInitializer)
+                //                     .SetNumberOfExecutions(minExecutions));
             }
 
             return this;
@@ -132,16 +154,15 @@ namespace ATSP
                 .OrderBy(x => x.Cost)
                 .First();
 
-            foreach(var experiment in experiments)
-            {
-                for(var i = 0;i<experiment.Result.Executions.Count;i++)
-                {
-                    experiment.Result.Executions[i].SimilarityWithBest =
-                        comparator.CompareSolutions(bestExecution.FinalSolution,
-                                                    experiment.Result.Executions[i].FinalSolution);
-                }
-            }
-
+            experiments.ForEach(x => {
+                x.Result.Executions.ForEach(y => {
+                    y.SimilarityWithBest = comparator.CompareSolutions(
+                        bestExecution.FinalSolution,
+                        y.FinalSolution
+                    );
+                });
+            });
+           
             return this;
         }
 

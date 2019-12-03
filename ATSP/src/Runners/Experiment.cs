@@ -78,7 +78,7 @@ namespace ATSP.Runners
         public ExperimentResult Run()
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"\nRunning experiment {Name}");
+            Console.WriteLine($"\nRunning experiment {Name}_{runner.MinExecutions}");
             Console.ResetColor();
             if(RunOnlyOnce && Runs > 0)
             {

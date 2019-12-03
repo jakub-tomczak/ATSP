@@ -12,6 +12,7 @@ namespace ATSP.Runners
             experimentToRun = experiment;
             var result = new ExperimentResult();
 
+            result.InstanceSize = experiment.Instance.N;
             result.Executions = Run();
             result.MeanExecutionTime = MeanExecutionTime;
 
