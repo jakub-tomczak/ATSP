@@ -57,12 +57,15 @@ namespace ATSP.Heuristics{
             masterList.Sort((x, y) => x.Item3.CompareTo(y.Item3));
         }
 
-        bool aspiration(int i, int j){
-            
+        void updateMasterList(){
+            var numberOfCandidates = Solution.Length*Solution.Length*.2;
+            for(var i = 0; i < numberOfCandidates; i++){
+                var swapCost = CalculateSwapCost(Solution,currentCost, masterList[i].Item1,masterList[i].Item2);
+                masterList[i] = Tuple.Create(masterList[i].Item1,masterList[i].Item2,swapCost);
+            }
 
 
-            return false;
-        }        
+        }
 
         public override void NextStep()
         {
