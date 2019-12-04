@@ -94,31 +94,57 @@ class PlotDrawer():
         self.draw_instance_based_plot(y_name="Number_of_improvements", y_desc="Liczba ocenionych rozwiązań", estimator_function=np.mean, plot_name='mean_improvements')
 
     def draw_restart(self):
-        return
-        def aggregate_costs_data(costs_data, agg_type):
+        def aggregate_costs_data(costs_data, agg_type, algo_name):
             costs_columns = costs_data.columns[3:]
             costs_ = costs_data[costs_columns]
+            df = None
             if agg_type == "min":
                 best_costs = [np.min(costs_[col]) for col in costs_]
                 for i in range(1, len(best_costs)):
                     if best_costs[i-1] < best_costs[i]:
                         best_costs[i] = best_costs[i-1]
-                return best_costs
+                df = pd.DataFrame(np.array([costs_columns, best_costs]).T)
             elif agg_type == "mean":
-                return [np.mean(costs_data[col]) for col in costs_]
-            return None
+                df = pd.DataFrame(np.array([costs_columns, [np.mean(costs_data[col]) for col in costs_]]).T)
+            
+            # add algorithm name column
+            df.loc[:, 'algo_name'] = algo_name
+            
+            df.columns=['x', 'y', 'algo_name']
+            # cast x and y to numeric values, by default they are strings
+            df.x = pd.to_numeric(df.x)
+            df.y = pd.to_numeric(df.y)
+            return df
 
         for instance in self.cost_instances:
-            best_costs = []
-            mean_costs = []
-            for algo in self.cost_algorithms:
-                data = self.df[(self.df.Algorithm == algo) & (self.df.Instance_name == instance)]
-                best_costs.append(aggregate_costs_data(data, 'min'))
-                mean_costs.append(aggregate_costs_data(data, 'mean'))
-        
-            print('ok')
+            data_best = pd.concat([aggregate_costs_data(self.costs[(self.costs.Algorithm == algo) & (self.costs.Instance_name == instance)],
+                                             'min',
+                                             algo)
+                        for algo in self.cost_algorithms])
+            data_mean = pd.concat([aggregate_costs_data(self.costs[(self.costs.Algorithm == algo) & (self.costs.Instance_name == instance)],
+                                             'mean',
+                                             algo)
+                        for algo in self.cost_algorithms])
+            
+            def _draw_restarts_plots(data, y_desc, name):
+                num_bins = 10
+                step = int(np.ceil(len(data.x)/(num_bins*len(self.cost_algorithms))))
                 
+                plt.clf()
+                sns.pointplot(x=data.x, y=data.y, hue=data.algo_name)\
+                    .set_xticklabels(data.x[::step])
+                plt.locator_params(nbins=num_bins)
+                plt.xticks(rotation=45)
+                plt.xlabel('Restart')
+                plt.ylabel(y_desc)
+                plt.subplots_adjust(bottom=.2)
+                plt.legend(title='Algorytm')
+                plt.tight_layout()
+                self.save_plot(name, instance=instance)
+                self.show_plot()
                 
+            _draw_restarts_plots(data_best, 'Najlepszy koszt', 'restarts_best')
+            _draw_restarts_plots(data_mean, 'Średni koszt', 'restarts_mean')
 
     def draw_initial_vs_final_solution_plots(self):
         self.draw_algorithm_based_plot(y_name="Quality",
@@ -148,5 +174,6 @@ class PlotDrawer():
         self.draw_number_of_improvements_plots()
         self.draw_initial_vs_final_solution_plots()
         self.draw_similarity_plots()
+        self.draw_restart()
 
 

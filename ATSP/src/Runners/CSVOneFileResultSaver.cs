@@ -78,6 +78,8 @@ namespace ATSP.Runners
                 var line = new StringBuilder();
                 foreach(var execution in experimentResults.Executions)
                 {
+                    if(execution.IntermediateCosts is null || execution.IntermediateCosts.Count < 1)
+                        continue;
                     line.Clear();
                     line.Append($"{experimentResults.Name};");
                     line.Append($"{experimentResults.InstanceName};");
