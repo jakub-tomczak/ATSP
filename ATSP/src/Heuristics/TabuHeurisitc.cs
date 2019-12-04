@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+//commit nie poszedł
+
 namespace ATSP.Heuristics{
     public class TabuHeuristic: ATSPHeuristic{
 
