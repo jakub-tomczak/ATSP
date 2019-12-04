@@ -148,10 +148,10 @@ namespace ATSP.Heuristics
         public uint NumberOfImprovements { get; protected set; }
 
         public bool SaveIntermediateCosts { get; set; } = true;
-        protected uint[] SaveCostPoints = Enumerable.
-            Range(0, 40).
-            Select(x => (uint)x*10).
-            ToArray();
+        public static uint[] SaveCostPoints => Enumerable
+            .Range(0, 40)
+            .Select(x => (uint)x*10)
+            .ToArray();
 
         public abstract bool IsEnd { get; protected set; }
         public TravellingSalesmanProblemInstance Instance { get; private set; }

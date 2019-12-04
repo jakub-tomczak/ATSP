@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-from utils import load_instances, get_list_of_directories
+from utils import load_data, get_list_of_directories, load_costs_results, load_instance_results
 from draw_plots import PlotDrawer
 import argparse
 
@@ -16,10 +16,11 @@ def parse_args():
 def main(parameters):
     print("Using {} directory".format(parameters.experiments_directory))
     instances_directories = get_list_of_directories(parameters.experiments_directory)
-    data = load_instances(instances_directories, parameters.extension)
+    data = load_data(instances_directories, parameters.extension, load_instance_results)
+    costs = load_data(instances_directories, parameters.extension, load_costs_results)
     # data.to_csv('all_data.csv', sep=';')
     plot_drawer = PlotDrawer(parameters.plots_path, parameters.display_plots)
-    plot_drawer.draw_plots(data)
+    plot_drawer.draw_plots(data, costs)
 
 if __name__ == "__main__":
     parameters = parse_args()

@@ -56,6 +56,40 @@ namespace ATSP.Runners
                     file.WriteLine(line);
                 }
             }
+
+            if(!Program.AlgorithmsWithIntermediateCostsSaved.Contains(experimentResults.Name) ||
+                !Program.InstancesWithIntermediateCostsSaved.Contains(experimentResults.InstanceName))
+            {
+                return;
+            }
+
+            // save intermediate costs for restarts
+            var pathIntermediateData = Path.Combine(experimentsDirectory,
+                $"cost_{experimentResults.Name}_{experimentResults.InstanceName}.{Extension}");
+            using(var file = new StreamWriter(pathIntermediateData))
+            {
+                var labels = ATSP.Heuristics.ATSPHeuristic.SaveCostPoints
+                    .Select(x => x.ToString())
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .Aggregate((x, y) => $"{x};{y}");
+                var header = $"Algorithm;Instance name;Instance size;{labels}";
+
+                file.WriteLine(header.Replace(' ', '_'));
+                var line = new StringBuilder();
+                foreach(var execution in experimentResults.Executions)
+                {
+                    line.Clear();
+                    line.Append($"{experimentResults.Name};");
+                    line.Append($"{experimentResults.InstanceName};");
+                    line.Append($"{experimentResults.InstanceSize};");
+                    line.Append(
+                        execution.IntermediateCosts
+                            .Select(x => x.ToString())
+                            .Aggregate((x, y) => $"{x};{y}")
+                    );
+                    file.WriteLine(line);
+                }
+            }
         }
     }
 }

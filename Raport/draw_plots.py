@@ -17,10 +17,19 @@ class PlotDrawer():
         self.instances = []
         self.algorithms = []
 
+        self.costs = pd.DataFrame()
+        self.cost_instances = []
+        self.cost_algorithms = []
+
     def set_data(self, dataframe):
         self.df = dataframe
         self.instances = self.df.Instance_name.unique()
         self.algorithms = self.df.Algorithm.unique()
+
+    def set_costs(self, costs):
+        self.costs = costs
+        self.cost_instances = self.costs.Instance_name.unique()
+        self.cost_algorithms = self.costs.Algorithm.unique()
 
     def save_plot(self, name, extension='png', instance='', set_title=False):
         if not self.save_plots:
@@ -84,6 +93,33 @@ class PlotDrawer():
     def draw_number_of_improvements_plots(self):
         self.draw_instance_based_plot(y_name="Number_of_improvements", y_desc="Liczba ocenionych rozwiązań", estimator_function=np.mean, plot_name='mean_improvements')
 
+    def draw_restart(self):
+        return
+        def aggregate_costs_data(costs_data, agg_type):
+            costs_columns = costs_data.columns[3:]
+            costs_ = costs_data[costs_columns]
+            if agg_type == "min":
+                best_costs = [np.min(costs_[col]) for col in costs_]
+                for i in range(1, len(best_costs)):
+                    if best_costs[i-1] < best_costs[i]:
+                        best_costs[i] = best_costs[i-1]
+                return best_costs
+            elif agg_type == "mean":
+                return [np.mean(costs_data[col]) for col in costs_]
+            return None
+
+        for instance in self.cost_instances:
+            best_costs = []
+            mean_costs = []
+            for algo in self.cost_algorithms:
+                data = self.df[(self.df.Algorithm == algo) & (self.df.Instance_name == instance)]
+                best_costs.append(aggregate_costs_data(data, 'min'))
+                mean_costs.append(aggregate_costs_data(data, 'mean'))
+        
+            print('ok')
+                
+                
+
     def draw_initial_vs_final_solution_plots(self):
         self.draw_algorithm_based_plot(y_name="Quality",
                                       y_desc="Jakość ostatecznego rozwiązania",
@@ -102,8 +138,9 @@ class PlotDrawer():
                                       x_desc="Jakość",
                                       hue_name="Algorithm")
     
-    def draw_plots(self, data):
+    def draw_plots(self, data, costs):
         self.set_data(data)
+        self.set_costs(costs)
         self.draw_quality_plots()
         self.draw_time_plots()
         self.draw_effectiveness_plots()

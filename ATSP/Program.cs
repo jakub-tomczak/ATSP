@@ -232,6 +232,22 @@ namespace ATSP
             }
         }
 
+        // list of algorithms for which intermediate cost should be saved
+        public static readonly List<string> AlgorithmsWithIntermediateCostsSaved = new List<string>()
+        {
+            "greedy",
+            "steepest",
+            "SA",
+            "Tabu"
+        };
+
+        // list of instances for which intermediate cost should be saved
+        public static readonly List<string> InstancesWithIntermediateCostsSaved = new List<string>()
+        {
+            "ft70",
+            "kro124p"
+        };
+
         private List<Experiment> experiments = new List<Experiment>();
         private static string instancesLocation = @"../instances";
         private static string bestInstancesFilename = "best_known_results";
