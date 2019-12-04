@@ -48,20 +48,23 @@ namespace ATSP.Heuristics{
         {
             masterList.Clear();
             var numberOfCandidates = Solution.Length*Solution.Length*.2;
-            for(var i=0;i<numberOfCandidates;i++)
+            var n = Solution.Length;
+            for(var i=0;i<n;i++)
             {
-                (var candidate1, var candidate2) = GetIndicesForSwap(Solution.Length);
-                var swapCost = CalculateSwapCost(Solution, currentCost, candidate1, candidate2);
-                masterList.Add(Tuple.Create(candidate1, candidate2, swapCost));
+                for(var j =0 ; j < n; j++)
+                {
+                var swapCost = CalculateSwapCost(Solution, currentCost, i, j);
+                masterList.Add(Tuple.Create(i, j, swapCost));
+                }
             }
             masterList.Sort((x, y) => x.Item3.CompareTo(y.Item3));
         }
 
         void updateMasterList(){
-            var numberOfCandidates = Solution.Length*Solution.Length*.2;
-            for(var i = 0; i < numberOfCandidates; i++){
-                var swapCost = CalculateSwapCost(Solution,currentCost, masterList[i].Item1,masterList[i].Item2);
-                masterList[i] = Tuple.Create(masterList[i].Item1,masterList[i].Item2,swapCost);
+            var n = Solution.Length;
+            for(var i = 0; i < masterList.Count(); i++){
+                    var swapCost = CalculateSwapCost(Solution,currentCost, masterList[i].Item1,masterList[i].Item2);
+                    masterList[i] = Tuple.Create(masterList[i].Item1,masterList[i].Item2,swapCost);
             }
             masterList.Sort((x, y) => x.Item3.CompareTo(y.Item3));
 
@@ -81,7 +84,7 @@ namespace ATSP.Heuristics{
             var improvements = 0;
             var bestChange = (firstIndex: 0, secondIndex: 0, cost: bestsolutionCost);
 
-            for(int i = 0; i < masterList.Count(); i++)
+            for(int i = 0; i < masterList.Count() * .1; i++)
             {
                 var x = masterList[i].Item1;
                 var y = masterList[i].Item2;
@@ -103,8 +106,8 @@ namespace ATSP.Heuristics{
             if(improvements>0)
             {
                 NumberOfImprovements++;
-                //currentCost = CalculateSwapCost(Solution,currentCost,bestChange.firstIndex,bestChange.secondIndex);
-                //Swapper.Swap(Solution, bestChange.firstIndex, bestChange.secondIndex);
+                currentCost = CalculateSwapCost(Solution,currentCost,bestChange.firstIndex,bestChange.secondIndex);
+                Swapper.Swap(Solution, bestChange.firstIndex, bestChange.secondIndex);
             }
 
             IsEnd = improvements == 0;
