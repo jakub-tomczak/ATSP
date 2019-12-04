@@ -55,21 +55,13 @@ namespace ATSP.Heuristics{
             {
                 for(var j =0 ; j < n; j++)
                 {
-                var swapCost = CalculateSwapCost(Solution, currentCost, i, j);
-                masterList.Add(Tuple.Create(i, j, swapCost));
+                    if(i!=j){
+                        var swapCost = CalculateSwapCost(Solution, currentCost, i, j);
+                        masterList.Add(Tuple.Create(i, j, swapCost));
+                    }
                 }
             }
             masterList.Sort((x, y) => x.Item3.CompareTo(y.Item3));
-        }
-
-        void updateMasterList(){
-            var n = Solution.Length;
-            for(var i = 0; i < masterList.Count(); i++){
-                    var swapCost = CalculateSwapCost(Solution,currentCost, masterList[i].Item1,masterList[i].Item2);
-                    masterList[i] = Tuple.Create(masterList[i].Item1,masterList[i].Item2,swapCost);
-            }
-            masterList.Sort((x, y) => x.Item3.CompareTo(y.Item3));
-
         }
 
         public override void NextStep()
@@ -78,11 +70,10 @@ namespace ATSP.Heuristics{
             {
                 currentCost = CalculateCost();
                 initTabuList();
-                generateMasterList();
                 bestsolutionCost = currentCost;
             }
-            else 
-                updateMasterList();
+            generateMasterList();
+
             var improvements = 0;
             var bestChange = (firstIndex: 0, secondIndex: 0, cost: bestsolutionCost);
 
@@ -90,10 +81,12 @@ namespace ATSP.Heuristics{
             {
                 var x = masterList[i].Item1;
                 var y = masterList[i].Item2;
-                if(tabuList[x,y]==0)
+                var newCost = CalculateSwapCost(Solution, currentCost, x, y);
+
+                if((tabuList[x,y]==0)||(newCost<=currentCost))
                 {
-                    currentCost = CalculateSwapCost(Solution, currentCost, x, y);
-                    tabuList[x,y] = 4;
+                    currentCost = newCost;
+                    tabuList[x,y] = Solution.Length;
                     if(bestsolutionCost >= currentCost)
                     {
                         bestsolutionCost = currentCost;
@@ -105,6 +98,11 @@ namespace ATSP.Heuristics{
                 }
             }
 
+            if(Steps % 1000 == 0)
+            {
+                Console.WriteLine($"{Instance.Name}, {Steps}");
+            }
+
             if(improvements>0)
             {
                 NumberOfImprovements++;
@@ -113,6 +111,7 @@ namespace ATSP.Heuristics{
             }
 
             IsEnd = improvements == 0;
+            IsEnd = IsEnd || (Steps>50000);
             decrementTabuList();
             Steps++;
             if(IsEnd){
