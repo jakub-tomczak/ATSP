@@ -29,10 +29,10 @@ namespace ATSP
                 "ft53",
                 "ft70",
                 "ftv33",
-                "ftv170",
+                // "ftv170",
                 "kro124p",
-                "rbg323",
-                "rbg443",
+                // "rbg323",
+                // "rbg443",
                 "ry48p"
             };
             instances.ToList()
@@ -105,14 +105,14 @@ namespace ATSP
                                 .UseInitializer(solutionInitializer)
                                 .SetNumberOfExecutions(minExecutions));
 
-            // experiments.Add(new Experiment($"steepest", saveResults: true)
-            //                     .UseInstance(instanceName)
-            //                     .SetInstancesLocation(instancesLocation)
-            //                     .UseBestResultsLoader(bestResults)
-            //                     .UsePermutator(permutator)
-            //                     .UseHeuristic(new SteepestHeurestic())
-            //                     .UseInitializer(solutionInitializer)
-            //                     .SetNumberOfExecutions(minExecutions));
+            experiments.Add(new Experiment($"steepest", saveResults: true)
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UsePermutator(permutator)
+                                .UseHeuristic(new SteepestHeurestic())
+                                .UseInitializer(solutionInitializer)
+                                .SetNumberOfExecutions(minExecutions));
 
             experiments.Add(new Experiment($"SA", saveResults: true)
                                 .UseInstance(instanceName)
@@ -123,14 +123,15 @@ namespace ATSP
                                     new SAHeuristic(coolingDownTime: 1000, acceptanceCoefficient: 0.95f))
                                 .UseInitializer(solutionInitializer)
                                 .SetNumberOfExecutions(minExecutions));
-            // experiments.Add(new Experiment($"Tabu", saveResults: true)
-            //                     .UseInstance(instanceName)
-            //                     .SetInstancesLocation(instancesLocation)
-            //                     .UseBestResultsLoader(bestResults)
-            //                     .UsePermutator(permutator)
-            //                     .UseHeuristic(new TabuHeuristic())
-            //                     .UseInitializer(solutionInitializer)
-            //                     .SetNumberOfExecutions(minExecutions));
+
+            experiments.Add(new Experiment($"Tabu", saveResults: true)
+                                .UseInstance(instanceName)
+                                .SetInstancesLocation(instancesLocation)
+                                .UseBestResultsLoader(bestResults)
+                                .UsePermutator(permutator)
+                                .UseHeuristic(new TabuHeuristic())
+                                .UseInitializer(solutionInitializer)
+                                .SetNumberOfExecutions(minExecutions));
 
             return this;
         }
