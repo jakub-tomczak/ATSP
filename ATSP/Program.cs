@@ -66,7 +66,7 @@ namespace ATSP
 
         public Program PrepareExperiments()
         {
-            var minExecutions = 10u;
+            var minExecutions = 100u;
 
             var permutator = new DefaultPermutator().SetSeed(seed)
                                                     .UseSwapper(new DefaultSwapper());
@@ -112,7 +112,7 @@ namespace ATSP
                                 .UsePermutator(permutator)
                                 .UseHeuristic(new SteepestHeurestic())
                                 .UseInitializer(solutionInitializer)
-                                .SetNumberOfExecutions(minExecutions));
+                                .SetNumberOfExecutions(30));
 
             experiments.Add(new Experiment($"SA", saveResults: true)
                                 .UseInstance(instanceName)
@@ -131,7 +131,7 @@ namespace ATSP
                                 .UsePermutator(permutator)
                                 .UseHeuristic(new TabuHeuristic())
                                 .UseInitializer(solutionInitializer)
-                                .SetNumberOfExecutions(minExecutions));
+                                .SetNumberOfExecutions(30));
 
             return this;
         }

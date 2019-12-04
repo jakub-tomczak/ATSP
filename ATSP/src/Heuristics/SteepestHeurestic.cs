@@ -1,9 +1,7 @@
-using System;
-
-
-
-namespace ATSP.Heuristics{
-    public class SteepestHeurestic: ATSPHeuristic{
+namespace ATSP.Heuristics
+{
+    public class SteepestHeurestic: ATSPHeuristic
+    {
 
         public Permutators.DefaultSwapper Swapper = new Permutators.DefaultSwapper();
 

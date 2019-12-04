@@ -98,10 +98,10 @@ namespace ATSP.Heuristics{
                 }
             }
 
-            if(Steps % 1000 == 0)
-            {
-                Console.WriteLine($"{Instance.Name}, {Steps}");
-            }
+            // if(Steps % 1000 == 0)
+            // {
+            //     Console.WriteLine($"{Instance.Name}, {Steps}");
+            // }
 
             if(improvements>0)
             {
@@ -110,8 +110,7 @@ namespace ATSP.Heuristics{
                 Swapper.Swap(Solution, bestChange.firstIndex, bestChange.secondIndex);
             }
 
-            IsEnd = improvements == 0;
-            IsEnd = IsEnd || (Steps>50000);
+            IsEnd = improvements == 0 || (Steps>5000);
             decrementTabuList();
             Steps++;
             if(IsEnd){

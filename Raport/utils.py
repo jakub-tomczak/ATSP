@@ -7,8 +7,8 @@ def calculate_effectiveness(data):
     maxImprovements = np.max(data.Number_of_improvements)
     meanExecutionTime = np.mean(data.Execution_time)
 
-    data.loc[:, 'Effectiveness'] = (data.Number_of_improvements/maxImprovements) \
-        / (data.Execution_time / meanExecutionTime * data.Execution_steps / maxSteps * (data.Quality+0.001)*10)
+    data.loc[:, 'Effectiveness'] = (data.Number_of_improvements/data.Execution_steps) * \
+        1 / (data.Execution_time / meanExecutionTime * (data.Quality+0.001))
 
 def get_list_of_directories(root_directory, add_root_directory=True):
     return [os.path.join(root_directory, d) if add_root_directory else d

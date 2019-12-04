@@ -25,25 +25,16 @@ namespace ATSP.Heuristics
                 currentCost = CalculateCost();
             }
 
-            // permutator.Permutate(Solution);
+            permutator.Permutate(Solution);
 
-            // find new permutation
-            // the same code that is in the permutator, but we need to update cost,
-            // so `for` should be here
-            for(int i=Solution.Length-1;i>0;i--)
+            var temp = CalculateCost();
+            if(temp < currentCost)
             {
-                var swapIndex = randomizer.Next(i);
-                var temp = CalculateSwapCost(Solution, currentCost, swapIndex, i);
-                if(temp < currentCost)
-                {
-                    NumberOfImprovements++;
-                }
-                currentCost = temp;
-                swapper.Swap(Solution, ref swapIndex, ref i);
-                SaveCost(currentCost);
-                Steps++;
+                NumberOfImprovements++;
             }
-
+            currentCost = temp;
+            SaveCost(currentCost);
+            Steps++;
         }
 
         public override void Reset()

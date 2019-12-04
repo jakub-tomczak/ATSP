@@ -149,7 +149,7 @@ namespace ATSP.Heuristics
 
         public bool SaveIntermediateCosts { get; set; } = true;
         public static uint[] SaveCostPoints => Enumerable
-            .Range(0, 40)
+            .Range(80, 100)
             .Select(x => (uint)x*10)
             .ToArray();
 

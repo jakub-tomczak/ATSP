@@ -50,9 +50,11 @@ class PlotDrawer():
         if self.show_plots:
             plt.show()
 
-    def draw_instance_based_plot(self, y_name, y_desc, estimator_function, plot_name, plotting_function=sns.pointplot, x_name="Instance_name", x_desc="Instancja"):
+    def draw_instance_based_plot(self, y_name, y_desc, estimator_function, plot_name, plotting_function=sns.pointplot, x_name="Instance_name", x_desc="Instancja", data=None):
         plt.clf()
-        plotting_function(data=self.df, x = x_name, y = y_name, hue="Algorithm", estimator=estimator_function)
+        if data is None:
+            data = self.df
+        plotting_function(data=data, x = x_name, y = y_name, hue="Algorithm", estimator=estimator_function)
         plt.xticks(rotation=90)
         plt.xlabel(x_desc)
         plt.ylabel(y_desc)
@@ -62,14 +64,16 @@ class PlotDrawer():
         self.save_plot(plot_name, instance='')
         self.show_plot()
 
-    def draw_algorithm_based_plot(self, y_name, y_desc, plot_name, plotting_function=sns.violinplot, x_name="Algorithm", x_desc="Algorytm", hue_name=None):
+    def draw_algorithm_based_plot(self, y_name, y_desc, plot_name, plotting_function=sns.violinplot, x_name="Algorithm", x_desc="Algorytm", hue_name=None, data=None):
+        if data is None:
+            data = self.df
         for instance_name in self.instances:
             plt.clf()
-            data = self.df[self.df.Instance_name == instance_name]
+            plotting_data = data[data.Instance_name == instance_name]
             if hue_name is None:
-                plotting_function(data=data, x=x_name, y=y_name)
+                plotting_function(data=plotting_data, x=x_name, y=y_name)
             else:
-                plotting_function(data=data, x=x_name, y=y_name, hue=hue_name, style=hue_name)
+                plotting_function(data=plotting_data, x=x_name, y=y_name, hue=hue_name, style=hue_name)
             plt.xlabel(x_desc)
             plt.ylabel(y_desc)
             plt.tight_layout()
@@ -82,13 +86,16 @@ class PlotDrawer():
         self.draw_instance_based_plot(y_name="Quality", y_desc="Najlepsza jakość", estimator_function=min, plot_name='best_quality')
 
     def draw_time_plots(self):
-        self.draw_instance_based_plot(y_name="Execution_time", y_desc="Średni czas działania", estimator_function=np.mean, plot_name='mean_execution_time')
+        self.draw_instance_based_plot(y_name="Execution_time", y_desc="Średni czas działania [ms]", estimator_function=np.mean, plot_name='mean_execution_time')
+
+        no_tabu_data = self.df[~(self.df.Algorithm=='Tabu')]
+        self.draw_instance_based_plot(y_name="Execution_time", y_desc="Średni czas działania [ms], bez Tabu", estimator_function=np.mean, plot_name='mean_execution_time_no_tabu', data=no_tabu_data)
         
     def draw_effectiveness_plots(self):
-        self.draw_algorithm_based_plot(y_name="Effectiveness", y_desc="Efektywność", plot_name="effectiveness")
+        self.draw_algorithm_based_plot(y_name="Effectiveness", y_desc="Efektywność", plotting_function=sns.boxplot, plot_name="effectiveness")
 
     def draw_steps_plots(self):
-        self.draw_instance_based_plot(y_name="Execution_steps", y_desc="Średni liczba kroków algorytmu", estimator_function=np.mean, plot_name='mean_steps')
+        self.draw_instance_based_plot(y_name="Execution_steps", y_desc="Średnia liczba kroków algorytmu", estimator_function=np.mean, plot_name='mean_steps')
 
     def draw_number_of_improvements_plots(self):
         self.draw_instance_based_plot(y_name="Number_of_improvements", y_desc="Liczba ocenionych rozwiązań", estimator_function=np.mean, plot_name='mean_improvements')
@@ -131,7 +138,7 @@ class PlotDrawer():
                 step = int(np.ceil(len(data.x)/(num_bins*len(self.cost_algorithms))))
                 
                 plt.clf()
-                sns.pointplot(x=data.x, y=data.y, hue=data.algo_name)\
+                sns.pointplot(data=data,x=data.x, y=data.y, hue=data.algo_name)\
                     .set_xticklabels(data.x[::step])
                 plt.locator_params(nbins=num_bins)
                 plt.xticks(rotation=45)
@@ -149,7 +156,7 @@ class PlotDrawer():
     def draw_initial_vs_final_solution_plots(self):
         self.draw_algorithm_based_plot(y_name="Quality",
                                       y_desc="Jakość ostatecznego rozwiązania",
-                                      plot_name='mean_improvements',
+                                      plot_name='initial_vs_final',
                                       plotting_function=sns.scatterplot,
                                       x_name="Initial_quality",
                                       x_desc="Jakość pierwotnego rozwiązania",

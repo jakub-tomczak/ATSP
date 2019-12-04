@@ -25,14 +25,14 @@ namespace ATSP.Heuristics
                 currentCost = CalculateCost();
             }
             (var i, var j) = GetIndicesForSwap(Solution.Length);
-            // check whether this is the improvement
+            // check whether this is an improvement
             var temp = CalculateSwapCost(Solution, currentCost, i, j);
             if(temp < currentCost)
             {
                 NumberOfImprovements++;
-                currentCost = temp;
-                swapper.Swap(Solution, ref j, ref i);
             }
+            currentCost = temp;
+            swapper.Swap(Solution, ref j, ref i);
             SaveCost(currentCost);
             Steps++;
         }
